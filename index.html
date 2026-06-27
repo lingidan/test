@@ -641,6 +641,81 @@
     padding: 6px 14px 3px; font-size: 11px; font-weight: 700;
     color: var(--gray-400); text-transform: uppercase; letter-spacing: .5px;
   }
+
+  /* ── Пикер бригады ── */
+  .btn-pick-crew {
+    display: inline-flex; align-items: center; gap: 7px; padding: 8px 16px;
+    font-size: 13px; font-weight: 600; border-radius: 8px; cursor: pointer;
+    background: var(--surface); color: var(--accent);
+    border: 1.5px solid var(--accent); transition: background .15s, color .15s;
+  }
+  .btn-pick-crew:hover { background: var(--accent); color: white; }
+
+  #crewPickerOverlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,.4); z-index: 800;
+    justify-content: center; align-items: flex-start; padding-top: 40px;
+  }
+  #crewPickerOverlay.open { display: flex; }
+  #crewPickerModal {
+    background: var(--surface); width: 480px; max-width: calc(100vw - 24px);
+    border-radius: 14px; box-shadow: 0 8px 40px rgba(0,0,0,.22);
+    display: flex; flex-direction: column; max-height: calc(100vh - 80px); overflow: hidden;
+  }
+  .cpm-header {
+    background: var(--navy); padding: 14px 18px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .cpm-header h3 { color: white; font-size: 14px; font-weight: 700; margin: 0; }
+  .cpm-close { background: none; border: none; color: white; font-size: 20px; cursor: pointer; opacity: .8; padding: 0; }
+  .cpm-close:hover { opacity: 1; }
+  .cpm-filter { padding: 10px 14px; border-bottom: 1px solid var(--gray-100); display: flex; gap: 8px; align-items: center; }
+  .cpm-filter select {
+    flex: 1; padding: 7px 10px; border: 1.5px solid var(--gray-200);
+    border-radius: 8px; font-size: 13px; background: var(--white); color: var(--text); cursor: pointer;
+  }
+  .cpm-filter select:focus { outline: none; border-color: var(--accent); }
+  .cpm-search {
+    flex: 1; padding: 7px 10px; border: 1.5px solid var(--gray-200);
+    border-radius: 8px; font-size: 13px; background: var(--white); color: var(--text);
+  }
+  .cpm-search:focus { outline: none; border-color: var(--accent); }
+  .cpm-list { overflow-y: auto; flex: 1; padding: 4px 0; }
+  .cpm-letter-divider {
+    padding: 5px 14px 2px; font-size: 12px; font-weight: 800;
+    color: var(--accent); background: var(--accent-light);
+    border-top: 1px solid var(--gray-100); letter-spacing: .5px;
+    position: sticky; top: 0; z-index: 1;
+  }
+  .cpm-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 14px; cursor: pointer;
+    border-bottom: 1px solid var(--gray-100); transition: background .1s;
+  }
+  .cpm-item:hover { background: var(--accent-light); }
+  .cpm-item.dup {
+    border: 1.5px solid #e05252; border-radius: 6px; margin: 2px 8px;
+    background: #fff6f6;
+  }
+  .cpm-dup-label { font-size: 10.5px; color: #e05252; font-weight: 700; display: block; margin-top: 2px; }
+  .cpm-cb { width: 16px; height: 16px; accent-color: var(--accent); flex-shrink: 0; cursor: pointer; }
+  .cpm-info { flex: 1; min-width: 0; }
+  .cpm-fio { font-size: 13px; font-weight: 600; color: var(--text); }
+  .cpm-dolzh { font-size: 11.5px; color: var(--gray-400); margin-top: 1px; }
+  .cpm-ppu { font-size: 11px; color: var(--accent); margin-top: 1px; }
+  .cpm-empty { padding: 24px; text-align: center; color: var(--gray-400); font-size: 13px; }
+  .cpm-footer {
+    padding: 10px 14px; border-top: 1px solid var(--gray-100);
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  }
+  .cpm-footer-info { font-size: 12px; color: var(--gray-400); }
+  .cpm-add-btn {
+    padding: 8px 20px; background: var(--accent); color: white;
+    border: none; border-radius: 8px; font-size: 13px; font-weight: 700;
+    cursor: pointer; transition: background .15s;
+  }
+  .cpm-add-btn:hover { background: var(--navy); }
+  .cpm-add-btn:disabled { opacity: .4; cursor: default; }
 </style>
 </head>
 <body>
@@ -681,6 +756,27 @@
       <div class="tp-swatch" style="background:linear-gradient(135deg,#0a4a5e 0%,#1a9ab8 55%,#c0e8f4 100%)"></div>
       <span class="tp-name">Лазурь</span>
     </button>
+  </div>
+</div>
+
+<!-- Пикер бригады -->
+<div id="crewPickerOverlay" onclick="crewPickerOverlayClick(event)">
+  <div id="crewPickerModal">
+    <div class="cpm-header">
+      <h3>Выбор исполнителей из базы</h3>
+      <button class="cpm-close" onclick="closeCrewPicker()">×</button>
+    </div>
+    <div class="cpm-filter">
+      <select id="crewPpuFilter" onchange="renderCrewList()">
+        <option value="">Все участки</option>
+      </select>
+      <input class="cpm-search" id="crewSearch" type="text" placeholder="Поиск по ФИО…" oninput="renderCrewList()">
+    </div>
+    <div class="cpm-list" id="crewPickerList"></div>
+    <div class="cpm-footer">
+      <span class="cpm-footer-info" id="crewSelInfo">Отмечено: 0</span>
+      <button class="cpm-add-btn" id="crewAddBtn" onclick="addCrewSelected()" disabled>Добавить (0)</button>
+    </div>
   </div>
 </div>
 
@@ -1115,6 +1211,10 @@
           <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
           Добавить строку
         </button>
+        <button class="btn-pick-crew" id="btnPickCrew" onclick="openCrewPicker()" style="display:none">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          Из базы
+        </button>
         <button id="btnSyncB3" class="btn-sync-b3" onclick="openLoginModal()">
           <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" viewBox="0 0 24 24"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/></svg>
           Синхронизация
@@ -1496,7 +1596,15 @@ const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/1TpuVrcebn3W-2qekT
 // Мастер-реестр: Пользователи + листы других организаций
 const MASTER_SHEET_ID = '1Thw1FraaXvuqDD_qQ-Bdd-Kbx7JvScSn-iYRD5v3-ts';
 let employeeMap = {};
-let issuersList = [];   // [{fio, dolzh, ppu}] — те, кто может выдавать наряд
+let issuersList = [];      // [{fio, dolzh, ppu}] — те, кто может выдавать наряд
+let allEmployeesList = []; // [{fio, dolzh, razr, grEB, grVys, ppu}] — все сотрудники
+
+function _ppuSort(a, b) {
+  const aNum = /^\d/.test(a), bNum = /^\d/.test(b);
+  if (aNum && !bNum) return -1;
+  if (!aNum && bNum) return 1;
+  return a.localeCompare(b, 'ru', { numeric: true, sensitivity: 'base' });
+}
 let currentUser = null;
 
 function _parseSheetCSV(text) {
@@ -1522,20 +1630,26 @@ async function loadEmployeeData() {
     const rows = _parseSheetCSV(text);
     employeeMap = {};
     issuersList = [];
+    allEmployeesList = [];
     for (let i = 3; i < rows.length; i++) {
       const r = rows[i];
       const fio = (r[1] || '').trim();
       if (!fio) continue;
-      const dolzh = (r[2]  || '').trim();
-      const ppu   = (r[4]  || '').trim();
+      const dolzh    = (r[2]  || '').trim();
+      const razr     = (r[3]  || '').trim();
+      const ppu      = (r[4]  || '').trim();
+      const grEB     = (r[32] || '').trim();
+      const grVys    = '2';
       const canIssue = (r[80] || '').trim().toLowerCase();
-      employeeMap[fio.toLowerCase().replace(/\s+/g, ' ')] = {
-        dolzh, razr: (r[3] || '').trim(), grEB: (r[32] || '').trim(),
-      };
+      employeeMap[fio.toLowerCase().replace(/\s+/g, ' ')] = { dolzh, razr, grEB };
+      allEmployeesList.push({ fio, dolzh, razr, grEB, grVys, ppu });
       if (canIssue === 'да') issuersList.push({ fio, dolzh, ppu });
     }
     issuersList.sort((a, b) => a.fio.localeCompare(b.fio, 'ru'));
+    allEmployeesList.sort((a, b) => a.fio.localeCompare(b.fio, 'ru'));
     rebuildIssuerPpuFilter();
+    rebuildCrewPpuFilter();
+    updateCrewPickerBtn();
   } catch(e) { console.warn('Не удалось загрузить базу сотрудников:', e); }
   if (syncEnabled) syncAllRows();
 }
@@ -1768,7 +1882,10 @@ function logout() {
   syncEnabled = false;
   employeeMap = {};
   issuersList = [];
+  allEmployeesList = [];
   rebuildIssuerPpuFilter();
+  rebuildCrewPpuFilter();
+  updateCrewPickerBtn();
   updateAuthButton();
   applyUserToForm();
   syncAllRows();
@@ -1793,10 +1910,128 @@ function rebuildIssuerPpuFilter() {
   const sel = document.getElementById('issuerPpuFilter');
   if (!sel) return;
   const ppus = [...new Set(issuersList.map(p => p.ppu).filter(Boolean))];
-  // обратный порядок (Я→А)
-  ppus.sort((a, b) => b.localeCompare(a, 'ru'));
+  ppus.sort(_ppuSort);
   sel.innerHTML = '<option value="">Все участки</option>' +
     ppus.map(p => `<option value="${p}">${p}</option>`).join('');
+}
+
+function rebuildCrewPpuFilter() {
+  const sel = document.getElementById('crewPpuFilter');
+  if (!sel) return;
+  const ppus = [...new Set(allEmployeesList.map(p => p.ppu).filter(Boolean))];
+  ppus.sort(_ppuSort);
+  sel.innerHTML = '<option value="">Все участки</option>' +
+    ppus.map(p => `<option value="${p}">${p}</option>`).join('');
+}
+
+function updateCrewPickerBtn() {
+  const btn = document.getElementById('btnPickCrew');
+  if (btn) btn.style.display = allEmployeesList.length ? 'inline-flex' : 'none';
+}
+
+// ─── Пикер бригады ────────────────────────────────────────────────────────
+
+function openCrewPicker() {
+  if (!allEmployeesList.length) return;
+  document.getElementById('crewSearch').value = '';
+  renderCrewList();
+  document.getElementById('crewPickerOverlay').classList.add('open');
+}
+
+function closeCrewPicker() {
+  document.getElementById('crewPickerOverlay').classList.remove('open');
+}
+
+function crewPickerOverlayClick(e) {
+  if (e.target === document.getElementById('crewPickerOverlay')) closeCrewPicker();
+}
+
+function _getExecFios() {
+  const set = new Set();
+  document.querySelectorAll('#execBody tr').forEach(tr => {
+    const c = tr.querySelector('.cell-edit');
+    if (c) set.add(c.textContent.trim().toLowerCase());
+  });
+  return set;
+}
+
+function renderCrewList() {
+  const list  = document.getElementById('crewPickerList');
+  const ppuF  = document.getElementById('crewPpuFilter').value;
+  const q     = (document.getElementById('crewSearch').value || '').trim().toLowerCase();
+  const dups  = _getExecFios();
+
+  let items = allEmployeesList.filter(p => {
+    if (ppuF && p.ppu !== ppuF) return false;
+    if (q && !p.fio.toLowerCase().includes(q)) return false;
+    return true;
+  });
+
+  if (!items.length) {
+    list.innerHTML = `<div class="cpm-empty">Нет сотрудников по выбранному фильтру</div>`;
+    _updateCrewFooter();
+    return;
+  }
+
+  // группировка по первой букве
+  let html = '';
+  let lastLetter = '';
+  items.forEach(p => {
+    const letter = p.fio[0].toUpperCase();
+    if (letter !== lastLetter) {
+      html += `<div class="cpm-letter-divider">${letter}</div>`;
+      lastLetter = letter;
+    }
+    const isDup = dups.has(p.fio.toLowerCase());
+    const fioE  = p.fio.replace(/'/g, "\\'");
+    html += `<div class="cpm-item${isDup ? ' dup' : ''}" onclick="crewItemClick(event,'${fioE}')">
+      <input class="cpm-cb" type="checkbox" data-fio="${p.fio.replace(/"/g,'&quot;')}"
+        onclick="event.stopPropagation(); _updateCrewFooter()" ${isDup ? 'title="Уже в таблице"' : ''}>
+      <div class="cpm-info">
+        <div class="cpm-fio">${p.fio}</div>
+        ${p.dolzh ? `<div class="cpm-dolzh">${p.dolzh}</div>` : ''}
+        ${p.ppu   ? `<div class="cpm-ppu">${p.ppu}</div>` : ''}
+        ${isDup   ? `<span class="cpm-dup-label">⚠ Уже в таблице</span>` : ''}
+      </div>
+    </div>`;
+  });
+  list.innerHTML = html;
+  _updateCrewFooter();
+}
+
+function crewItemClick(e, fio) {
+  const item = e.currentTarget;
+  const cb   = item.querySelector('.cpm-cb');
+  cb.checked = !cb.checked;
+  _updateCrewFooter();
+}
+
+function _updateCrewFooter() {
+  const n   = document.querySelectorAll('#crewPickerList .cpm-cb:checked').length;
+  const btn = document.getElementById('crewAddBtn');
+  const inf = document.getElementById('crewSelInfo');
+  btn.disabled   = n === 0;
+  btn.textContent = n > 0 ? `Добавить (${n})` : 'Добавить (0)';
+  inf.textContent = `Отмечено: ${n}`;
+}
+
+function addCrewSelected() {
+  const checked = document.querySelectorAll('#crewPickerList .cpm-cb:checked');
+  checked.forEach(cb => {
+    const fio = cb.dataset.fio;
+    const emp = allEmployeesList.find(p => p.fio === fio);
+    if (!emp) return;
+    addRow();
+    const tr    = document.getElementById('execBody').lastElementChild;
+    const cells = tr.querySelectorAll('.cell-edit');
+    cells[0].textContent = emp.fio;
+    cells[1].textContent = emp.dolzh;
+    cells[2].textContent = emp.razr;
+    cells[3].textContent = emp.grEB;
+    cells[4].textContent = emp.grVys;
+  });
+  scheduleSave();
+  closeCrewPicker();
 }
 
 function openIssuerPicker() {
@@ -1945,21 +2180,26 @@ function loadOrgPersonnel() {
         const iPPU      = hdrs.findIndex(h => h.includes('участок') || h.includes('ппу'));
         employeeMap = {};
         issuersList = [];
+        allEmployeesList = [];
         for (let i = 1; i < rows.length; i++) {
           const r = rows[i];
           const fio = ((iFIO >= 0 ? r[iFIO] : r[1]) || '').trim();
           if (!fio) continue;
-          const dolzh = ((iDolzh >= 0 ? r[iDolzh] : r[2]) || '').trim();
-          const ppu   = (iPPU   >= 0 ? r[iPPU]   : '').trim();
-          const canIssue = (iIssue >= 0 ? r[iIssue] : '').trim().toLowerCase();
-          employeeMap[fio.toLowerCase().replace(/\s+/g, ' ')] = {
-            dolzh, razr: ((iRazr >= 0 ? r[iRazr] : r[3]) || '').trim(),
-            grEB: ((iGrEB >= 0 ? r[iGrEB] : r[4]) || '').trim(),
-          };
+          const dolzh    = ((iDolzh >= 0 ? r[iDolzh] : r[2]) || '').trim();
+          const razr     = ((iRazr  >= 0 ? r[iRazr]  : r[3]) || '').trim();
+          const grEB     = ((iGrEB  >= 0 ? r[iGrEB]  : r[4]) || '').trim();
+          const ppu      = (iPPU    >= 0 ? r[iPPU]           : '').trim();
+          const grVys    = '2';
+          const canIssue = (iIssue  >= 0 ? r[iIssue]         : '').trim().toLowerCase();
+          employeeMap[fio.toLowerCase().replace(/\s+/g, ' ')] = { dolzh, razr, grEB };
+          allEmployeesList.push({ fio, dolzh, razr, grEB, grVys, ppu });
           if (canIssue === 'да') issuersList.push({ fio, dolzh, ppu });
         }
         issuersList.sort((a, b) => a.fio.localeCompare(b.fio, 'ru'));
+        allEmployeesList.sort((a, b) => a.fio.localeCompare(b.fio, 'ru'));
         rebuildIssuerPpuFilter();
+        rebuildCrewPpuFilter();
+        updateCrewPickerBtn();
         syncEnabled = true;
         syncAllRows();
       })

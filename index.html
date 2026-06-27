@@ -716,6 +716,23 @@
   }
   .cpm-add-btn:hover { background: var(--navy); }
   .cpm-add-btn:disabled { opacity: .4; cursor: default; }
+
+  /* ── Автодополнение исполнителей (ФИО ячейка) ── */
+  #execAcList {
+    position: fixed; z-index: 600; display: none;
+    background: var(--white); border: 1.5px solid var(--gray-200);
+    border-radius: 8px; box-shadow: 0 6px 20px rgba(0,0,0,.13);
+    min-width: 280px; max-width: 420px; max-height: 220px; overflow-y: auto;
+  }
+  #execAcList.open { display: block; }
+  .exec-ac-item {
+    padding: 8px 12px; cursor: pointer; font-size: 13px;
+    border-bottom: 1px solid var(--gray-100); display: flex; gap: 8px; align-items: baseline;
+  }
+  .exec-ac-item:last-child { border-bottom: none; }
+  .exec-ac-item:hover, .exec-ac-item.active { background: var(--accent-light); }
+  .exec-ac-fio { font-weight: 600; color: var(--text); }
+  .exec-ac-dolzh { font-size: 11.5px; color: var(--gray-400); }
 </style>
 </head>
 <body>
@@ -758,6 +775,9 @@
     </button>
   </div>
 </div>
+
+<!-- Автодополнение ячеек ФИО в таблице исполнителей -->
+<div id="execAcList"></div>
 
 <!-- Пикер бригады -->
 <div id="crewPickerOverlay" onclick="crewPickerOverlayClick(event)">
@@ -954,7 +974,7 @@
     <p>Форма заполнения разрешительной документации на опасные работы</p>
   </div>
   <div style="font-size:12px; color:var(--gray-400); text-align:right; white-space:nowrap">
-    <div style="font-size:14px; font-weight:700; color:var(--navy); margin-bottom:4px">v2.41</div>
+    <div style="font-size:14px; font-weight:700; color:var(--navy); margin-bottom:4px">v2.42</div>
     Разработал<br>Лингидан Максим Дмитриевич
   </div>
 </div>
@@ -2015,6 +2035,90 @@ function _updateCrewFooter() {
   inf.textContent = `Отмечено: ${n}`;
 }
 
+// ─── Автодополнение ФИО в таблице исполнителей ───────────────────────────
+let _execAcCell = null;
+let _execAcIdx  = -1;
+
+function execAcShow(cell) {
+  if (!allEmployeesList.length) return;
+  const q = cell.textContent.trim().toLowerCase();
+  if (!q) { execAcHide(); return; }
+
+  const matches = allEmployeesList
+    .filter(p => p.fio.toLowerCase().includes(q))
+    .slice(0, 12);
+
+  if (!matches.length) { execAcHide(); return; }
+
+  const el = document.getElementById('execAcList');
+  _execAcCell = cell;
+  _execAcIdx  = -1;
+
+  el.innerHTML = matches.map((p, i) =>
+    `<div class="exec-ac-item" data-i="${i}"
+      onmousedown="execAcSelect(event,'${p.fio.replace(/'/g,"\\'")}','${(p.dolzh||'').replace(/'/g,"\\'")}','${(p.razr||'').replace(/'/g,"\\'")}','${(p.grEB||'').replace(/'/g,"\\'")}','${p.grVys||'2'}')">
+      <span class="exec-ac-fio">${p.fio}</span>
+      ${p.dolzh ? `<span class="exec-ac-dolzh">${p.dolzh}</span>` : ''}
+    </div>`
+  ).join('');
+
+  // позиционируем под ячейкой
+  const rect = cell.getBoundingClientRect();
+  el.style.left = rect.left + 'px';
+  el.style.top  = (rect.bottom + 3) + 'px';
+  el.style.width = Math.max(rect.width, 280) + 'px';
+  el.classList.add('open');
+}
+
+function execAcHide() {
+  document.getElementById('execAcList').classList.remove('open');
+  _execAcCell = null;
+  _execAcIdx  = -1;
+}
+
+function execAcSelect(e, fio, dolzh, razr, grEB, grVys) {
+  e.preventDefault();
+  if (!_execAcCell) return;
+  const tr    = _execAcCell.closest('tr');
+  const cells = tr.querySelectorAll('.cell-edit');
+  _execAcCell.textContent = fio;
+  cells[1].textContent = dolzh;
+  cells[2].textContent = razr;
+  cells[3].textContent = grEB;
+  cells[4].textContent = grVys;
+  execAcHide();
+  scheduleSave();
+}
+
+function execAcKeyDown(e, cell) {
+  const el = document.getElementById('execAcList');
+  if (!el.classList.contains('open')) return;
+  const items = el.querySelectorAll('.exec-ac-item');
+  if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    _execAcIdx = Math.min(_execAcIdx + 1, items.length - 1);
+    items.forEach((it, i) => it.classList.toggle('active', i === _execAcIdx));
+  } else if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    _execAcIdx = Math.max(_execAcIdx - 1, 0);
+    items.forEach((it, i) => it.classList.toggle('active', i === _execAcIdx));
+  } else if (e.key === 'Enter') {
+    if (_execAcIdx >= 0 && items[_execAcIdx]) {
+      e.preventDefault();
+      items[_execAcIdx].dispatchEvent(new MouseEvent('mousedown'));
+    }
+  } else if (e.key === 'Escape') {
+    execAcHide();
+  }
+}
+
+document.addEventListener('click', e => {
+  if (!e.target.closest('#execAcList') && !e.target.closest('[data-col="0"]')) execAcHide();
+});
+document.addEventListener('scroll', () => {
+  if (_execAcCell) execAcShow(_execAcCell);
+}, true);
+
 function addCrewSelected() {
   const checked = document.querySelectorAll('#crewPickerList .cpm-cb:checked');
   checked.forEach(cb => {
@@ -2252,8 +2356,13 @@ function addRow() {
     td.addEventListener('paste', e => handleCellPaste(e, td));
     td.addEventListener('keydown', e => handleCellKeydown(e, td));
   });
-  // Auto-fill from employee DB on FIO blur (only when sync is enabled)
+  // Автодополнение по базе сотрудников
   const fioTd = tr.querySelector('[data-col="0"]');
+  fioTd.addEventListener('input',   () => execAcShow(fioTd));
+  fioTd.addEventListener('keydown', e  => execAcKeyDown(e, fioTd));
+  fioTd.addEventListener('blur',    ()  => { setTimeout(execAcHide, 150); });
+
+  // Auto-fill from employee DB on FIO blur (only when sync is enabled)
   fioTd.addEventListener('blur', () => {
     if (!syncEnabled) return;
     const fio = fioTd.textContent.trim();
@@ -2879,7 +2988,7 @@ async function buildPPRVDocument(data) {
 }
 
 // ─── Проверка актуальности версии ─────────────────────────────────────────
-const CURRENT_VERSION = 'v2.41';
+const CURRENT_VERSION = 'v2.42';
 const VERSION_CHECK_TTL = 5 * 60 * 1000; // 5 минут
 let _versionCheckTime = null;
 let _versionCheckPassed = false;

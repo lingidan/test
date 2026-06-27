@@ -561,6 +561,86 @@
     transition: background .15s, border-color .15s;
   }
   .btn-clear-tab:hover { background: #fdf0f0; border-color: #e05252; }
+
+  /* ── Пикер выдающего наряд ── */
+  .issuer-wrap { position: relative; display: flex; gap: 5px; }
+  .issuer-wrap input { flex: 1; min-width: 0; }
+  .issuer-pick-btn {
+    flex-shrink: 0; background: var(--surface); border: 1.5px solid var(--gray-200);
+    border-radius: 8px; padding: 0 10px; cursor: pointer; color: var(--gray-400);
+    font-size: 14px; line-height: 1; transition: border-color .15s, color .15s;
+    display: flex; align-items: center;
+  }
+  .issuer-pick-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* Автодополнение */
+  .issuer-ac-list {
+    display: none; position: absolute; top: 100%; left: 0; right: 36px;
+    z-index: 400; background: var(--white); border: 1.5px solid var(--gray-200);
+    border-radius: 8px; box-shadow: 0 6px 20px rgba(0,0,0,.12);
+    max-height: 220px; overflow-y: auto; margin-top: 3px;
+  }
+  .issuer-ac-list.open { display: block; }
+  .issuer-ac-item {
+    padding: 8px 12px; cursor: pointer; font-size: 13px;
+    border-bottom: 1px solid var(--gray-100); display: flex; gap: 8px; align-items: baseline;
+  }
+  .issuer-ac-item:last-child { border-bottom: none; }
+  .issuer-ac-item:hover, .issuer-ac-item.active { background: var(--accent-light); }
+  .issuer-ac-fio { font-weight: 600; color: var(--text); }
+  .issuer-ac-dolzh { font-size: 11.5px; color: var(--gray-400); }
+
+  /* Модальный пикер */
+  #issuerPickerOverlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,.4); z-index: 800;
+    justify-content: center; align-items: flex-start; padding-top: 60px;
+  }
+  #issuerPickerOverlay.open { display: flex; }
+  #issuerPickerModal {
+    background: var(--surface); width: 420px; max-width: calc(100vw - 24px);
+    border-radius: 14px; box-shadow: 0 8px 40px rgba(0,0,0,.22);
+    display: flex; flex-direction: column; max-height: calc(100vh - 100px);
+    overflow: hidden;
+  }
+  .ipm-header {
+    background: var(--navy); padding: 14px 18px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .ipm-header h3 { color: white; font-size: 14px; font-weight: 700; margin: 0; }
+  .ipm-close { background: none; border: none; color: white; font-size: 20px; cursor: pointer; opacity: .8; padding: 0; line-height: 1; }
+  .ipm-close:hover { opacity: 1; }
+  .ipm-filter { padding: 12px 14px; border-bottom: 1px solid var(--gray-100); }
+  .ipm-filter select {
+    width: 100%; padding: 7px 10px; border: 1.5px solid var(--gray-200);
+    border-radius: 8px; font-size: 13px; background: var(--white); color: var(--text);
+    cursor: pointer;
+  }
+  .ipm-filter select:focus { outline: none; border-color: var(--accent); }
+  .ipm-list { overflow-y: auto; flex: 1; padding: 6px 0; }
+  .ipm-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 9px 14px; cursor: pointer;
+    border-bottom: 1px solid var(--gray-100); transition: background .1s;
+  }
+  .ipm-item:last-child { border-bottom: none; }
+  .ipm-item:hover { background: var(--accent-light); }
+  .ipm-star {
+    background: none; border: none; cursor: pointer; padding: 0;
+    font-size: 16px; line-height: 1; flex-shrink: 0; opacity: .4;
+    transition: opacity .15s, transform .1s;
+  }
+  .ipm-star.on { opacity: 1; }
+  .ipm-star:hover { transform: scale(1.2); opacity: 1; }
+  .ipm-info { flex: 1; min-width: 0; }
+  .ipm-fio { font-size: 13px; font-weight: 600; color: var(--text); }
+  .ipm-dolzh { font-size: 11.5px; color: var(--gray-400); margin-top: 1px; }
+  .ipm-ppu { font-size: 11px; color: var(--accent); margin-top: 1px; }
+  .ipm-empty { padding: 24px; text-align: center; color: var(--gray-400); font-size: 13px; }
+  .ipm-section-label {
+    padding: 6px 14px 3px; font-size: 11px; font-weight: 700;
+    color: var(--gray-400); text-transform: uppercase; letter-spacing: .5px;
+  }
 </style>
 </head>
 <body>
@@ -601,6 +681,22 @@
       <div class="tp-swatch" style="background:linear-gradient(135deg,#0a4a5e 0%,#1a9ab8 55%,#c0e8f4 100%)"></div>
       <span class="tp-name">Лазурь</span>
     </button>
+  </div>
+</div>
+
+<!-- Пикер выдающего наряд -->
+<div id="issuerPickerOverlay" onclick="issuerPickerOverlayClick(event)">
+  <div id="issuerPickerModal">
+    <div class="ipm-header">
+      <h3>Выбор лица, выдающего наряд</h3>
+      <button class="ipm-close" onclick="closeIssuerPicker()">×</button>
+    </div>
+    <div class="ipm-filter">
+      <select id="issuerPpuFilter" onchange="renderIssuerList()">
+        <option value="">Все участки</option>
+      </select>
+    </div>
+    <div class="ipm-list" id="issuerPickerList"></div>
   </div>
 </div>
 
@@ -856,7 +952,11 @@
         </div>
         <div class="field">
           <label>ФИО лица, выдавшего наряд <span class="req">*</span></label>
-          <input type="text" id="naradVydalFio" placeholder="Иванов И. И." oninput="updateNaradVydal()">
+          <div class="issuer-wrap">
+            <input type="text" id="naradVydalFio" placeholder="Иванов И. И." oninput="issuerOnInput()" onkeydown="issuerKeyDown(event)" autocomplete="off">
+            <button class="issuer-pick-btn" type="button" onclick="openIssuerPicker()" title="Выбрать из списка">▾</button>
+            <div class="issuer-ac-list" id="issuerAcList"></div>
+          </div>
         </div>
         <div class="field">
           <label>Должность лица, выдавшего наряд <span class="req">*</span></label>
@@ -1396,6 +1496,7 @@ const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/1TpuVrcebn3W-2qekT
 // Мастер-реестр: Пользователи + листы других организаций
 const MASTER_SHEET_ID = '1Thw1FraaXvuqDD_qQ-Bdd-Kbx7JvScSn-iYRD5v3-ts';
 let employeeMap = {};
+let issuersList = [];   // [{fio, dolzh, ppu}] — те, кто может выдавать наряд
 let currentUser = null;
 
 function _parseSheetCSV(text) {
@@ -1420,16 +1521,21 @@ async function loadEmployeeData() {
     const text = await resp.text();
     const rows = _parseSheetCSV(text);
     employeeMap = {};
+    issuersList = [];
     for (let i = 3; i < rows.length; i++) {
       const r = rows[i];
       const fio = (r[1] || '').trim();
       if (!fio) continue;
+      const dolzh = (r[2]  || '').trim();
+      const ppu   = (r[4]  || '').trim();
+      const canIssue = (r[80] || '').trim().toLowerCase();
       employeeMap[fio.toLowerCase().replace(/\s+/g, ' ')] = {
-        dolzh: (r[2]  || '').trim(),
-        razr:  (r[3]  || '').trim(),
-        grEB:  (r[32] || '').trim(),
+        dolzh, razr: (r[3] || '').trim(), grEB: (r[32] || '').trim(),
       };
+      if (canIssue === 'да') issuersList.push({ fio, dolzh, ppu });
     }
+    issuersList.sort((a, b) => a.fio.localeCompare(b.fio, 'ru'));
+    rebuildIssuerPpuFilter();
   } catch(e) { console.warn('Не удалось загрузить базу сотрудников:', e); }
   if (syncEnabled) syncAllRows();
 }
@@ -1661,10 +1767,157 @@ function logout() {
   localStorage.removeItem('auth_user');
   syncEnabled = false;
   employeeMap = {};
+  issuersList = [];
+  rebuildIssuerPpuFilter();
   updateAuthButton();
   applyUserToForm();
   syncAllRows();
 }
+
+// ─── Пикер / автодополнение выдающего наряд ──────────────────────────────
+
+function issuerFavKey() {
+  return 'issuer_favs_' + (currentUser ? currentUser.org : '_');
+}
+function issuerFavs() {
+  try { return JSON.parse(localStorage.getItem(issuerFavKey()) || '[]'); } catch { return []; }
+}
+function issuerFavToggle(fio) {
+  let favs = issuerFavs();
+  const idx = favs.indexOf(fio);
+  if (idx >= 0) favs.splice(idx, 1); else favs.push(fio);
+  localStorage.setItem(issuerFavKey(), JSON.stringify(favs));
+}
+
+function rebuildIssuerPpuFilter() {
+  const sel = document.getElementById('issuerPpuFilter');
+  if (!sel) return;
+  const ppus = [...new Set(issuersList.map(p => p.ppu).filter(Boolean))];
+  // обратный порядок (Я→А)
+  ppus.sort((a, b) => b.localeCompare(a, 'ru'));
+  sel.innerHTML = '<option value="">Все участки</option>' +
+    ppus.map(p => `<option value="${p}">${p}</option>`).join('');
+}
+
+function openIssuerPicker() {
+  if (!issuersList.length) return;
+  renderIssuerList();
+  document.getElementById('issuerPickerOverlay').classList.add('open');
+}
+function closeIssuerPicker() {
+  document.getElementById('issuerPickerOverlay').classList.remove('open');
+}
+function issuerPickerOverlayClick(e) {
+  if (e.target === document.getElementById('issuerPickerOverlay')) closeIssuerPicker();
+}
+
+function renderIssuerList() {
+  const list  = document.getElementById('issuerPickerList');
+  const ppuF  = document.getElementById('issuerPpuFilter').value;
+  const favs  = issuerFavs();
+
+  let items = issuersList.filter(p => !ppuF || p.ppu === ppuF);
+  const favItems   = items.filter(p => favs.includes(p.fio));
+  const otherItems = items.filter(p => !favs.includes(p.fio));
+
+  let html = '';
+  if (favItems.length) {
+    html += `<div class="ipm-section-label">⭐ Избранные</div>`;
+    favItems.forEach(p => { html += issuerItemHtml(p, true); });
+  }
+  if (otherItems.length) {
+    if (favItems.length) html += `<div class="ipm-section-label">Все</div>`;
+    otherItems.forEach(p => { html += issuerItemHtml(p, false); });
+  }
+  if (!items.length) html = `<div class="ipm-empty">Нет сотрудников с правом выдачи наряда</div>`;
+  list.innerHTML = html;
+}
+
+function issuerItemHtml(p, isFav) {
+  const fioE  = p.fio.replace(/"/g, '&quot;');
+  const dolzhE = (p.dolzh || '').replace(/"/g, '&quot;');
+  return `<div class="ipm-item" onclick="selectIssuer('${fioE}','${dolzhE}')">
+    <button class="ipm-star ${isFav ? 'on' : ''}" title="Избранное"
+      onclick="event.stopPropagation();toggleIssuerFav('${fioE}',this)">★</button>
+    <div class="ipm-info">
+      <div class="ipm-fio">${p.fio}</div>
+      ${p.dolzh ? `<div class="ipm-dolzh">${p.dolzh}</div>` : ''}
+      ${p.ppu   ? `<div class="ipm-ppu">${p.ppu}</div>` : ''}
+    </div>
+  </div>`;
+}
+
+function toggleIssuerFav(fio, btn) {
+  issuerFavToggle(fio);
+  renderIssuerList();
+}
+
+function selectIssuer(fio, dolzh) {
+  document.getElementById('naradVydalFio').value   = fio;
+  document.getElementById('naradVydalDolzh').value = dolzh;
+  updateNaradVydal();
+  closeIssuerPicker();
+  closeIssuerAc();
+}
+
+// ── Автодополнение ────────────────────────────────────────────────────────
+let _acIdx = -1;
+
+function issuerOnInput() {
+  updateNaradVydal();
+  const q = document.getElementById('naradVydalFio').value.trim().toLowerCase();
+  if (!q || !issuersList.length) { closeIssuerAc(); return; }
+
+  const matches = issuersList
+    .filter(p => p.fio.toLowerCase().includes(q))
+    .slice(0, 12);
+
+  if (!matches.length) { closeIssuerAc(); return; }
+
+  _acIdx = -1;
+  const el = document.getElementById('issuerAcList');
+  el.innerHTML = matches.map((p, i) =>
+    `<div class="issuer-ac-item" data-i="${i}"
+      onmousedown="selectIssuer('${p.fio.replace(/'/g,"\\'")}','${(p.dolzh||'').replace(/'/g,"\\'")}')">
+      <span class="issuer-ac-fio">${p.fio}</span>
+      ${p.dolzh ? `<span class="issuer-ac-dolzh">${p.dolzh}</span>` : ''}
+    </div>`
+  ).join('');
+  el.classList.add('open');
+}
+
+function issuerKeyDown(e) {
+  const el = document.getElementById('issuerAcList');
+  if (!el.classList.contains('open')) return;
+  const items = el.querySelectorAll('.issuer-ac-item');
+  if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    _acIdx = Math.min(_acIdx + 1, items.length - 1);
+    items.forEach((it, i) => it.classList.toggle('active', i === _acIdx));
+  } else if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    _acIdx = Math.max(_acIdx - 1, 0);
+    items.forEach((it, i) => it.classList.toggle('active', i === _acIdx));
+  } else if (e.key === 'Enter' || e.key === 'Tab') {
+    if (_acIdx >= 0 && items[_acIdx]) {
+      e.preventDefault();
+      items[_acIdx].dispatchEvent(new MouseEvent('mousedown'));
+    } else {
+      closeIssuerAc();
+    }
+  } else if (e.key === 'Escape') {
+    closeIssuerAc();
+  }
+}
+
+function closeIssuerAc() {
+  document.getElementById('issuerAcList').classList.remove('open');
+  _acIdx = -1;
+}
+
+document.addEventListener('click', e => {
+  if (!e.target.closest('.issuer-wrap')) closeIssuerAc();
+});
 
 function loadOrgPersonnel() {
   if (!currentUser) return;
@@ -1681,24 +1934,32 @@ function loadOrgPersonnel() {
       .then(r => { if (!r.ok) throw new Error(); return r.text(); })
       .then(csv => {
         const rows = _parseSheetCSV(csv);
-        employeeMap = {};
         if (rows.length < 2) return;
         // Определяем индексы по заголовкам (строка 0)
         const hdrs = rows[0].map(h => (h || '').toLowerCase());
-        const iFIO   = hdrs.findIndex(h => h.includes('фио') || h.includes('ф.и.о'));
-        const iDolzh = hdrs.findIndex(h => h.includes('должн'));
-        const iRazr  = hdrs.findIndex(h => h.includes('разряд') || h.includes('профессия'));
-        const iGrEB  = hdrs.findIndex(h => h.includes('группа'));
+        const iFIO      = hdrs.findIndex(h => h.includes('фио') || h.includes('ф.и.о'));
+        const iDolzh    = hdrs.findIndex(h => h.includes('должн'));
+        const iRazr     = hdrs.findIndex(h => h.includes('разряд') || h.includes('профессия'));
+        const iGrEB     = hdrs.findIndex(h => h.includes('группа'));
+        const iIssue    = hdrs.findIndex(h => h.includes('выдав') || h.includes('выдач') || h.includes('выдават'));
+        const iPPU      = hdrs.findIndex(h => h.includes('участок') || h.includes('ппу'));
+        employeeMap = {};
+        issuersList = [];
         for (let i = 1; i < rows.length; i++) {
           const r = rows[i];
-          const fio = ((iFIO   >= 0 ? r[iFIO]   : r[1]) || '').trim();
+          const fio = ((iFIO >= 0 ? r[iFIO] : r[1]) || '').trim();
           if (!fio) continue;
+          const dolzh = ((iDolzh >= 0 ? r[iDolzh] : r[2]) || '').trim();
+          const ppu   = (iPPU   >= 0 ? r[iPPU]   : '').trim();
+          const canIssue = (iIssue >= 0 ? r[iIssue] : '').trim().toLowerCase();
           employeeMap[fio.toLowerCase().replace(/\s+/g, ' ')] = {
-            dolzh: ((iDolzh >= 0 ? r[iDolzh] : r[2]) || '').trim(),
-            razr:  ((iRazr  >= 0 ? r[iRazr]  : r[3]) || '').trim(),
-            grEB:  ((iGrEB  >= 0 ? r[iGrEB]  : r[4]) || '').trim(),
+            dolzh, razr: ((iRazr >= 0 ? r[iRazr] : r[3]) || '').trim(),
+            grEB: ((iGrEB >= 0 ? r[iGrEB] : r[4]) || '').trim(),
           };
+          if (canIssue === 'да') issuersList.push({ fio, dolzh, ppu });
         }
+        issuersList.sort((a, b) => a.fio.localeCompare(b.fio, 'ru'));
+        rebuildIssuerPpuFilter();
         syncEnabled = true;
         syncAllRows();
       })

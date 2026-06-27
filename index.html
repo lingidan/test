@@ -430,12 +430,22 @@
   [data-theme="dark"] {
     --navy: #1e1e1e; --navy-light: #2a2a2a; --navy-dark: #141414;
     --accent: #4d9de0; --accent-light: #1e3048;
-    --surface: #252525; --gray-50: #1a1a1a; --gray-100: #2d2d2d;
+    --surface: #252525; --white: #2d2d2d; --gray-50: #1a1a1a; --gray-100: #2d2d2d;
     --gray-200: #3a3a3a; --gray-400: #888888; --gray-700: #c0c0c0;
     --text: #e8e8e8; --shadow: 0 2px 12px rgba(0,0,0,.5);
     --shadow-sm: 0 1px 4px rgba(0,0,0,.4);
     --bg-page: #141414;
   }
+  /* Тёмная тема: хардкодные цвета → адаптивные */
+  [data-theme="dark"] .sm-btn-reset { background: #333; color: var(--gray-700); border-color: var(--gray-200); }
+  [data-theme="dark"] .sm-table textarea { background: var(--surface); color: var(--text); }
+  [data-theme="dark"] .btn-del-row:hover { background: rgba(224,82,82,.15); }
+  [data-theme="dark"] .tab-close:hover { background: rgba(224,82,82,.15); }
+  [data-theme="dark"] .btn-clear-tab:hover { background: rgba(224,82,82,.15); }
+  [data-theme="dark"] .del-custom-btn:hover { background: rgba(224,82,82,.15); }
+  [data-theme="dark"] .cpm-item.dup { background: rgba(224,82,82,.12); border-color: #e05252; }
+  [data-theme="dark"] .cpm-dup-label { color: #f87171; }
+  [data-theme="dark"] .lm-tab.active { color: var(--gray-700); }
   [data-theme="kedr"] {
     --navy: #2d4a3e; --navy-light: #3a5f50; --navy-dark: #1e3329;
     --accent: #3d8a6a; --accent-light: #d0e8dc;

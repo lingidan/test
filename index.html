@@ -439,6 +439,113 @@
   #btnChangelog:hover { background: var(--accent-light); border-color: var(--accent); color: var(--accent); }
   #btnChangelog.open  { background: var(--accent-light); border-color: var(--accent); color: var(--accent); }
 
+  /* ── Кнопка Инструкция ── */
+  #btnGuide {
+    display: flex; align-items: center; gap: 7px;
+    padding: 9px 16px; background: var(--surface);
+    border: 1.5px solid var(--gray-200); border-radius: 20px;
+    font-size: 13px; font-weight: 600; color: var(--text);
+    cursor: pointer; box-shadow: var(--shadow-sm);
+    transition: background .15s, border-color .15s;
+    white-space: nowrap;
+  }
+  #btnGuide:hover { background: var(--accent-light); border-color: var(--accent); color: var(--accent); }
+
+  /* ── Модал инструкции ── */
+  #guideOverlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,.5); z-index: 900;
+    justify-content: center; align-items: center;
+  }
+  #guideOverlay.open { display: flex; }
+  #guideModal {
+    background: var(--surface); width: 660px; max-width: calc(100vw - 24px);
+    border-radius: 16px; box-shadow: 0 12px 48px rgba(0,0,0,.28);
+    display: flex; flex-direction: column; max-height: calc(100vh - 48px);
+    overflow: hidden;
+  }
+  .guide-header {
+    background: var(--navy); padding: 16px 20px;
+    display: flex; align-items: center; gap: 14px; flex-shrink: 0;
+  }
+  .guide-header h3 { color: white; font-size: 15px; font-weight: 700; margin: 0; flex: 1; }
+  .guide-view-toggle {
+    display: flex; background: rgba(255,255,255,.15); border-radius: 20px; padding: 3px; gap: 2px;
+  }
+  .guide-vbtn {
+    background: none; border: none; color: rgba(255,255,255,.7); font-size: 12px; font-weight: 600;
+    padding: 4px 12px; border-radius: 16px; cursor: pointer; transition: background .15s, color .15s;
+    white-space: nowrap;
+  }
+  .guide-vbtn.active { background: white; color: var(--navy); }
+  .guide-close {
+    background: none; border: none; color: rgba(255,255,255,.8); font-size: 22px;
+    cursor: pointer; padding: 0; line-height: 1; flex-shrink: 0;
+  }
+  .guide-close:hover { color: white; }
+
+  /* ── Режим слайдов ── */
+  .guide-slide-body {
+    flex: 1; display: flex; flex-direction: column; overflow: hidden;
+  }
+  .guide-slide-content {
+    flex: 1; padding: 32px 36px 24px; overflow-y: auto;
+  }
+  .guide-slide-icon {
+    font-size: 36px; margin-bottom: 14px; display: block;
+  }
+  .guide-slide-title {
+    font-size: 20px; font-weight: 700; color: var(--navy); margin-bottom: 12px;
+  }
+  .guide-slide-text {
+    font-size: 14px; line-height: 1.7; color: var(--text);
+  }
+  .guide-slide-text p { margin-bottom: 10px; }
+  .guide-slide-text p:last-child { margin-bottom: 0; }
+  .guide-slide-text strong { color: var(--navy); }
+  .guide-slide-nav {
+    padding: 16px 24px; border-top: 1px solid var(--gray-100);
+    display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
+  }
+  .guide-nav-btn {
+    display: flex; align-items: center; gap: 6px;
+    padding: 9px 20px; border-radius: 20px; font-size: 13px; font-weight: 600;
+    border: 1.5px solid var(--gray-200); background: var(--surface); color: var(--text);
+    cursor: pointer; transition: background .15s, border-color .15s;
+  }
+  .guide-nav-btn:hover:not(:disabled) { background: var(--accent-light); border-color: var(--accent); color: var(--accent); }
+  .guide-nav-btn:disabled { opacity: .35; cursor: default; }
+  .guide-nav-btn.primary { background: var(--accent); border-color: var(--accent); color: white; }
+  .guide-nav-btn.primary:hover:not(:disabled) { background: var(--navy); border-color: var(--navy); color: white; }
+  .guide-dots {
+    display: flex; gap: 7px; align-items: center;
+  }
+  .guide-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--gray-200); cursor: pointer; transition: background .2s, transform .2s;
+  }
+  .guide-dot.active { background: var(--accent); transform: scale(1.25); }
+
+  /* ── Режим списка ── */
+  .guide-list-body {
+    flex: 1; overflow-y: auto; padding: 8px 0;
+  }
+  .guide-list-item {
+    padding: 20px 28px; border-bottom: 1px solid var(--gray-100);
+  }
+  .guide-list-item:last-child { border-bottom: none; }
+  .guide-list-item-head {
+    display: flex; align-items: center; gap: 12px; margin-bottom: 8px;
+  }
+  .guide-list-icon { font-size: 22px; flex-shrink: 0; }
+  .guide-list-title { font-size: 15px; font-weight: 700; color: var(--navy); }
+  .guide-list-text {
+    font-size: 13px; line-height: 1.65; color: var(--text); padding-left: 34px;
+  }
+  .guide-list-text p { margin-bottom: 8px; }
+  .guide-list-text p:last-child { margin-bottom: 0; }
+  .guide-list-text strong { color: var(--navy); }
+
   #changelogPopup {
     display: none; position: fixed; top: 110px; right: 20px; z-index: 600;
     background: var(--surface); border: 1.5px solid var(--gray-200);
@@ -1093,18 +1200,13 @@
     <p>Форма заполнения разрешительной документации на опасные работы</p>
   </div>
   <div style="font-size:12px; color:var(--gray-400); text-align:right; white-space:nowrap">
-    <div style="font-size:14px; font-weight:700; color:var(--navy); margin-bottom:4px">v2.45</div>
+    <div style="font-size:14px; font-weight:700; color:var(--navy); margin-bottom:4px">v2.46</div>
     Разработал<br>Лингидан Максим Дмитриевич
   </div>
 </div>
 
 <!-- Правые кнопки (фиксированная колонка, справа сверху) -->
 <div id="header-right-btns">
-  <!-- Кнопка История обновлений -->
-  <button id="btnChangelog" onclick="toggleChangelog()">
-    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-    Обновления
-  </button>
   <!-- Кнопка Войти -->
   <div id="btnLoginWrapper">
     <button id="btnLogin" onclick="handleAuthClick()">
@@ -1120,6 +1222,16 @@
       </div>
     </div>
   </div>
+  <!-- Кнопка Инструкция -->
+  <button id="btnGuide" onclick="openGuide()">
+    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+    Инструкция
+  </button>
+  <!-- Кнопка История обновлений -->
+  <button id="btnChangelog" onclick="toggleChangelog()">
+    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+    Обновления
+  </button>
   <!-- Кнопка Темы -->
   <button id="btnTheme" onclick="toggleThemePopup()">
     <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
@@ -1134,6 +1246,35 @@
 <div id="changelogPopup">
   <div class="cl-header">История обновлений</div>
   <div id="changelogList"></div>
+</div>
+
+<!-- ── Модал инструкции ── -->
+<div id="guideOverlay" onclick="guideOverlayClick(event)">
+  <div id="guideModal">
+    <div class="guide-header">
+      <div class="guide-view-toggle">
+        <button class="guide-vbtn active" id="guideBtnSlides" onclick="setGuideView('slides')">Слайды</button>
+        <button class="guide-vbtn" id="guideBtnList" onclick="setGuideView('list')">Список</button>
+      </div>
+      <h3 id="guideHeaderTitle">Инструкция</h3>
+      <button class="guide-close" onclick="closeGuide()">×</button>
+    </div>
+
+    <!-- Режим слайдов -->
+    <div class="guide-slide-body" id="guideSlidebody">
+      <div class="guide-slide-content" id="guideSlideContent"></div>
+      <div class="guide-slide-nav">
+        <button class="guide-nav-btn" id="guidePrevBtn" onclick="guideNav(-1)">← Назад</button>
+        <div class="guide-dots" id="guideDots"></div>
+        <button class="guide-nav-btn primary" id="guideNextBtn" onclick="guideNav(1)">Далее →</button>
+      </div>
+    </div>
+
+    <!-- Режим списка -->
+    <div class="guide-list-body" id="guideListBody" style="display:none">
+      <div id="guideListContent"></div>
+    </div>
+  </div>
 </div>
 
 <!-- ── Панель вкладок ── -->
@@ -3153,7 +3294,7 @@ async function buildPPRVDocument(data) {
 }
 
 // ─── Проверка актуальности версии ─────────────────────────────────────────
-const CURRENT_VERSION = 'v2.45';
+const CURRENT_VERSION = 'v2.46';
 const VERSION_CHECK_TTL = 5 * 60 * 1000; // 5 минут
 let _versionCheckTime = null;
 let _versionCheckPassed = false;
@@ -4344,6 +4485,13 @@ async function buildOgnevoyDocument(data) {
 // ─── История обновлений ───────────────────────────────────────────────────
 const CHANGELOG = [
   {
+    version: 'v2.46', date: '27.06.2026',
+    changes: [
+      'Добавлена кнопка «Инструкция» с встроенной презентацией по работе с сайтом',
+      'Два режима просмотра: слайды (с навигацией) и список (всё сразу)',
+    ]
+  },
+  {
     version: 'v2.45', date: '27.06.2026',
     changes: [
       'Избранные исполнители в пикере бригады — звёздочка рядом с каждым сотрудником',
@@ -4451,6 +4599,161 @@ document.addEventListener('click', function(e) {
     btn.classList.remove('open');
   }
 });
+
+// ─── Инструкция ───────────────────────────────────────────────────────────
+
+const GUIDE_SLIDES = [
+  {
+    icon: '👋',
+    title: 'Добро пожаловать в Конструктор',
+    text: `<p>Этот сайт создан для руководителей работ и всех, кто занимается оформлением нарядов-допусков. Если вам нужно быстро подготовить документы на опасные работы — Конструктор сделает это в разы быстрее и проще, чем вручную.</p>
+<p>Никаких установок и регистраций для старта: открыл браузер — и сразу работаешь. Всё заполняется в форме, а готовые файлы скачиваются одной кнопкой.</p>`
+  },
+  {
+    icon: '📋',
+    title: 'Блок 1 — Реквизиты и общие сведения',
+    text: `<p>Здесь заполняются основные данные: организация, номер наряда, дата выдачи, вид и место работ.</p>
+<p>Поля, отмеченные <strong>красной звёздочкой (*)</strong>, обязательны — без них кнопки скачивания не появятся.</p>
+<p><strong>Руководитель работ</strong> — человек, непосредственно отвечающий за безопасность на месте производства работ.<br>
+<strong>Лицо, выдавшее наряд</strong> — тот, кто оформляет документ: инженер, мастер или начальник участка.</p>`
+  },
+  {
+    icon: '⚠️',
+    title: 'Блок 2 — Опасные и вредные факторы',
+    text: `<p>Отметьте все производственные факторы, которые присутствуют на вашем объекте. От выбора зависит содержание итогового наряда-допуска — нужные разделы и требования подставятся автоматически.</p>
+<p>Кнопка <strong>«Настройки»</strong> в правом углу шапки блока позволяет добавить нестандартные факторы, характерные именно для вашего объекта.</p>`
+  },
+  {
+    icon: '👷',
+    title: 'Блок 3 — Состав исполнителей',
+    text: `<p>Добавляйте членов бригады двумя способами:</p>
+<p>• <strong>«Добавить строку»</strong> — ручной ввод данных по одному человеку.<br>
+• <strong>«Из базы»</strong> — раскрывающийся список сотрудников вашей организации. Можно выбрать сразу нескольких — ФИО, должность и квалификация подставятся автоматически.</p>
+<p>Кнопка <strong>«Из базы»</strong> становится доступна только после авторизации в системе.</p>`
+  },
+  {
+    icon: '📄',
+    title: 'Блок 4 — Скачать документы',
+    text: `<p>Кнопки скачивания появляются автоматически, как только все обязательные поля заполнены.</p>
+<p>Доступные документы:<br>
+<strong>Наряд-допуск</strong>, <strong>ППРв</strong> (план производства работ на высоте), <strong>Акт-высота</strong>, <strong>ОПФ</strong>, <strong>Огневой наряд</strong>.</p>
+<p>Все файлы формируются прямо в вашем браузере — данные никуда не отправляются и не сохраняются на сервере.</p>`
+  },
+  {
+    icon: '🔐',
+    title: 'Авторизация — что она даёт',
+    text: `<p>После входа в систему сайт автоматически подставляет ваши данные (ФИО, должность, организацию) в нужные поля наряда.</p>
+<p>Главное преимущество — доступ к <strong>базе сотрудников вашей организации</strong>. В блоке 3 появляется раскрывающийся список: выбирайте нужных людей одним нажатием, и все данные — должность, разряд, группа электробезопасности — заполнятся сами.</p>
+<p>Это значительно ускоряет работу при повторном оформлении нарядов.</p>`
+  },
+  {
+    icon: '🗂️',
+    title: 'Как получить доступ к базе сотрудников',
+    text: `<p>База сотрудников вашей организации формируется отдельно. Вы можете предоставить данные самостоятельно или попросить <strong>специалиста по охране труда</strong> — он взаимодействует с разработчиком напрямую.</p>
+<p>При регистрации аккаунта обязательно укажите <strong>номер телефона или e-mail</strong>. Без контактных данных восстановить доступ к аккаунту в случае утери будет невозможно.</p>
+<p>Связь с разработчиком: <strong>lingidanm@gmail.com</strong></p>`
+  },
+  {
+    icon: '✨',
+    title: 'Другие возможности',
+    text: `<p><strong>Несколько нарядов одновременно</strong> — нажмите «+» в панели вкладок вверху страницы. Каждую вкладку можно переименовать нажатием на иконку карандаша.</p>
+<p><strong>Автосохранение</strong> — данные сохраняются в браузере автоматически. Даже если закрыть вкладку, всё восстановится при следующем открытии.</p>
+<p><strong>Тёмная и светлая тема</strong> — переключайте кнопкой «Тема» в правой панели под свои предпочтения или условия освещения.</p>`
+  }
+];
+
+let _guideIdx  = 0;
+let _guideView = 'slides';
+
+function openGuide() {
+  _guideView = localStorage.getItem('guide_view_mode') || 'slides';
+  _guideIdx  = 0;
+  _applyGuideView();
+  _renderGuideSlide();
+  _renderGuideList();
+  document.getElementById('guideOverlay').classList.add('open');
+  document.addEventListener('keydown', _guideKeyDown);
+}
+
+function closeGuide() {
+  document.getElementById('guideOverlay').classList.remove('open');
+  document.removeEventListener('keydown', _guideKeyDown);
+}
+
+function guideOverlayClick(e) {
+  if (e.target === document.getElementById('guideOverlay')) closeGuide();
+}
+
+function _guideKeyDown(e) {
+  if (e.key === 'Escape') { closeGuide(); return; }
+  if (_guideView === 'slides') {
+    if (e.key === 'ArrowRight') guideNav(1);
+    if (e.key === 'ArrowLeft')  guideNav(-1);
+  }
+}
+
+function setGuideView(view) {
+  _guideView = view;
+  localStorage.setItem('guide_view_mode', view);
+  _applyGuideView();
+}
+
+function _applyGuideView() {
+  document.getElementById('guideSlidebody').style.display  = _guideView === 'slides' ? 'flex' : 'none';
+  document.getElementById('guideListBody').style.display   = _guideView === 'list'   ? 'block' : 'none';
+  document.getElementById('guideBtnSlides').classList.toggle('active', _guideView === 'slides');
+  document.getElementById('guideBtnList').classList.toggle('active',   _guideView === 'list');
+  document.getElementById('guideHeaderTitle').textContent  = _guideView === 'slides'
+    ? `Инструкция — ${_guideIdx + 1} / ${GUIDE_SLIDES.length}`
+    : 'Инструкция';
+}
+
+function _renderGuideSlide() {
+  const s   = GUIDE_SLIDES[_guideIdx];
+  const n   = GUIDE_SLIDES.length;
+  document.getElementById('guideSlideContent').innerHTML =
+    `<span class="guide-slide-icon">${s.icon}</span>
+     <div class="guide-slide-title">${s.title}</div>
+     <div class="guide-slide-text">${s.text}</div>`;
+
+  // Точки
+  document.getElementById('guideDots').innerHTML = GUIDE_SLIDES.map((_, i) =>
+    `<div class="guide-dot ${i === _guideIdx ? 'active' : ''}" onclick="guideTo(${i})"></div>`
+  ).join('');
+
+  document.getElementById('guidePrevBtn').disabled = _guideIdx === 0;
+  const nextBtn = document.getElementById('guideNextBtn');
+  if (_guideIdx === n - 1) {
+    nextBtn.textContent = 'Готово ✓';
+    nextBtn.onclick = closeGuide;
+  } else {
+    nextBtn.textContent = 'Далее →';
+    nextBtn.onclick = () => guideNav(1);
+  }
+
+  document.getElementById('guideHeaderTitle').textContent = `Инструкция — ${_guideIdx + 1} / ${n}`;
+}
+
+function _renderGuideList() {
+  document.getElementById('guideListContent').innerHTML = GUIDE_SLIDES.map(s => `
+    <div class="guide-list-item">
+      <div class="guide-list-item-head">
+        <span class="guide-list-icon">${s.icon}</span>
+        <div class="guide-list-title">${s.title}</div>
+      </div>
+      <div class="guide-list-text">${s.text}</div>
+    </div>`).join('');
+}
+
+function guideNav(dir) {
+  _guideIdx = Math.max(0, Math.min(GUIDE_SLIDES.length - 1, _guideIdx + dir));
+  _renderGuideSlide();
+}
+
+function guideTo(idx) {
+  _guideIdx = idx;
+  _renderGuideSlide();
+}
 
 // ─── Init ─────────────────────────────────────────────────────────────────
 // Восстанавливаем сессию авторизации

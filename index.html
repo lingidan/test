@@ -427,44 +427,39 @@
   .del-custom-btn:hover { color: #e05252; background: #fee2e2; }
 
   /* ── Цветовые темы ── */
-  [data-theme="slate"] {
-    --navy: #2d3a4a; --navy-light: #3d4f63; --navy-dark: #1e2a38;
-    --accent: #4a7abf; --accent-light: #d8e6f5;
-    --text: #1c2a38; --bg-page: #d0d9e4;
+  [data-theme="dark"] {
+    --navy: #1e1e1e; --navy-light: #2a2a2a; --navy-dark: #141414;
+    --accent: #4d9de0; --accent-light: #1e3048;
+    --surface: #252525; --gray-50: #1a1a1a; --gray-100: #2d2d2d;
+    --gray-200: #3a3a3a; --gray-400: #888888; --gray-700: #c0c0c0;
+    --text: #e8e8e8; --shadow: 0 2px 12px rgba(0,0,0,.5);
+    --shadow-sm: 0 1px 4px rgba(0,0,0,.4);
+    --bg-page: #141414;
   }
-  [data-theme="forest"] {
-    --navy: #1a4535; --navy-light: #235e47; --navy-dark: #112e23;
-    --accent: #2e7a5c; --accent-light: #cce8dc;
-    --text: #122e22; --bg-page: #c8ddd1;
+  [data-theme="kedr"] {
+    --navy: #2d4a3e; --navy-light: #3a5f50; --navy-dark: #1e3329;
+    --accent: #3d8a6a; --accent-light: #d0e8dc;
+    --text: #1a2e25; --bg-page: #f0f5f2;
   }
-  [data-theme="burgundy"] {
-    --navy: #4a1a2c; --navy-light: #63253c; --navy-dark: #32101c;
-    --accent: #a03060; --accent-light: #f0d0de;
-    --text: #32101c; --bg-page: #e0c8d4;
+  [data-theme="yantar"] {
+    --navy: #3d2b1f; --navy-light: #52391f; --navy-dark: #28190e;
+    --accent: #c47a3a; --accent-light: #f0e0c8;
+    --text: #2a1a0e; --bg-page: #faf5ef;
   }
-  [data-theme="sunset"] {
-    --navy: #7a2e0a; --navy-light: #a33d10; --navy-dark: #5a1f04;
-    --accent: #d4651e; --accent-light: #fce8d8;
-    --text: #4a1c08; --bg-page: #f5ddc8;
+  [data-theme="shifer"] {
+    --navy: #2e3a4a; --navy-light: #3d4e62; --navy-dark: #1e2836;
+    --accent: #5b8ab0; --accent-light: #dde6ee;
+    --text: #1c2634; --bg-page: #f2f4f6;
   }
-  [data-theme="amethyst"] {
-    --navy: #3d1568; --navy-light: #561e8c; --navy-dark: #280d46;
-    --accent: #7a40c8; --accent-light: #ecddf8;
-    --text: #280d46; --bg-page: #dfd0f0;
+  [data-theme="vishnya"] {
+    --navy: #4a2535; --navy-light: #623044; --navy-dark: #321525;
+    --accent: #b04a6a; --accent-light: #edd0da;
+    --text: #2e1020; --bg-page: #faf0f3;
   }
-  [data-theme="azure"] {
-    --navy: #0a4a5e; --navy-light: #0d6680; --navy-dark: #063040;
-    --accent: #1a9ab8; --accent-light: #cdf0f8;
-    --text: #063040; --bg-page: #c0e8f4;
-  }
-  [data-theme="night"] {
-    --navy: #0d1f33; --navy-light: #1a3250; --navy-dark: #08131f;
-    --accent: #4a9ad4; --accent-light: #1a3050;
-    --surface: #1e2f45; --gray-50: #192840; --gray-100: #243650;
-    --gray-200: #2e4468; --gray-400: #5a8ab0; --gray-700: #8ab0d0;
-    --text: #c8dff0; --shadow: 0 2px 12px rgba(0,0,0,.45);
-    --shadow-sm: 0 1px 4px rgba(0,0,0,.35);
-    --bg-page: #101e2e;
+  [data-theme="indigo"] {
+    --navy: #1a2a4a; --navy-light: #253860; --navy-dark: #101c34;
+    --accent: #3a6fd8; --accent-light: #ccd8f8;
+    --text: #0f1e38; --bg-page: #edf2ff;
   }
 
   /* ── Кнопка Темы ── */
@@ -484,24 +479,30 @@
     display: none; position: fixed; top: 110px; right: 20px; z-index: 600;
     background: var(--surface); border: 1.5px solid var(--gray-200);
     border-radius: 14px; box-shadow: 0 8px 32px rgba(26,58,92,.18);
-    padding: 16px; width: 320px;
+    padding: 14px; width: 240px;
   }
   #themePopup.open { display: block; }
-  .tp-title { font-size: 12px; font-weight: 700; color: var(--gray-400); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 12px; }
-  .tp-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
-  .tp-card {
-    display: flex; flex-direction: column; align-items: center; gap: 6px;
-    padding: 10px 6px 8px; border: 2px solid var(--gray-100);
-    border-radius: 10px; cursor: pointer; background: var(--gray-50);
-    transition: border-color .15s, background .15s; text-align: center;
+  .tp-title { font-size: 11px; font-weight: 700; color: var(--gray-400); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 10px; }
+  .tp-list { display: flex; flex-direction: column; gap: 4px; }
+  .tp-row {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 10px; border-radius: 9px; cursor: pointer;
+    border: 1.5px solid transparent;
+    transition: background .12s, border-color .12s;
   }
-  .tp-card:hover { border-color: var(--gray-200); }
-  .tp-card.active { border-color: var(--accent); background: var(--accent-light); }
-  .tp-swatch {
-    width: 44px; height: 32px; border-radius: 7px;
-    box-shadow: 0 2px 6px rgba(0,0,0,.2);
+  .tp-row:hover { background: var(--gray-100); }
+  .tp-row.active { border-color: var(--accent); background: var(--accent-light); }
+  .tp-strip {
+    width: 36px; height: 36px; border-radius: 8px; flex-shrink: 0;
+    display: flex; flex-direction: column; overflow: hidden;
   }
-  .tp-name { font-size: 11px; font-weight: 600; color: var(--gray-700); }
+  .tp-strip-top { flex: 0 0 14px; }
+  .tp-strip-mid { flex: 1; display: flex; }
+  .tp-strip-accent { flex: 0 0 8px; }
+  .tp-strip-bg { flex: 1; }
+  .tp-info { flex: 1; min-width: 0; }
+  .tp-name { font-size: 13px; font-weight: 600; color: var(--text); }
+  .tp-desc { font-size: 11px; color: var(--gray-400); margin-top: 1px; }
 
   /* ── Панель вкладок ── */
   .tabs-bar {
@@ -740,38 +741,97 @@
 <!-- Попап выбора темы -->
 <div id="themePopup">
   <div class="tp-title">Цветовая тема</div>
-  <div class="tp-grid">
-    <button class="tp-card" data-theme="" onclick="applyTheme('')">
-      <div class="tp-swatch" style="background:linear-gradient(135deg,#1a3a5c 0%,#2e7abf 55%,#eef2f7 100%)"></div>
-      <span class="tp-name">День</span>
+  <div class="tp-list">
+    <button class="tp-row" data-theme="" onclick="applyTheme('')">
+      <div class="tp-strip">
+        <div class="tp-strip-top" style="background:#1a3a5c"></div>
+        <div class="tp-strip-mid">
+          <div class="tp-strip-accent" style="background:#2e7abf"></div>
+          <div class="tp-strip-bg" style="background:#eef2f7"></div>
+        </div>
+      </div>
+      <div class="tp-info">
+        <div class="tp-name">Светлая</div>
+        <div class="tp-desc">Тёмно-синий · голубой</div>
+      </div>
     </button>
-    <button class="tp-card" data-theme="night" onclick="applyTheme('night')">
-      <div class="tp-swatch" style="background:linear-gradient(135deg,#0d1f33 0%,#1a3250 50%,#101e2e 100%)"></div>
-      <span class="tp-name">Ночь</span>
+    <button class="tp-row" data-theme="dark" onclick="applyTheme('dark')">
+      <div class="tp-strip">
+        <div class="tp-strip-top" style="background:#1e1e1e"></div>
+        <div class="tp-strip-mid">
+          <div class="tp-strip-accent" style="background:#4d9de0"></div>
+          <div class="tp-strip-bg" style="background:#252525"></div>
+        </div>
+      </div>
+      <div class="tp-info">
+        <div class="tp-name">Тёмная</div>
+        <div class="tp-desc">Нейтральный серый · синий</div>
+      </div>
     </button>
-    <button class="tp-card" data-theme="slate" onclick="applyTheme('slate')">
-      <div class="tp-swatch" style="background:linear-gradient(135deg,#2d3a4a 0%,#4a7abf 55%,#d0d9e4 100%)"></div>
-      <span class="tp-name">Сланец</span>
+    <button class="tp-row" data-theme="kedr" onclick="applyTheme('kedr')">
+      <div class="tp-strip">
+        <div class="tp-strip-top" style="background:#2d4a3e"></div>
+        <div class="tp-strip-mid">
+          <div class="tp-strip-accent" style="background:#3d8a6a"></div>
+          <div class="tp-strip-bg" style="background:#f0f5f2"></div>
+        </div>
+      </div>
+      <div class="tp-info">
+        <div class="tp-name">Кедр</div>
+        <div class="tp-desc">Тёмно-зелёный · мятный</div>
+      </div>
     </button>
-    <button class="tp-card" data-theme="forest" onclick="applyTheme('forest')">
-      <div class="tp-swatch" style="background:linear-gradient(135deg,#1a4535 0%,#2e7a5c 55%,#c8ddd1 100%)"></div>
-      <span class="tp-name">Хвойный</span>
+    <button class="tp-row" data-theme="yantar" onclick="applyTheme('yantar')">
+      <div class="tp-strip">
+        <div class="tp-strip-top" style="background:#3d2b1f"></div>
+        <div class="tp-strip-mid">
+          <div class="tp-strip-accent" style="background:#c47a3a"></div>
+          <div class="tp-strip-bg" style="background:#faf5ef"></div>
+        </div>
+      </div>
+      <div class="tp-info">
+        <div class="tp-name">Янтарь</div>
+        <div class="tp-desc">Тёмно-коричневый · янтарь</div>
+      </div>
     </button>
-    <button class="tp-card" data-theme="burgundy" onclick="applyTheme('burgundy')">
-      <div class="tp-swatch" style="background:linear-gradient(135deg,#4a1a2c 0%,#a03060 55%,#e0c8d4 100%)"></div>
-      <span class="tp-name">Бордо</span>
+    <button class="tp-row" data-theme="shifer" onclick="applyTheme('shifer')">
+      <div class="tp-strip">
+        <div class="tp-strip-top" style="background:#2e3a4a"></div>
+        <div class="tp-strip-mid">
+          <div class="tp-strip-accent" style="background:#5b8ab0"></div>
+          <div class="tp-strip-bg" style="background:#f2f4f6"></div>
+        </div>
+      </div>
+      <div class="tp-info">
+        <div class="tp-name">Шифер</div>
+        <div class="tp-desc">Сине-серый · стальной</div>
+      </div>
     </button>
-    <button class="tp-card" data-theme="sunset" onclick="applyTheme('sunset')">
-      <div class="tp-swatch" style="background:linear-gradient(135deg,#7a2e0a 0%,#d4651e 55%,#f5ddc8 100%)"></div>
-      <span class="tp-name">Закат</span>
+    <button class="tp-row" data-theme="vishnya" onclick="applyTheme('vishnya')">
+      <div class="tp-strip">
+        <div class="tp-strip-top" style="background:#4a2535"></div>
+        <div class="tp-strip-mid">
+          <div class="tp-strip-accent" style="background:#b04a6a"></div>
+          <div class="tp-strip-bg" style="background:#faf0f3"></div>
+        </div>
+      </div>
+      <div class="tp-info">
+        <div class="tp-name">Вишня</div>
+        <div class="tp-desc">Тёмно-бордовый · вишня</div>
+      </div>
     </button>
-    <button class="tp-card" data-theme="amethyst" onclick="applyTheme('amethyst')">
-      <div class="tp-swatch" style="background:linear-gradient(135deg,#3d1568 0%,#7a40c8 55%,#dfd0f0 100%)"></div>
-      <span class="tp-name">Аметист</span>
-    </button>
-    <button class="tp-card" data-theme="azure" onclick="applyTheme('azure')">
-      <div class="tp-swatch" style="background:linear-gradient(135deg,#0a4a5e 0%,#1a9ab8 55%,#c0e8f4 100%)"></div>
-      <span class="tp-name">Лазурь</span>
+    <button class="tp-row" data-theme="indigo" onclick="applyTheme('indigo')">
+      <div class="tp-strip">
+        <div class="tp-strip-top" style="background:#1a2a4a"></div>
+        <div class="tp-strip-mid">
+          <div class="tp-strip-accent" style="background:#3a6fd8"></div>
+          <div class="tp-strip-bg" style="background:#edf2ff"></div>
+        </div>
+      </div>
+      <div class="tp-info">
+        <div class="tp-name">Индиго</div>
+        <div class="tp-desc">Тёмно-синий · ярко-синий</div>
+      </div>
     </button>
   </div>
 </div>
@@ -974,7 +1034,7 @@
     <p>Форма заполнения разрешительной документации на опасные работы</p>
   </div>
   <div style="font-size:12px; color:var(--gray-400); text-align:right; white-space:nowrap">
-    <div style="font-size:14px; font-weight:700; color:var(--navy); margin-bottom:4px">v2.42</div>
+    <div style="font-size:14px; font-weight:700; color:var(--navy); margin-bottom:4px">v2.43</div>
     Разработал<br>Лингидан Максим Дмитриевич
   </div>
 </div>
@@ -1042,7 +1102,7 @@
 
         <div class="field">
           <label>Номер наряда</label>
-          <input type="text" id="nomer" placeholder="01-2025, 12/А и т. п.">
+          <input type="text" id="nomer" placeholder="">
         </div>
 
         <div class="field">
@@ -1052,12 +1112,12 @@
 
         <div class="field col-span-2">
           <label>Номер огневого наряда <span style="font-weight:400; color:var(--gray-400, #94a3b8); font-size:12px">(только для огневых работ)</span></label>
-          <input type="text" id="nomerOgn" placeholder="01-2025/О">
+          <input type="text" id="nomerOgn" placeholder="">
         </div>
 
         <div class="field" id="fieldRukovFio">
           <label>ФИО руководителя работ <span class="req">*</span></label>
-          <input type="text" id="rukovFio" placeholder="Иванов И. И." oninput="checkButtons()">
+          <input type="text" id="rukovFio" placeholder="Иванов Иван Иванович" oninput="checkButtons()">
           <span class="auth-value" id="rukovFioDisplay"></span>
         </div>
 
@@ -1069,7 +1129,7 @@
         <div class="field">
           <label>ФИО лица, выдавшего наряд <span class="req">*</span></label>
           <div class="issuer-wrap">
-            <input type="text" id="naradVydalFio" placeholder="Иванов И. И." oninput="issuerOnInput()" onkeydown="issuerKeyDown(event)" autocomplete="off">
+            <input type="text" id="naradVydalFio" placeholder="Иванов Иван Иванович" oninput="issuerOnInput()" onkeydown="issuerKeyDown(event)" autocomplete="off">
             <button class="issuer-pick-btn" type="button" onclick="openIssuerPicker()" title="Выбрать из списка">▾</button>
             <div class="issuer-ac-list" id="issuerAcList"></div>
           </div>
@@ -1082,22 +1142,22 @@
 
         <div class="field col-span-2">
           <label>Вид работ <span class="req">*</span></label>
-          <input type="text" id="vidRabot" placeholder="Монтаж металлоконструкций на отм. +6,000" oninput="checkButtons()">
+          <input type="text" id="vidRabot" placeholder="" oninput="checkButtons()">
         </div>
 
         <div class="field col-span-2">
           <label>Место выполнения работ <span class="req">*</span></label>
-          <input type="text" id="mesto" placeholder="Цех №3, ряд Г, ось 12–14, отм. +3,500" oninput="checkButtons()">
+          <input type="text" id="mesto" placeholder="" oninput="checkButtons()">
         </div>
 
         <div class="field col-span-2">
           <label>ППР (проект производства работ)</label>
-          <input type="text" id="ppr" placeholder="№ 47-2025 или «Монтаж перекрытий, корп. А»">
+          <input type="text" id="ppr" placeholder="">
         </div>
 
         <div class="field col-span-2">
           <label>Утвердил ППРв <span style="font-weight:400; color:var(--gray-400, #94a3b8); font-size:12px">(план производства работ на высоте)</span></label>
-          <input type="text" id="utvPprv" placeholder="Иванов И. И., главный инженер">
+          <input type="text" id="utvPprv" placeholder="Иванов Иван Иванович, главный инженер">
         </div>
 
         <div class="field col-span-2" style="display:flex; flex-direction:row; gap:60px; align-items:flex-start; flex-wrap:wrap">
@@ -2988,7 +3048,7 @@ async function buildPPRVDocument(data) {
 }
 
 // ─── Проверка актуальности версии ─────────────────────────────────────────
-const CURRENT_VERSION = 'v2.42';
+const CURRENT_VERSION = 'v2.43';
 const VERSION_CHECK_TTL = 5 * 60 * 1000; // 5 минут
 let _versionCheckTime = null;
 let _versionCheckPassed = false;
@@ -3522,7 +3582,7 @@ function scheduleSave() {
 function applyTheme(theme) {
   document.documentElement.setAttribute('data-theme', theme);
   localStorage.setItem('narad_theme', theme);
-  document.querySelectorAll('.tp-card').forEach(btn => {
+  document.querySelectorAll('.tp-row').forEach(btn => {
     btn.classList.toggle('active', btn.dataset.theme === theme);
   });
   closeThemePopup();

@@ -736,6 +736,17 @@
     border-top: 1px solid var(--gray-100); letter-spacing: .5px;
     position: sticky; top: 0; z-index: 1;
   }
+  .cpm-star {
+    background: none; border: none; cursor: pointer; padding: 0;
+    font-size: 16px; line-height: 1; flex-shrink: 0; opacity: .35;
+    transition: opacity .15s, transform .1s;
+  }
+  .cpm-star.on { opacity: 1; }
+  .cpm-star:hover { transform: scale(1.2); opacity: 1; }
+  .cpm-section-label {
+    padding: 6px 14px 3px; font-size: 11px; font-weight: 700;
+    color: var(--gray-400); text-transform: uppercase; letter-spacing: .5px;
+  }
   .cpm-item {
     display: flex; align-items: center; gap: 10px;
     padding: 8px 14px; cursor: pointer;
@@ -1082,7 +1093,7 @@
     <p>Форма заполнения разрешительной документации на опасные работы</p>
   </div>
   <div style="font-size:12px; color:var(--gray-400); text-align:right; white-space:nowrap">
-    <div style="font-size:14px; font-weight:700; color:var(--navy); margin-bottom:4px">v2.44</div>
+    <div style="font-size:14px; font-weight:700; color:var(--navy); margin-bottom:4px">v2.45</div>
     Разработал<br>Лингидан Максим Дмитриевич
   </div>
 </div>
@@ -2054,6 +2065,23 @@ function rebuildIssuerPpuFilter() {
     ppus.map(p => `<option value="${p}">${p}</option>`).join('');
 }
 
+function crewFavKey() {
+  return 'crew_favs_' + (currentUser ? currentUser.org : '_');
+}
+function crewFavs() {
+  try { return JSON.parse(localStorage.getItem(crewFavKey()) || '[]'); } catch { return []; }
+}
+function crewFavToggle(fio) {
+  let favs = crewFavs();
+  const idx = favs.indexOf(fio);
+  if (idx >= 0) favs.splice(idx, 1); else favs.push(fio);
+  localStorage.setItem(crewFavKey(), JSON.stringify(favs));
+}
+function toggleCrewFav(fio, btn) {
+  crewFavToggle(fio);
+  renderCrewList();
+}
+
 function rebuildCrewPpuFilter() {
   const sel = document.getElementById('crewPpuFilter');
   if (!sel) return;
@@ -2112,18 +2140,17 @@ function renderCrewList() {
     return;
   }
 
-  // группировка по первой букве
-  let html = '';
-  let lastLetter = '';
-  items.forEach(p => {
-    const letter = p.fio[0].toUpperCase();
-    if (letter !== lastLetter) {
-      html += `<div class="cpm-letter-divider">${letter}</div>`;
-      lastLetter = letter;
-    }
+  const favs = crewFavs();
+  const favItems   = items.filter(p => favs.includes(p.fio));
+  const otherItems = items.filter(p => !favs.includes(p.fio));
+
+  function crewItemHtml(p) {
     const isDup = dups.has(p.fio.toLowerCase());
     const fioE  = p.fio.replace(/'/g, "\\'");
-    html += `<div class="cpm-item${isDup ? ' dup' : ''}" onclick="crewItemClick(event,'${fioE}')">
+    const isFav = favs.includes(p.fio);
+    return `<div class="cpm-item${isDup ? ' dup' : ''}" onclick="crewItemClick(event,'${fioE}')">
+      <button class="cpm-star ${isFav ? 'on' : ''}" title="Избранное"
+        onclick="event.stopPropagation();toggleCrewFav('${fioE}',this)">★</button>
       <input class="cpm-cb" type="checkbox" data-fio="${p.fio.replace(/"/g,'&quot;')}"
         onclick="event.stopPropagation(); _updateCrewFooter()" ${isDup ? 'title="Уже в таблице"' : ''}>
       <div class="cpm-info">
@@ -2133,7 +2160,26 @@ function renderCrewList() {
         ${isDup   ? `<span class="cpm-dup-label">⚠ Уже в таблице</span>` : ''}
       </div>
     </div>`;
-  });
+  }
+
+  let html = '';
+  if (favItems.length) {
+    html += `<div class="cpm-section-label">⭐ Избранные</div>`;
+    favItems.forEach(p => { html += crewItemHtml(p); });
+  }
+  if (otherItems.length) {
+    if (favItems.length) html += `<div class="cpm-section-label">Все</div>`;
+    // группировка по первой букве
+    let lastLetter = '';
+    otherItems.forEach(p => {
+      const letter = p.fio[0].toUpperCase();
+      if (letter !== lastLetter) {
+        html += `<div class="cpm-letter-divider">${letter}</div>`;
+        lastLetter = letter;
+      }
+      html += crewItemHtml(p);
+    });
+  }
   list.innerHTML = html;
   _updateCrewFooter();
 }
@@ -3107,7 +3153,7 @@ async function buildPPRVDocument(data) {
 }
 
 // ─── Проверка актуальности версии ─────────────────────────────────────────
-const CURRENT_VERSION = 'v2.44';
+const CURRENT_VERSION = 'v2.45';
 const VERSION_CHECK_TTL = 5 * 60 * 1000; // 5 минут
 let _versionCheckTime = null;
 let _versionCheckPassed = false;
@@ -4297,6 +4343,13 @@ async function buildOgnevoyDocument(data) {
 
 // ─── История обновлений ───────────────────────────────────────────────────
 const CHANGELOG = [
+  {
+    version: 'v2.45', date: '27.06.2026',
+    changes: [
+      'Избранные исполнители в пикере бригады — звёздочка рядом с каждым сотрудником',
+      'Избранные отображаются отдельной секцией в начале списка',
+    ]
+  },
   {
     version: 'v2.44', date: '27.06.2026',
     changes: [

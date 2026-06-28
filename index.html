@@ -1202,7 +1202,7 @@
     <p>Форма заполнения разрешительной документации на опасные работы</p>
   </div>
   <div style="font-size:12px; color:var(--gray-400); text-align:right; white-space:nowrap">
-    <div style="font-size:14px; font-weight:700; color:var(--navy); margin-bottom:4px">v2.53</div>
+    <div style="font-size:14px; font-weight:700; color:var(--navy); margin-bottom:4px">v2.52</div>
     Разработал<br>Лингидан Максим Дмитриевич
   </div>
 </div>
@@ -1894,11 +1894,6 @@ function collectFormData() {
 // Мастер-реестр: Пользователи + листы организаций
 const MASTER_SHEET_ID = '1Thw1FraaXvuqDD_qQ-Bdd-Kbx7JvScSn-iYRD5v3-ts';
 
-// Для организаций, у которых реестр сотрудников хранится в отдельной таблице
-// (обход ограничений IMPORTRANGE в gviz CSV)
-const ORG_SOURCE_SHEETS = {
-  'ООО "ЮЭМ"': { id: '1TpuVrcebn3W-2qekT6aoHXGosztP6YouBtI6ZSjMdAk', sheet: 'Сайт' },
-};
 let employeeMap = {};
 let issuersList = [];      // [{fio, dolzh, ppu}] — те, кто может выдавать наряд
 let allEmployeesList = []; // [{fio, dolzh, razr, grEB, grVys, ppu}] — все сотрудники
@@ -2554,101 +2549,63 @@ function loadOrgPersonnel() {
   if (!currentUser) return;
   const org = currentUser.org;
 
-  function _parseEmployees(rows) {
-    if (rows.length < 2) return;
-    const hdrs = rows[0].map(h => (h || '').toLowerCase());
-    const iFIO   = hdrs.findIndex(h => h.includes('фио') || h.includes('ф.и.о'));
-    const iDolzh = hdrs.findIndex(h => h.includes('должн'));
-    const iRazr  = hdrs.findIndex(h => h.includes('разряд') || h.includes('профессия'));
-    const iGrEB  = hdrs.findIndex(h => h.includes('группа'));
-    const iIssue = hdrs.findIndex(h => h.includes('выдав') || h.includes('выдач') || h.includes('выдават'));
-    const iPPU   = hdrs.findIndex(h => h.includes('участок') || h.includes('ппу'));
-    for (let i = 1; i < rows.length; i++) {
-      const r = rows[i];
-      const fio = ((iFIO >= 0 ? r[iFIO] : r[1]) || '').trim();
-      if (!fio) continue;
-      const dolzh    = ((iDolzh >= 0 ? r[iDolzh] : r[2]) || '').trim();
-      const razr     = ((iRazr  >= 0 ? r[iRazr]  : r[3]) || '').trim();
-      const grEB     = ((iGrEB  >= 0 ? r[iGrEB]  : r[4]) || '').trim();
-      const ppu      = ((iPPU   >= 0 ? r[iPPU]   : r[6]) || '').trim();
-      const canIssue = ((iIssue >= 0 ? r[iIssue] : r[7]) || '').trim().toLowerCase();
-      employeeMap[fio.toLowerCase().replace(/\s+/g, ' ')] = { dolzh, razr, grEB };
-      allEmployeesList.push({ fio, dolzh, razr, grEB, grVys: '2', ppu });
-      if (canIssue === 'да') issuersList.push({ fio, dolzh, ppu });
-    }
-  }
-
-  function _parseDangers(rows) {
-    if (rows.length < 2) return;
-    const hdrs  = rows[0].map(h => (h || '').toLowerCase());
-    const iDName = hdrs.findIndex(h => h.includes('название') && h.includes('опасн'));
-    orgDangers = [];
-    if (iDName < 0) return;
-    const seenNames = new Set();
-    for (let i = 1; i < rows.length; i++) {
-      const r = rows[i];
-      const name = (r[iDName] || '').trim();
-      if (!name || seenNames.has(name)) continue;
-      seenNames.add(name);
-      orgDangers.push({
-        id:  'orgd_' + _simpleHash(name),
-        name,
-        p3:  (r[iDName + 1] || '').trim() || null,
-        p4:  (r[iDName + 2] || '').trim() || null,
-        p5:  (r[iDName + 3] || '').trim() || null,
-      });
-    }
-  }
-
-  function _finalize() {
-    issuersList.sort((a, b) => a.fio.localeCompare(b.fio, 'ru'));
-    allEmployeesList.sort((a, b) => a.fio.localeCompare(b.fio, 'ru'));
-    rebuildIssuerPpuFilter();
-    rebuildCrewPpuFilter();
-    updateCrewPickerBtn();
-    renderCustomCheckboxes();
-    syncEnabled = true;
-    syncAllRows();
-  }
-
-  function _csvUrl(sheetId, sheetName) {
-    return `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(sheetName)}`;
-  }
-
-  employeeMap = {};
-  issuersList = [];
-  allEmployeesList = [];
-  orgDangers = [];
-
-  const src = ORG_SOURCE_SHEETS[org];
-
-  if (src) {
-    // Org имеет отдельную таблицу — берём сотрудников напрямую,
-    // опасности — из мастер-реестра (там могут быть локальные колонки)
-    const empFetch = fetch(_csvUrl(src.id, src.sheet))
-      .then(r => { if (!r.ok) throw new Error(); return r.text(); })
-      .then(csv => _parseEmployees(_parseSheetCSV(csv)));
-
-    const dangerFetch = fetch(_csvUrl(MASTER_SHEET_ID, org))
-      .then(r => { if (!r.ok) throw new Error(); return r.text(); })
-      .then(csv => _parseDangers(_parseSheetCSV(csv)))
-      .catch(() => {});  // опасности не критичны — молча игнорируем ошибку
-
-    Promise.all([empFetch, dangerFetch])
-      .then(_finalize)
-      .catch(() => console.warn('Не удалось загрузить сотрудников организации:', org));
-  } else {
-    // Стандартный путь — всё из одного листа мастер-реестра
-    fetch(_csvUrl(MASTER_SHEET_ID, org))
-      .then(r => { if (!r.ok) throw new Error(); return r.text(); })
-      .then(csv => {
-        const rows = _parseSheetCSV(csv);
-        _parseEmployees(rows);
-        _parseDangers(rows);
-        _finalize();
-      })
-      .catch(() => console.warn('Не удалось загрузить сотрудников организации:', org));
-  }
+  const sheetUrl = `https://docs.google.com/spreadsheets/d/${MASTER_SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(org)}`;
+  fetch(sheetUrl)
+    .then(r => { if (!r.ok) throw new Error(); return r.text(); })
+    .then(csv => {
+      const rows = _parseSheetCSV(csv);
+      if (rows.length < 2) return;
+      const hdrs = rows[0].map(h => (h || '').toLowerCase());
+      const iFIO   = hdrs.findIndex(h => h.includes('фио') || h.includes('ф.и.о'));
+      const iDolzh = hdrs.findIndex(h => h.includes('должн'));
+      const iRazr  = hdrs.findIndex(h => h.includes('разряд') || h.includes('профессия'));
+      const iGrEB  = hdrs.findIndex(h => h.includes('группа'));
+      const iIssue = hdrs.findIndex(h => h.includes('выдав') || h.includes('выдач') || h.includes('выдават'));
+      const iPPU   = hdrs.findIndex(h => h.includes('участок') || h.includes('ппу'));
+      const iDName = hdrs.findIndex(h => h.includes('название') && h.includes('опасн'));
+      employeeMap = {};
+      issuersList = [];
+      allEmployeesList = [];
+      for (let i = 1; i < rows.length; i++) {
+        const r = rows[i];
+        const fio = ((iFIO >= 0 ? r[iFIO] : r[1]) || '').trim();
+        if (!fio) continue;
+        const dolzh    = ((iDolzh >= 0 ? r[iDolzh] : r[2]) || '').trim();
+        const razr     = ((iRazr  >= 0 ? r[iRazr]  : r[3]) || '').trim();
+        const grEB     = ((iGrEB  >= 0 ? r[iGrEB]  : r[4]) || '').trim();
+        const ppu      = ((iPPU   >= 0 ? r[iPPU]   : r[6]) || '').trim();
+        const canIssue = ((iIssue >= 0 ? r[iIssue] : r[7]) || '').trim().toLowerCase();
+        employeeMap[fio.toLowerCase().replace(/\s+/g, ' ')] = { dolzh, razr, grEB };
+        allEmployeesList.push({ fio, dolzh, razr, grEB, grVys: '2', ppu });
+        if (canIssue === 'да') issuersList.push({ fio, dolzh, ppu });
+      }
+      orgDangers = [];
+      if (iDName >= 0) {
+        const seenNames = new Set();
+        for (let i = 1; i < rows.length; i++) {
+          const r = rows[i];
+          const name = (r[iDName] || '').trim();
+          if (!name || seenNames.has(name)) continue;
+          seenNames.add(name);
+          orgDangers.push({
+            id:  'orgd_' + _simpleHash(name),
+            name,
+            p3:  (r[iDName + 1] || '').trim() || null,
+            p4:  (r[iDName + 2] || '').trim() || null,
+            p5:  (r[iDName + 3] || '').trim() || null,
+          });
+        }
+      }
+      issuersList.sort((a, b) => a.fio.localeCompare(b.fio, 'ru'));
+      allEmployeesList.sort((a, b) => a.fio.localeCompare(b.fio, 'ru'));
+      rebuildIssuerPpuFilter();
+      rebuildCrewPpuFilter();
+      updateCrewPickerBtn();
+      renderCustomCheckboxes();
+      syncEnabled = true;
+      syncAllRows();
+    })
+    .catch(() => console.warn('Не удалось загрузить сотрудников организации:', org));
 }
 
 function syncAllRows() {
@@ -3344,7 +3301,7 @@ async function buildPPRVDocument(data) {
 }
 
 // ─── Проверка актуальности версии ─────────────────────────────────────────
-const CURRENT_VERSION = 'v2.53';
+const CURRENT_VERSION = 'v2.52';
 const VERSION_CHECK_TTL = 5 * 60 * 1000; // 5 минут
 let _versionCheckTime = null;
 let _versionCheckPassed = false;
@@ -4554,12 +4511,6 @@ async function buildOgnevoyDocument(data) {
 
 // ─── История обновлений ───────────────────────────────────────────────────
 const CHANGELOG = [
-  {
-    version: 'v2.53', date: '28.06.2026',
-    changes: [
-      'Для ООО "ЮЭМ" сотрудники загружаются напрямую из исходной таблицы — участки с буквенными обозначениями (ТУ, ОГМ, ОКК и др.) теперь отображаются корректно',
-    ]
-  },
   {
     version: 'v2.52', date: '28.06.2026',
     changes: [

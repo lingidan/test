@@ -1183,7 +1183,6 @@
       </div>
     </div>
     <div class="sm-footer">
-      <button class="sm-btn-reset" onclick="resetFactorOverrides()">Сбросить стандартные к умолчанию</button>
       <button class="sm-btn-save" onclick="saveSettings()">Сохранить</button>
     </div>
   </div>
@@ -1202,7 +1201,7 @@
     <p>Форма заполнения разрешительной документации на опасные работы</p>
   </div>
   <div style="font-size:12px; color:var(--gray-400); text-align:right; white-space:nowrap">
-    <div style="font-size:14px; font-weight:700; color:var(--navy); margin-bottom:4px">v2.53</div>
+    <div style="font-size:14px; font-weight:700; color:var(--navy); margin-bottom:4px">v2.58</div>
     Разработал<br>Лингидан Максим Дмитриевич
   </div>
 </div>
@@ -1409,69 +1408,7 @@
       </button>
     </div>
     <div class="card-body">
-      <div class="cb-grid">
-
-        <label class="cb-item">
-          <input type="checkbox" id="cb_elinstr" onchange="checkButtons()">
-          <div class="cb-box"><svg width="11" height="9" viewBox="0 0 11 9" fill="none"><path d="M1 4.5L4 7.5L10 1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-          <span class="cb-label">Электроинструмент</span>
-        </label>
-
-        <label class="cb-item">
-          <input type="checkbox" id="cb_vysota" onchange="checkButtons()">
-          <div class="cb-box"><svg width="11" height="9" viewBox="0 0 11 9" fill="none"><path d="M1 4.5L4 7.5L10 1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-          <span class="cb-label">Высота</span>
-        </label>
-
-        <label class="cb-item">
-          <input type="checkbox" id="cb_vyshka" onchange="checkButtons()">
-          <div class="cb-box"><svg width="11" height="9" viewBox="0 0 11 9" fill="none"><path d="M1 4.5L4 7.5L10 1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-          <span class="cb-label">Вышка тура</span>
-        </label>
-
-        <label class="cb-item">
-          <input type="checkbox" id="cb_svet" onchange="checkButtons()">
-          <div class="cb-box"><svg width="11" height="9" viewBox="0 0 11 9" fill="none"><path d="M1 4.5L4 7.5L10 1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-          <span class="cb-label">Недостаточное освещение</span>
-        </label>
-
-        <label class="cb-item">
-          <input type="checkbox" id="cb_pogruz" onchange="checkButtons()">
-          <div class="cb-box"><svg width="11" height="9" viewBox="0 0 11 9" fill="none"><path d="M1 4.5L4 7.5L10 1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-          <span class="cb-label">Погрузочно-разгрузочные</span>
-        </label>
-
-        <label class="cb-item">
-          <input type="checkbox" id="cb_zemla" onchange="checkButtons()">
-          <div class="cb-box"><svg width="11" height="9" viewBox="0 0 11 9" fill="none"><path d="M1 4.5L4 7.5L10 1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-          <span class="cb-label">Земляные работы</span>
-        </label>
-
-        <label class="cb-item">
-          <input type="checkbox" id="cb_hot" onchange="checkButtons()">
-          <div class="cb-box"><svg width="11" height="9" viewBox="0 0 11 9" fill="none"><path d="M1 4.5L4 7.5L10 1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-          <span class="cb-label">Повышенные температуры</span>
-        </label>
-
-        <label class="cb-item">
-          <input type="checkbox" id="cb_cold" onchange="checkButtons()">
-          <div class="cb-box"><svg width="11" height="9" viewBox="0 0 11 9" fill="none"><path d="M1 4.5L4 7.5L10 1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-          <span class="cb-label">Пониженные температуры</span>
-        </label>
-
-        <label class="cb-item">
-          <input type="checkbox" id="cb_estok" onchange="checkButtons()">
-          <div class="cb-box"><svg width="11" height="9" viewBox="0 0 11 9" fill="none"><path d="M1 4.5L4 7.5L10 1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-          <span class="cb-label">Высота + Эстокада</span>
-        </label>
-
-        <label class="cb-item">
-          <input type="checkbox" id="cb_noch" onchange="checkButtons()">
-          <div class="cb-box"><svg width="11" height="9" viewBox="0 0 11 9" fill="none"><path d="M1 4.5L4 7.5L10 1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-          <span class="cb-label">Ночные работы</span>
-        </label>
-
-      </div>
+      <div class="cb-grid" id="cbGrid"></div>
       <div id="cbCustom"></div>
     </div>
   </div>
@@ -1616,11 +1553,11 @@ function fillTestData() {
   document.getElementById('vidRabot').value = pick(raboty);
   document.getElementById('nomerOgn').value = String(rnd(100, 999)) + '/О';
 
-  const cbIds = ['cb_elinstr','cb_vysota','cb_vyshka','cb_svet','cb_pogruz','cb_zemla','cb_hot','cb_cold','cb_estok','cb_noch'];
-  cbIds.forEach(id => { document.getElementById(id).checked = false; });
+  orgDangers.forEach(f => { const el = document.getElementById(f.id); if (el) el.checked = false; });
+  customFactors.forEach(f => { const el = document.getElementById(f.id); if (el) el.checked = false; });
   const factorCount = rnd(1, 5);
-  const shuffled = cbIds.slice().sort(() => Math.random() - 0.5);
-  shuffled.slice(0, factorCount).forEach(id => { document.getElementById(id).checked = true; });
+  const shuffledDangers = orgDangers.slice().sort(() => Math.random() - 0.5);
+  shuffledDangers.slice(0, factorCount).forEach(f => { const el = document.getElementById(f.id); if (el) el.checked = true; });
 
   document.getElementById('execBody').innerHTML = '';
   rowCount = 0;
@@ -1639,55 +1576,6 @@ function fillTestData() {
   checkButtons();
 }
 
-// ─── Данные опасных факторов (из листа "Рабочая зона" оригинального xlsx) ──
-// Порядок совпадает с E3…E14 в листе Заполнение
-// [id, название, описание_п3, меры_до_начала_п4, меры_в_процессе_п5]
-const FACTORS = [
-  ['cb_obsh',    'Общие факторы',
-   '- Общие факторы опасностей: падения и спотыкания, воздействие пыли, шума и вибрации, порезы от острых кромок, поражение электрическим током, падение предметов, воздействие производственных загрязнений.',
-   null,
-   null],
-  ['cb_svet',    'Недостаточное освещение',
-   '- Недостаточное освящение',
-   'Обеспечить установку временного освящения',
-   'Контролировать работу временного освещения'],
-  ['cb_elinstr', 'Электроинструмент',
-   '- При выполнении работ с электроинструментом: возможны травмы рук из-за заклинивания или выброса осколков, перегрев и возгорание инструмента, спотыкание о кабель.',
-   'Проверить исправность электроинструмента, кабелей и вилок, наличие заземления (двойной изоляции); обеспечить устойчивое положение работника, убрать посторонние предметы, проложить кабели вне проходов; выдать и проверить применение СИЗ.',
-   'Применять инструмент по назначению, не допускать заклинивания и перегрева; отключать инструмент при перерывах и смене оснастки; контролировать положение кабелей, не допускать спотыкания и повреждения изоляции.'],
-  ['cb_vysota',  'Высота',
-   '- При выполнении работ на высоте: падение с высоты, получение травм при падении на арматуру или строительный мусор.',
-   'Проверить исправность средств подмащивания и СИЗ от падения с высоты; очистить рабочие места от мусора; установить ограждения и предупредительные знаки.',
-   'Применять страховочные системы; не допускать сброса предметов вниз; соблюдать порядок и устойчивость рабочего места.'],
-  ['cb_estok',   'Высота + Эстокада',
-   '- При выполнении работ на высоте: падение с высоты, получение травм при падении на арматуру или строительный мусор.',
-   'Проверить исправность средств подмащивания и СИЗ от падения с высоты; очистить рабочие места от мусора; установить ограждения и предупредительные знаки.',
-   'Применять страховочные системы; не допускать сброса предметов вниз; соблюдать порядок и устойчивость рабочего места.\nПрекратить работу при порывах ветра более 15 м/с'],
-  ['cb_vyshka',  'Вышка тура',
-   null,
-   'Проверить комплектность и исправность вышки-туры, наличие паспортной документации; установить вышку на ровное и прочное основание с фиксацией опор и тормозов колес; смонтировать настилы, ограждения и лестницы в соответствии с инструкцией изготовителя; обозначить опасную зону',
-   'Не превышать допустимую нагрузку на настил; не перемещать вышку с находящимися на ней работниками; применять СИЗ от падения с высоты при необходимости; не допускать складирования материалов и инструмента на ограждениях.'],
-  ['cb_zemla',   'Земляные работы',
-   '- При выполнении земляных работ: обрушение стенок траншей и котлованов, падение работников в выемки, повреждение подземных коммуникаций, наезд строительной техники, затопление выработок, получение травм при ручной разработке грунта',
-   '- Определить и обозначить зоны производства работ и места прохождения подземных коммуникаций; установить ограждения, сигнальные ленты и предупреждающие знаки; проверить исправность землеройной техники и инструмента; обеспечить безопасные подходы, спуски и выходы из выемок; проверить состояние откосов и креплений.',
-   '- Выполнять разработку грунта с соблюдением устойчивости стенок траншей и котлованов; применять крепление откосов при необходимости; регулярно осматривать состояние выемок; прекращать работы при обнаружении коммуникаций, признаков обрушения или подтопления.'],
-  ['cb_hot',     'Повышенные температуры',
-   '- При выполнении работ в условиях повышенных температур: перегрев и обезвоживание организма, снижение координации движений.',
-   '- Обеспечить наличие питьевой воды в достаточном количестве и в непосредственной близости от места проведения работ для предотвращения обезвоживания.',
-   '- Ограничить время непрерывного пребывания в зоне повышенных температур (например, не более 15–20 минут с последующим отдыхом) и по возможности перенести тяжелые работы на утреннее или вечернее время.'],
-  ['cb_cold',    'Пониженные температуры',
-   '- При выполнении работ в условиях пониженных температур: переохлаждение и обморожение, снижение координации, падения на скользкой поверхности.',
-   '- Определить место для обогрева персонала в перерывах между производством работ',
-   '-Организовать дополнительные перерывы для обогрева сотрудников'],
-  ['cb_pogruz',  'Погрузочно-разгрузочные',
-   '- При выполнении погрузочно-разгрузочных работ: перемещаемые грузы, движущаяся техника, падение предметов при обрыве строп или нарушении схем строповки, острые кромки материалов.',
-   'Проверить исправность и маркировку грузозахватных приспособлений; подготовить площадки для складирования; оградить опасную зону сигнальной лентой; обеспечить освещенность места работ.',
-   'Соблюдать схемы строповки и складирования; исключить нахождение людей под грузом и в радиусе действия техники; контролировать отсутствие посторонних в опасной зоне; соблюдать нормы нагрузки при ручном перемещении.'],
-  ['cb_noch',    'Ночные работы',
-   '- При выполнении работ в ночное время: недостаточная видимость в зоне производства работ и на путях эвакуации, слепящий эффект от искусственных источников света, повышенная утомляемость, снижение концентрации внимания и координации движений исполнителей.',
-   'Обеспечить рабочие места и пути эвакуации достаточным искусственным освещением; проверить исправность переносных и стационарных светильников и исключить их слепящее действие; выдать исполнителям сигнальные жилеты со световозвращающими полосами; провести целевой инструктаж об особенностях и рисках выполнения работ в темное время суток.',
-   'Регулярно контролировать уровень освещения в рабочей зоне и применять дополнительный местный свет при точных операциях; немедленно приостанавливать работы при внезапном отключении освещения до его полного восстановления; строго контролировать самочувствие работников и соблюдение режима труда и отдыха для недопущения переутомления.']
-];
 
 // ─── Количество строк в п.6 (по умолчанию = +0.5, выбор 1–30) ────────────
 function initSec6RowsSelect() {
@@ -1800,9 +1688,10 @@ function checkButtons() {
   document.getElementById('dlPlaceholder').style.display = ok ? 'none' : 'flex';
 
   // АКТ-высота активна только при наличии факторов высоты
-  const hasHeight = document.getElementById('cb_vysota').checked ||
-                    document.getElementById('cb_estok').checked ||
-                    document.getElementById('cb_vyshka').checked;
+  const hasHeight = orgDangers.some(f =>
+    (f.name.toLowerCase().includes('высот') || f.name.toLowerCase().includes('эстокад') || f.name.toLowerCase().includes('вышк')) &&
+    document.getElementById(f.id)?.checked
+  );
   const btnAkt = document.getElementById('btnAkt');
   if (btnAkt) {
     btnAkt.style.opacity = hasHeight ? '1' : '.45';
@@ -1844,11 +1733,7 @@ function collectFormData() {
     rows.push({ fio: fioV, dolzh: dolzhV, razr: razrV, grEB: grEBV, grVys: grVysV, itog: parts.join(', ') });
   });
 
-  const activeFactors = FACTORS.filter(f => f[0] === 'cb_obsh' || document.getElementById(f[0])?.checked);
-  const activeCustom  = [
-    ...customFactors,
-    ...orgDangers,
-  ]
+  const activeFactors = [...orgDangers, ...customFactors]
     .filter(f => document.getElementById(f.id)?.checked)
     .map(f => ({ id: f.id, name: f.name, desc: f.p3, pre: f.p4, inpro: f.p5 }));
 
@@ -1871,20 +1756,11 @@ function collectFormData() {
     rukovFio:    document.getElementById('rukovFio').value.trim(),
     rukov:       [document.getElementById('rukovDolzh').value.trim(), document.getElementById('rukovFio').value.trim()].filter(Boolean).join(' '),
     utvPprv:     document.getElementById('utvPprv').value.trim(),
-    soglasov:    document.getElementById('cb_zemla')?.checked ? '' : 'Не требуется',
+    soglasov:    orgDangers.some(f => f.name.toLowerCase().includes('земл') && document.getElementById(f.id)?.checked) ? '' : 'Не требуется',
     mesto:       document.getElementById('mesto').value.trim(),
     vidRabot:    document.getElementById('vidRabot').value.trim(),
     // Блок 2 — факторы с текстами п.3/п.4/п.5
-    activeFactors: [
-      ...activeFactors.map(f => ({
-        id:    f[0],
-        name:  f[1],
-        desc:  getFactorText(f[0], 'p3'),
-        pre:   getFactorText(f[0], 'p4'),
-        inpro: getFactorText(f[0], 'p5'),
-      })),
-      ...activeCustom,
-    ],
+    activeFactors,
     // Блок 3 — исполнители
     executors: rows.filter(r => r.fio || r.dolzh)
   };
@@ -2161,6 +2037,7 @@ function logout() {
   updateAuthButton();
   applyUserToForm();
   syncAllRows();
+  applyTemplateData();
 }
 
 // ─── Пикер / автодополнение выдающего наряд ──────────────────────────────
@@ -2220,14 +2097,18 @@ function updateCrewPickerBtn() {
 
 // ─── Пикер бригады ────────────────────────────────────────────────────────
 
+let _crewPickerSel = new Set();
+
 function openCrewPicker() {
   if (!allEmployeesList.length) return;
+  _crewPickerSel.clear();
   document.getElementById('crewSearch').value = '';
   renderCrewList();
   document.getElementById('crewPickerOverlay').classList.add('open');
 }
 
 function closeCrewPicker() {
+  _crewPickerSel.clear();
   document.getElementById('crewPickerOverlay').classList.remove('open');
 }
 
@@ -2267,14 +2148,15 @@ function renderCrewList() {
   const otherItems = items.filter(p => !favs.includes(p.fio));
 
   function crewItemHtml(p) {
-    const isDup = dups.has(p.fio.toLowerCase());
-    const fioE  = p.fio.replace(/'/g, "\\'");
-    const isFav = favs.includes(p.fio);
-    return `<div class="cpm-item${isDup ? ' dup' : ''}" onclick="crewItemClick(event,'${fioE}')">
+    const isDup  = dups.has(p.fio.toLowerCase());
+    const fioE   = p.fio.replace(/'/g, "\\'");
+    const isFav  = favs.includes(p.fio);
+    const isSel  = _crewPickerSel.has(p.fio);
+    return `<div class="cpm-item${isDup ? ' dup' : ''}${isSel ? ' selected' : ''}" onclick="crewItemClick(event,'${fioE}')">
       <button class="cpm-star ${isFav ? 'on' : ''}" title="Избранное"
         onclick="event.stopPropagation();toggleCrewFav('${fioE}',this)">★</button>
       <input class="cpm-cb" type="checkbox" data-fio="${p.fio.replace(/"/g,'&quot;')}"
-        onclick="event.stopPropagation(); _updateCrewFooter()" ${isDup ? 'title="Уже в таблице"' : ''}>
+        onclick="event.stopPropagation(); _updateCrewFooter()" ${isSel ? 'checked' : ''} ${isDup ? 'title="Уже в таблице"' : ''}>
       <div class="cpm-info">
         <div class="cpm-fio">${p.fio}</div>
         ${p.dolzh ? `<div class="cpm-dolzh">${p.dolzh}</div>` : ''}
@@ -2310,14 +2192,23 @@ function crewItemClick(e, fio) {
   const item = e.currentTarget;
   const cb   = item.querySelector('.cpm-cb');
   cb.checked = !cb.checked;
+  if (cb.checked) _crewPickerSel.add(fio); else _crewPickerSel.delete(fio);
   _updateCrewFooter();
 }
 
 function _updateCrewFooter() {
-  const n   = document.querySelectorAll('#crewPickerList .cpm-cb:checked').length;
+  // синхронизируем Set с текущими видимыми чекбоксами
+  document.querySelectorAll('#crewPickerList .cpm-cb').forEach(cb => {
+    if (cb.checked) _crewPickerSel.add(cb.dataset.fio);
+    else if (!cb.checked && _crewPickerSel.has(cb.dataset.fio)) {
+      // явно снял галку — удаляем из Set
+      _crewPickerSel.delete(cb.dataset.fio);
+    }
+  });
+  const n   = _crewPickerSel.size;
   const btn = document.getElementById('crewAddBtn');
   const inf = document.getElementById('crewSelInfo');
-  btn.disabled   = n === 0;
+  btn.disabled    = n === 0;
   btn.textContent = n > 0 ? `Добавить (${n})` : 'Добавить (0)';
   inf.textContent = `Отмечено: ${n}`;
 }
@@ -2407,9 +2298,7 @@ document.addEventListener('scroll', () => {
 }, true);
 
 function addCrewSelected() {
-  const checked = document.querySelectorAll('#crewPickerList .cpm-cb:checked');
-  checked.forEach(cb => {
-    const fio = cb.dataset.fio;
+  _crewPickerSel.forEach(fio => {
     const emp = allEmployeesList.find(p => p.fio === fio);
     if (!emp) return;
     addRow();
@@ -2559,7 +2448,8 @@ function loadOrgPersonnel() {
       const iFIO   = hdrs.findIndex(h => h.includes('фио') || h.includes('ф.и.о'));
       const iDolzh = hdrs.findIndex(h => h.includes('должн'));
       const iRazr  = hdrs.findIndex(h => h.includes('разряд') || h.includes('профессия'));
-      const iGrEB  = hdrs.findIndex(h => h.includes('группа'));
+      const iGrEB  = hdrs.findIndex(h => h.includes('группа') && (h.includes('эб') || h.includes('эл')));
+      const iGrVys = hdrs.findIndex(h => h.includes('группа') && h.includes('высот'));
       const iIssue = hdrs.findIndex(h => h.includes('выдав') || h.includes('выдач') || h.includes('выдават'));
       const iPPU   = hdrs.findIndex(h => h.includes('участок') || h.includes('ппу'));
       const iDName = hdrs.findIndex(h => h.includes('название') && h.includes('опасн'));
@@ -2576,7 +2466,8 @@ function loadOrgPersonnel() {
         const ppu      = ((iPPU   >= 0 ? r[iPPU]   : r[6]) || '').trim();
         const canIssue = ((iIssue >= 0 ? r[iIssue] : r[7]) || '').trim().toLowerCase();
         employeeMap[fio.toLowerCase().replace(/\s+/g, ' ')] = { dolzh, razr, grEB };
-        allEmployeesList.push({ fio, dolzh, razr, grEB, grVys: '2', ppu });
+        const grVys = ((iGrVys >= 0 ? r[iGrVys] : '') || '').trim() || '2';
+        allEmployeesList.push({ fio, dolzh, razr, grEB, grVys, ppu });
         if (canIssue === 'да') issuersList.push({ fio, dolzh, ppu });
       }
       orgDangers = [];
@@ -2596,12 +2487,44 @@ function loadOrgPersonnel() {
           });
         }
       }
+      // Неизменные мероприятия организации (колонки «Неизменный п.3/4/5»)
+      const iP3St = hdrs.findIndex(h => h.includes('неизменн') && (h.includes('п.3') || h.includes('п3') || h.endsWith('3')));
+      const iP4St = hdrs.findIndex(h => h.includes('неизменн') && (h.includes('п.4') || h.includes('п4') || h.endsWith('4')));
+      const iP5St = hdrs.findIndex(h => h.includes('неизменн') && (h.includes('п.5') || h.includes('п5') || h.endsWith('5')));
+      orgStaticData = { p3: null, p4rows: [], p5rows: [] };
+      if (iP3St >= 0 || iP4St >= 0 || iP5St >= 0) {
+        for (let i = 1; i < rows.length; i++) {
+          const r = rows[i];
+          const p3val  = (iP3St >= 0 ? r[iP3St] : '').trim();
+          const p4val  = (iP4St >= 0 ? r[iP4St] : '').trim();
+          const p5val  = (iP5St >= 0 ? r[iP5St] : '').trim();
+          if (p3val && !orgStaticData.p3) orgStaticData.p3 = p3val;
+          if (p4val) orgStaticData.p4rows.push(p4val);
+          if (p5val) orgStaticData.p5rows.push(p5val);
+        }
+      }
+      // Определить участок текущего пользователя
+      if (currentUser) {
+        const me = allEmployeesList.find(e => e.fio.toLowerCase() === currentUser.fio.toLowerCase());
+        if (me) currentUser.ppu = me.ppu;
+      }
+
       issuersList.sort((a, b) => a.fio.localeCompare(b.fio, 'ru'));
       allEmployeesList.sort((a, b) => a.fio.localeCompare(b.fio, 'ru'));
       rebuildIssuerPpuFilter();
       rebuildCrewPpuFilter();
       updateCrewPickerBtn();
       renderCustomCheckboxes();
+      // Восстановить состояния чекбоксов из orgDangers после асинхронной загрузки Sheets
+      try {
+        const _snapKey = tabsMeta.activeId ? tabStorageKey(tabsMeta.activeId) : STORAGE_KEY;
+        const _snap = JSON.parse(localStorage.getItem(_snapKey) || '{}');
+        if (_snap.cbStates) {
+          Object.entries(_snap.cbStates).forEach(([id, checked]) => {
+            const el = document.getElementById(id); if (el) el.checked = checked;
+          });
+        }
+      } catch(e) {}
       syncEnabled = true;
       syncAllRows();
     })
@@ -2895,22 +2818,18 @@ async function buildNaryadDocument(data) {
     });
   }
 
-  const preRows = [
-    ['Ознакомить персонал с проектом производства работ (ППР' + (data.ppr ? ' ' + data.ppr : '') + ') под подпись', 'До начала работ', respPre],
-    ['Определить состав бригады (звена), назначить ответственного исполнителя работ' + (execLead ? ': ' + execLead : ''), 'До начала работ', naradVydalShort],
-    ['Провести целевой инструктаж персоналу на рабочем месте', 'До начала работ', respPre],
-    [['Проверить:', '- наличие удостоверений по ОТ и ЭБ, сроки проверки знаний и медосмотров', '- наличие и исправность СИЗ', '- исправность инструмента и приспособлений'], 'До начала работ', respPre],
-    ['Организовать безопасный проход персонала к рабочим местам и порядок его содержания', 'До начала работ', respPre],
-    [['Обеспечить рабочее место:', '- первичными средствами пожаротушения', '- аптечкой первой помощи', '- питьевой водой'], 'До начала работ', respPre]
-  ];
+  const _staticD = orgStaticData;
+
+  const preRows = [];
+  if (data.ppr) preRows.push(['Ознакомить персонал с проектом производства работ (ППР ' + data.ppr + ') под подпись', 'До начала работ', respPre]);
+  preRows.push(['Определить состав бригады (звена), назначить ответственного исполнителя работ' + (execLead ? ': ' + execLead : ''), 'До начала работ', naradVydalShort]);
+  (_staticD.p4rows || []).forEach(text => preRows.push([text, 'До начала работ', respPre]));
   data.activeFactors.forEach(f => { if (f.pre) preRows.push([f.pre, 'До начала работ', respPre]); });
   const preTable = measuresTable('4. До начала производства работ необходимо выполнить следующие мероприятия:', 'Ответственное лицо', preRows);
 
-  const inproRows = [
-    ['Выполнять работы согласно ППР' + (data.ppr ? ' ' + data.ppr : ''), 'Постоянно', respInpro],
-    [['Контролировать:', '- соблюдение требований ОТ, ПБ, ЭБ;', '- исправность оборудования и инструментов;', '- применение и исправность СИЗ;', '- поддержание чистоты и порядка;', '- наличие первичных средств пожаротушения и аптечки первой помощи'], 'Постоянно', respInpro],
-    ['Временные электрические сети (переноски) подвешивать над рабочими местами на высоту 2,5 м, над проходами — 3,5 м', 'Постоянно', respInpro]
-  ];
+  const inproRows = [];
+  if (data.ppr) inproRows.push(['Выполнять работы согласно ППР ' + data.ppr, 'Постоянно', respInpro]);
+  (_staticD.p5rows || []).forEach(text => inproRows.push([text, 'Постоянно', respInpro]));
   data.activeFactors.forEach(f => { if (f.inpro) inproRows.push([f.inpro, 'Постоянно', respInpro]); });
   const inproTable = measuresTable('5. В процессе производства работ необходимо выполнить следующие мероприятия:', 'Ответственное лицо', inproRows);
 
@@ -3015,6 +2934,7 @@ async function buildNaryadDocument(data) {
         // §3
         p('3. Вредные и опасные производственные факторы, которые действуют или могут возникнуть независимо от выполняемой работы в местах ее производства:', { bold: true }),
         ...(data.activeFactors.filter(f => f.desc).map(f => p(f.desc))),
+        ...(_staticD.p3 ? [p(_staticD.p3)] : []),
         p('', { spacing: { after: 80 } }),
 
         // §4
@@ -3301,7 +3221,7 @@ async function buildPPRVDocument(data) {
 }
 
 // ─── Проверка актуальности версии ─────────────────────────────────────────
-const CURRENT_VERSION = 'v2.53';
+const CURRENT_VERSION = 'v2.58';
 const VERSION_CHECK_TTL = 5 * 60 * 1000; // 5 минут
 let _versionCheckTime = null;
 let _versionCheckPassed = false;
@@ -3354,10 +3274,8 @@ function downloadBlob(blob, filename) {
 
 function trackDocGenerated() {
   if (!currentUser || !currentUser.login) return;
-  fetch(REG_SCRIPT_URL, {
-    method: 'POST',
-    body: JSON.stringify({ action: 'trackDocs', login: currentUser.login, count: 1 }),
-  }).catch(() => {});
+  const params = new URLSearchParams({ action: 'trackDocs', login: currentUser.login, count: 1 });
+  fetch(REG_SCRIPT_URL + '?' + params.toString()).catch(() => {});
 }
 
 async function downloadNaryad(btn) {
@@ -3672,11 +3590,74 @@ async function downloadAkt(btn) {
 
 // ─── Локальная память (localStorage) ──────────────────────────────────────
 // ─── Настройки факторов ───────────────────────────────────────────────────
-const SETTINGS_KEY = 'narad_settings_v1';
 const CUSTOM_KEY   = 'narad_custom_v1';
-let factorOverrides = {};
 let customFactors   = []; // [{id, name, p3, p4, p5}]
 let orgDangers      = []; // [{id, name, p3, p4, p5}] — из колонки «Название опасности» в таблице орг.
+let orgStaticData   = { p3: null, p4rows: [], p5rows: [] }; // неизменные мероприятия организации из Sheets
+
+// ─── Шаблонные данные (fallback для неавторизованных) ─────────────────────
+const TEMPLATE_FACTORS = [
+  { id: 'tpl_svet',    name: 'Недостаточное освещение',
+    p3: '- Недостаточное освящение',
+    p4: 'Обеспечить установку временного освящения',
+    p5: 'Контролировать работу временного освещения' },
+  { id: 'tpl_elinstr', name: 'Электроинструмент',
+    p3: '- При выполнении работ с электроинструментом: возможны травмы рук из-за заклинивания или выброса осколков, перегрев и возгорание инструмента, спотыкание о кабель.',
+    p4: 'Проверить исправность электроинструмента, кабелей и вилок, наличие заземления (двойной изоляции); обеспечить устойчивое положение работника, убрать посторонние предметы, проложить кабели вне проходов; выдать и проверить применение СИЗ.',
+    p5: 'Применять инструмент по назначению, не допускать заклинивания и перегрева; отключать инструмент при перерывах и смене оснастки; контролировать положение кабелей, не допускать спотыкания и повреждения изоляции.' },
+  { id: 'tpl_vysota',  name: 'Высота',
+    p3: '- При выполнении работ на высоте: падение с высоты, получение травм при падении на арматуру или строительный мусор.',
+    p4: 'Проверить исправность средств подмащивания и СИЗ от падения с высоты; очистить рабочие места от мусора; установить ограждения и предупредительные знаки.',
+    p5: 'Применять страховочные системы; не допускать сброса предметов вниз; соблюдать порядок и устойчивость рабочего места.' },
+  { id: 'tpl_estok',   name: 'Высота + Эстокада',
+    p3: '- При выполнении работ на высоте: падение с высоты, получение травм при падении на арматуру или строительный мусор.',
+    p4: 'Проверить исправность средств подмащивания и СИЗ от падения с высоты; очистить рабочие места от мусора; установить ограждения и предупредительные знаки.',
+    p5: 'Применять страховочные системы; не допускать сброса предметов вниз; соблюдать порядок и устойчивость рабочего места.\nПрекратить работу при порывах ветра более 15 м/с' },
+  { id: 'tpl_vyshka',  name: 'Вышка тура',
+    p3: null,
+    p4: 'Проверить комплектность и исправность вышки-туры, наличие паспортной документации; установить вышку на ровное и прочное основание с фиксацией опор и тормозов колес; смонтировать настилы, ограждения и лестницы в соответствии с инструкцией изготовителя; обозначить опасную зону',
+    p5: 'Не превышать допустимую нагрузку на настил; не перемещать вышку с находящимися на ней работниками; применять СИЗ от падения с высоты при необходимости; не допускать складирования материалов и инструмента на ограждениях.' },
+  { id: 'tpl_zemla',   name: 'Земляные работы',
+    p3: '- При выполнении земляных работ: обрушение стенок траншей и котлованов, падение работников в выемки, повреждение подземных коммуникаций, наезд строительной техники, затопление выработок, получение травм при ручной разработке грунта',
+    p4: '- Определить и обозначить зоны производства работ и места прохождения подземных коммуникаций; установить ограждения, сигнальные ленты и предупреждающие знаки; проверить исправность землеройной техники и инструмента; обеспечить безопасные подходы, спуски и выходы из выемок; проверить состояние откосов и креплений.',
+    p5: '- Выполнять разработку грунта с соблюдением устойчивости стенок траншей и котлованов; применять крепление откосов при необходимости; регулярно осматривать состояние выемок; прекращать работы при обнаружении коммуникаций, признаков обрушения или подтопления.' },
+  { id: 'tpl_hot',     name: 'Повышенные температуры',
+    p3: '- При выполнении работ в условиях повышенных температур: перегрев и обезвоживание организма, снижение координации движений.',
+    p4: '- Обеспечить наличие питьевой воды в достаточном количестве и в непосредственной близости от места проведения работ для предотвращения обезвоживания.',
+    p5: '- Ограничить время непрерывного пребывания в зоне повышенных температур (например, не более 15–20 минут с последующим отдыхом) и по возможности перенести тяжелые работы на утреннее или вечернее время.' },
+  { id: 'tpl_cold',    name: 'Пониженные температуры',
+    p3: '- При выполнении работ в условиях пониженных температур: переохлаждение и обморожение, снижение координации, падения на скользкой поверхности.',
+    p4: '- Определить место для обогрева персонала в перерывах между производством работ',
+    p5: '-Организовать дополнительные перерывы для обогрева сотрудников' },
+  { id: 'tpl_pogruz',  name: 'Погрузочно-разгрузочные',
+    p3: '- При выполнении погрузочно-разгрузочных работ: перемещаемые грузы, движущаяся техника, падение предметов при обрыве строп или нарушении схем строповки, острые кромки материалов.',
+    p4: 'Проверить исправность и маркировку грузозахватных приспособлений; подготовить площадки для складирования; оградить опасную зону сигнальной лентой; обеспечить освещенность места работ.',
+    p5: 'Соблюдать схемы строповки и складирования; исключить нахождение людей под грузом и в радиусе действия техники; контролировать отсутствие посторонних в опасной зоне; соблюдать нормы нагрузки при ручном перемещении.' },
+  { id: 'tpl_noch',    name: 'Ночные работы',
+    p3: '- При выполнении работ в ночное время: недостаточная видимость в зоне производства работ и на путях эвакуации, слепящий эффект от искусственных источников света, повышенная утомляемость, снижение концентрации внимания и координации движений исполнителей.',
+    p4: 'Обеспечить рабочие места и пути эвакуации достаточным искусственным освещением; проверить исправность переносных и стационарных светильников и исключить их слепящее действие; выдать исполнителям сигнальные жилеты со световозвращающими полосами; провести целевой инструктаж об особенностях и рисках выполнения работ в темное время суток.',
+    p5: 'Регулярно контролировать уровень освещения в рабочей зоне и применять дополнительный местный свет при точных операциях; немедленно приостанавливать работы при внезапном отключении освещения до его полного восстановления; строго контролировать самочувствие работников и соблюдение режима труда и отдыха для недопущения переутомления.' },
+];
+
+const TEMPLATE_STATIC_DATA = {
+  p3: '- Общие факторы опасностей: падения и спотыкания, воздействие пыли, шума и вибрации, порезы от острых кромок, поражение электрическим током, падение предметов, воздействие производственных загрязнений.',
+  p4rows: [
+    'Провести целевой инструктаж персоналу на рабочем месте',
+    'Проверить:\n- наличие удостоверений по ОТ и ЭБ, сроки проверки знаний и медосмотров\n- наличие и исправность СИЗ\n- исправность инструмента и приспособлений',
+    'Организовать безопасный проход персонала к рабочим местам и порядок его содержания',
+    'Обеспечить рабочее место:\n- первичными средствами пожаротушения\n- аптечкой первой помощи\n- питьевой водой',
+  ],
+  p5rows: [
+    'Контролировать:\n- соблюдение требований ОТ, ПБ, ЭБ;\n- исправность оборудования и инструментов;\n- применение и исправность СИЗ;\n- поддержание чистоты и порядка;\n- наличие первичных средств пожаротушения и аптечки первой помощи',
+    'Временные электрические сети (переноски) подвешивать над рабочими местами на высоту 2,5 м, над проходами — 3,5 м',
+  ],
+};
+
+function applyTemplateData() {
+  orgDangers    = TEMPLATE_FACTORS.map(f => ({ ...f }));
+  orgStaticData = { p3: TEMPLATE_STATIC_DATA.p3, p4rows: [...TEMPLATE_STATIC_DATA.p4rows], p5rows: [...TEMPLATE_STATIC_DATA.p5rows] };
+  renderCustomCheckboxes();
+}
 
 function _simpleHash(s) {
   let h = 0;
@@ -3700,17 +3681,21 @@ function _makeCbLabel(f) {
 }
 
 function renderCustomCheckboxes() {
+  const grid = document.getElementById('cbGrid');
+  if (grid) {
+    grid.innerHTML = '';
+    orgDangers.forEach(f => grid.appendChild(_makeCbLabel(f)));
+  }
+
   const container = document.getElementById('cbCustom');
+  if (!container) return;
   container.innerHTML = '';
-
-  customFactors.forEach(f => container.appendChild(_makeCbLabel(f)));
-
-  if (orgDangers.length > 0) {
+  if (customFactors.length > 0) {
     const divider = document.createElement('div');
     divider.className = 'org-dangers-divider';
-    divider.textContent = 'Дополнительные опасности организации';
+    divider.textContent = 'Дополнительные факторы';
     container.appendChild(divider);
-    orgDangers.forEach(f => container.appendChild(_makeCbLabel(f)));
+    customFactors.forEach(f => container.appendChild(_makeCbLabel(f)));
   }
 }
 
@@ -3747,28 +3732,9 @@ function addCustomFactorRow() {
   tbody.lastElementChild.querySelector('textarea').focus();
 }
 
-function loadSettings() {
-  try {
-    const raw = localStorage.getItem(SETTINGS_KEY);
-    if (raw) factorOverrides = JSON.parse(raw);
-  } catch(e) {}
-}
+function loadSettings() {}
 
 function saveSettings() {
-  factorOverrides = {};
-  document.querySelectorAll('#settingsBody tr').forEach(tr => {
-    const id = tr.dataset.id;
-    const def = FACTORS.find(f => f[0] === id);
-    const ta = tr.querySelectorAll('textarea');
-    const p3 = ta[0].value.trim();
-    const p4 = ta[1].value.trim();
-    const p5 = ta[2].value.trim();
-    if (p3 !== (def[2] || '') || p4 !== (def[3] || '') || p5 !== (def[4] || '')) {
-      factorOverrides[id] = { p3: p3 || null, p4: p4 || null, p5: p5 || null };
-    }
-  });
-  try { localStorage.setItem(SETTINGS_KEY, JSON.stringify(factorOverrides)); } catch(e) {}
-
   // save custom factors — capture current checked states first
   const prevChecked = {};
   customFactors.forEach(f => { const el = document.getElementById(f.id); if (el) prevChecked[f.id] = el.checked; });
@@ -3788,50 +3754,7 @@ function saveSettings() {
   closeSettings();
 }
 
-function resetFactorOverrides() {
-  if (!confirm('Сбросить все тексты к значениям по умолчанию?')) return;
-  factorOverrides = {};
-  try { localStorage.removeItem(SETTINGS_KEY); } catch(e) {}
-  buildSettingsTable();
-}
-
-function getFactorText(id, field) {
-  const ov = factorOverrides[id];
-  const def = FACTORS.find(f => f[0] === id);
-  if (!def) return null;
-  const defVal = field === 'p3' ? def[2] : field === 'p4' ? def[3] : def[4];
-  return (ov && ov[field] !== undefined) ? ov[field] : defVal;
-}
-
-function buildSettingsTable() {
-  const tbody = document.getElementById('settingsBody');
-  tbody.innerHTML = '';
-  FACTORS.forEach(f => {
-    const id = f[0], name = f[1];
-    const ov = factorOverrides[id] || {};
-    const val3 = (ov.p3 !== undefined ? ov.p3 : f[2]) || '';
-    const val4 = (ov.p4 !== undefined ? ov.p4 : f[3]) || '';
-    const val5 = (ov.p5 !== undefined ? ov.p5 : f[4]) || '';
-    const def3 = f[2] || '', def4 = f[3] || '', def5 = f[4] || '';
-    const tr = document.createElement('tr');
-    tr.dataset.id = id;
-    if (id === 'cb_obsh') {
-      tr.innerHTML = `
-        <td>${name}</td>
-        <td colspan="3" style="color:var(--gray-400); font-size:12px; font-style:italic; padding:10px 12px">${escHtml(val3)}<br><span style="opacity:.7">Текст неизменен</span></td>`;
-    } else {
-      tr.innerHTML = `
-        <td>${name}</td>
-        <td><textarea data-def="${escAttr(def3)}" class="${val3===def3?'is-default':''}">${escHtml(val3)}</textarea></td>
-        <td><textarea data-def="${escAttr(def4)}" class="${val4===def4?'is-default':''}">${escHtml(val4)}</textarea></td>
-        <td><textarea data-def="${escAttr(def5)}" class="${val5===def5?'is-default':''}">${escHtml(val5)}</textarea></td>`;
-      tr.querySelectorAll('textarea').forEach(ta => {
-        ta.addEventListener('input', () => ta.classList.toggle('is-default', ta.value === ta.dataset.def));
-      });
-    }
-    tbody.appendChild(tr);
-  });
-}
+function buildSettingsTable() {}
 
 function escHtml(s) { return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 function escAttr(s) { return (s||'').replace(/"/g,'&quot;'); }
@@ -3856,7 +3779,6 @@ let tabsMeta = { tabs: [], activeId: null };
 let _nextTabId = 1;
 function tabStorageKey(id) { return 'narad_form_tab_' + id; }
 
-const CB_IDS = ['cb_elinstr','cb_vysota','cb_vyshka','cb_svet','cb_pogruz','cb_zemla','cb_hot','cb_cold','cb_estok','cb_noch'];
 
 let _saveTimer;
 function scheduleSave() {
@@ -4008,9 +3930,8 @@ function clearFormUI(withRows) {
    'naradVydal','rukovDolzh','rukovFio','utvPprv','mesto','vidRabot'].forEach(id => {
     const el = document.getElementById(id); if (el) el.value = '';
   });
-  CB_IDS.forEach(id => { const el = document.getElementById(id); if (el) el.checked = false; });
-  customFactors.forEach(f => { const el = document.getElementById(f.id); if (el) el.checked = false; });
   orgDangers.forEach(f => { const el = document.getElementById(f.id); if (el) el.checked = false; });
+  customFactors.forEach(f => { const el = document.getElementById(f.id); if (el) el.checked = false; });
   document.getElementById('execBody').innerHTML = '';
   rowCount = 0;
   if (withRows !== false) { addRow(); addRow(); }
@@ -4024,9 +3945,8 @@ function clearFormUI(withRows) {
 
 function saveFormData() {
   const cbStates = {};
-  CB_IDS.forEach(id => { const el = document.getElementById(id); if (el) cbStates[id] = el.checked; });
-  customFactors.forEach(f => { const el = document.getElementById(f.id); if (el) cbStates[f.id] = el.checked; });
   orgDangers.forEach(f => { const el = document.getElementById(f.id); if (el) cbStates[f.id] = el.checked; });
+  customFactors.forEach(f => { const el = document.getElementById(f.id); if (el) cbStates[f.id] = el.checked; });
 
   const execRows = [];
   document.querySelectorAll('#execBody tr').forEach(tr => {
@@ -4521,6 +4441,41 @@ async function buildOgnevoyDocument(data) {
 // ─── История обновлений ───────────────────────────────────────────────────
 const CHANGELOG = [
   {
+    version: 'v2.58', date: '28.06.2026',
+    changes: [
+      'Блок 2 теперь показывает шаблонные опасности когда пользователь не авторизован',
+      'Шаблонные п.3/4/5 подставляются автоматически без входа в систему',
+    ]
+  },
+  {
+    version: 'v2.57', date: '28.06.2026',
+    changes: [
+      'Неизменные п.3/4/5 теперь общие для организации (не по участку) — собираются из всех строк Sheets',
+      'Исправлено чтение «Группа высота» из таблицы вместо хардкоженного значения 2',
+    ]
+  },
+  {
+    version: 'v2.56', date: '28.06.2026',
+    changes: [
+      'Блок 2: опасные факторы теперь полностью загружаются из Google Sheets — хардкод удалён',
+      'Порядок факторов соответствует порядку строк в таблице организации',
+      'Кнопка «Настройки» сохранена для добавления собственных факторов',
+    ]
+  },
+  {
+    version: 'v2.55', date: '28.06.2026',
+    changes: [
+      'Добавлена поддержка неизменных пунктов 3, 4, 5 из Google Sheets по участку сотрудника',
+      'ППР: если не заполнен — строки про ППР не появляются в п.4 и п.5; состав звена всегда идёт следом',
+    ]
+  },
+  {
+    version: 'v2.54', date: '28.06.2026',
+    changes: [
+      'Исправлен пикер исполнителей: выбранные сотрудники теперь не сбрасываются при очистке поиска',
+    ]
+  },
+  {
     version: 'v2.53', date: '28.06.2026',
     changes: [
       'Добавлен счётчик сгенерированных документов — каждое скачивание автоматически фиксируется в таблице пользователей',
@@ -4852,6 +4807,7 @@ function guideTo(idx) {
 loadSettings();
 applyTheme(localStorage.getItem('narad_theme') || '');
 loadCustomFactors();
+if (!currentUser) applyTemplateData();
 addRow();
 addRow();
 initSec6RowsSelect();

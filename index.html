@@ -1202,7 +1202,7 @@
     <p>Форма заполнения разрешительной документации на опасные работы</p>
   </div>
   <div style="font-size:12px; color:var(--gray-400); text-align:right; white-space:nowrap">
-    <div style="font-size:14px; font-weight:700; color:var(--navy); margin-bottom:4px">v2.51</div>
+    <div style="font-size:14px; font-weight:700; color:var(--navy); margin-bottom:4px">v2.52</div>
     Разработал<br>Лингидан Максим Дмитриевич
   </div>
 </div>
@@ -2574,9 +2574,9 @@ function loadOrgPersonnel() {
           const dolzh    = ((iDolzh >= 0 ? r[iDolzh] : r[2]) || '').trim();
           const razr     = ((iRazr  >= 0 ? r[iRazr]  : r[3]) || '').trim();
           const grEB     = ((iGrEB  >= 0 ? r[iGrEB]  : r[4]) || '').trim();
-          const ppu      = (iPPU    >= 0 ? r[iPPU]           : '').trim();
+          const ppu      = ((iPPU   >= 0 ? r[iPPU]   : r[6]) || '').trim();
           const grVys    = '2';
-          const canIssue = (iIssue  >= 0 ? r[iIssue]         : '').trim().toLowerCase();
+          const canIssue = ((iIssue >= 0 ? r[iIssue] : r[7]) || '').trim().toLowerCase();
           employeeMap[fio.toLowerCase().replace(/\s+/g, ' ')] = { dolzh, razr, grEB };
           allEmployeesList.push({ fio, dolzh, razr, grEB, grVys, ppu });
           if (canIssue === 'да') issuersList.push({ fio, dolzh, ppu });
@@ -3304,7 +3304,7 @@ async function buildPPRVDocument(data) {
 }
 
 // ─── Проверка актуальности версии ─────────────────────────────────────────
-const CURRENT_VERSION = 'v2.51';
+const CURRENT_VERSION = 'v2.52';
 const VERSION_CHECK_TTL = 5 * 60 * 1000; // 5 минут
 let _versionCheckTime = null;
 let _versionCheckPassed = false;
@@ -4514,6 +4514,12 @@ async function buildOgnevoyDocument(data) {
 
 // ─── История обновлений ───────────────────────────────────────────────────
 const CHANGELOG = [
+  {
+    version: 'v2.52', date: '28.06.2026',
+    changes: [
+      'Исправлен баг с фильтром участков: листы без заголовков (через IMPORTRANGE) теперь корректно читают колонки «Участок» и «Может выдавать наряд»',
+    ]
+  },
   {
     version: 'v2.51', date: '28.06.2026',
     changes: [

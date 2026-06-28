@@ -1202,7 +1202,7 @@
     <p>Форма заполнения разрешительной документации на опасные работы</p>
   </div>
   <div style="font-size:12px; color:var(--gray-400); text-align:right; white-space:nowrap">
-    <div style="font-size:14px; font-weight:700; color:var(--navy); margin-bottom:4px">v2.52</div>
+    <div style="font-size:14px; font-weight:700; color:var(--navy); margin-bottom:4px">v2.53</div>
     Разработал<br>Лингидан Максим Дмитриевич
   </div>
 </div>
@@ -3301,7 +3301,7 @@ async function buildPPRVDocument(data) {
 }
 
 // ─── Проверка актуальности версии ─────────────────────────────────────────
-const CURRENT_VERSION = 'v2.52';
+const CURRENT_VERSION = 'v2.53';
 const VERSION_CHECK_TTL = 5 * 60 * 1000; // 5 минут
 let _versionCheckTime = null;
 let _versionCheckPassed = false;
@@ -3349,6 +3349,15 @@ function downloadBlob(blob, filename) {
   a.click();
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
+  trackDocGenerated();
+}
+
+function trackDocGenerated() {
+  if (!currentUser || !currentUser.login) return;
+  fetch(REG_SCRIPT_URL, {
+    method: 'POST',
+    body: JSON.stringify({ action: 'trackDocs', login: currentUser.login, count: 1 }),
+  }).catch(() => {});
 }
 
 async function downloadNaryad(btn) {
@@ -4511,6 +4520,12 @@ async function buildOgnevoyDocument(data) {
 
 // ─── История обновлений ───────────────────────────────────────────────────
 const CHANGELOG = [
+  {
+    version: 'v2.53', date: '28.06.2026',
+    changes: [
+      'Добавлен счётчик сгенерированных документов — каждое скачивание автоматически фиксируется в таблице пользователей',
+    ]
+  },
   {
     version: 'v2.52', date: '28.06.2026',
     changes: [

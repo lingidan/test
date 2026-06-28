@@ -140,6 +140,8 @@
   .cb-item input:checked ~ .cb-box svg { display: block; }
   .cb-label { font-size: 13px; color: var(--text); line-height: 1.3; }
   .cb-item:has(input:checked) { border-color: var(--accent); background: var(--accent-light); }
+  .org-dangers-divider { grid-column: 1 / -1; display: flex; align-items: center; gap: 10px; margin: 6px 0 4px; font-size: 11px; color: var(--gray-400); font-weight: 600; letter-spacing: .04em; text-transform: uppercase; }
+  .org-dangers-divider::before, .org-dangers-divider::after { content: ''; flex: 1; height: 1px; background: var(--gray-200); }
 
   /* Table */
   .table-wrap { overflow-x: auto; margin-bottom: 14px; }
@@ -1200,7 +1202,7 @@
     <p>Форма заполнения разрешительной документации на опасные работы</p>
   </div>
   <div style="font-size:12px; color:var(--gray-400); text-align:right; white-space:nowrap">
-    <div style="font-size:14px; font-weight:700; color:var(--navy); margin-bottom:4px">v2.49</div>
+    <div style="font-size:14px; font-weight:700; color:var(--navy); margin-bottom:4px">v2.51</div>
     Разработал<br>Лингидан Максим Дмитриевич
   </div>
 </div>
@@ -1843,7 +1845,10 @@ function collectFormData() {
   });
 
   const activeFactors = FACTORS.filter(f => f[0] === 'cb_obsh' || document.getElementById(f[0])?.checked);
-  const activeCustom  = customFactors
+  const activeCustom  = [
+    ...customFactors,
+    ...orgDangers,
+  ]
     .filter(f => document.getElementById(f.id)?.checked)
     .map(f => ({ id: f.id, name: f.name, desc: f.p3, pre: f.p4, inpro: f.p5 }));
 
@@ -1886,9 +1891,7 @@ function collectFormData() {
 }
 
 // ─── Google Sheets: база сотрудников ──────────────────────────────────────
-// YEM — отдельная таблица (исторически)
-const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/1TpuVrcebn3W-2qekT6aoHXGosztP6YauBtI6ZSjMdAk/export?format=csv';
-// Мастер-реестр: Пользователи + листы других организаций
+// Мастер-реестр: Пользователи + листы организаций
 const MASTER_SHEET_ID = '1Thw1FraaXvuqDD_qQ-Bdd-Kbx7JvScSn-iYRD5v3-ts';
 let employeeMap = {};
 let issuersList = [];      // [{fio, dolzh, ppu}] — те, кто может выдавать наряд
@@ -1921,36 +1924,6 @@ function _parseSheetCSV(text) {
   return rows;
 }
 
-async function loadEmployeeData() {
-  try {
-    const resp = await fetch(SHEET_CSV_URL);
-    const text = await resp.text();
-    const rows = _parseSheetCSV(text);
-    employeeMap = {};
-    issuersList = [];
-    allEmployeesList = [];
-    for (let i = 3; i < rows.length; i++) {
-      const r = rows[i];
-      const fio = (r[1] || '').trim();
-      if (!fio) continue;
-      const dolzh    = (r[2]  || '').trim();
-      const razr     = (r[3]  || '').trim();
-      const ppu      = (r[4]  || '').trim();
-      const grEB     = (r[32] || '').trim();
-      const grVys    = '2';
-      const canIssue = (r[80] || '').trim().toLowerCase();
-      employeeMap[fio.toLowerCase().replace(/\s+/g, ' ')] = { dolzh, razr, grEB };
-      allEmployeesList.push({ fio, dolzh, razr, grEB, grVys, ppu });
-      if (canIssue === 'да') issuersList.push({ fio, dolzh, ppu });
-    }
-    issuersList.sort((a, b) => a.fio.localeCompare(b.fio, 'ru'));
-    allEmployeesList.sort((a, b) => a.fio.localeCompare(b.fio, 'ru'));
-    rebuildIssuerPpuFilter();
-    rebuildCrewPpuFilter();
-    updateCrewPickerBtn();
-  } catch(e) { console.warn('Не удалось загрузить базу сотрудников:', e); }
-  if (syncEnabled) syncAllRows();
-}
 
 function lookupEmployee(fio) {
   return employeeMap[fio.toLowerCase().replace(/\s+/g, ' ')] || null;
@@ -2575,13 +2548,8 @@ function loadOrgPersonnel() {
   if (!currentUser) return;
   const org = currentUser.org;
 
-  if (org.includes('ЮЭМ')) {
-    // ЮЭМ — используем существующую таблицу сотрудников
-    syncEnabled = true;
-    loadEmployeeData();
-  } else {
-    // Другие организации — лист в мастер-реестре, ищем по названию
-    const sheetUrl = `https://docs.google.com/spreadsheets/d/${MASTER_SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(org)}`;
+  // Все организации — лист в мастер-реестре по названию
+  const sheetUrl = `https://docs.google.com/spreadsheets/d/${MASTER_SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(org)}`;
     fetch(sheetUrl)
       .then(r => { if (!r.ok) throw new Error(); return r.text(); })
       .then(csv => {
@@ -2595,6 +2563,7 @@ function loadOrgPersonnel() {
         const iGrEB     = hdrs.findIndex(h => h.includes('группа'));
         const iIssue    = hdrs.findIndex(h => h.includes('выдав') || h.includes('выдач') || h.includes('выдават'));
         const iPPU      = hdrs.findIndex(h => h.includes('участок') || h.includes('ппу'));
+        const iDName    = hdrs.findIndex(h => h.includes('название') && h.includes('опасн'));
         employeeMap = {};
         issuersList = [];
         allEmployeesList = [];
@@ -2612,16 +2581,34 @@ function loadOrgPersonnel() {
           allEmployeesList.push({ fio, dolzh, razr, grEB, grVys, ppu });
           if (canIssue === 'да') issuersList.push({ fio, dolzh, ppu });
         }
+        // Загружаем опасности организации из колонки «Название опасности»
+        orgDangers = [];
+        if (iDName >= 0) {
+          const seenNames = new Set();
+          for (let i = 1; i < rows.length; i++) {
+            const r = rows[i];
+            const name = (r[iDName] || '').trim();
+            if (!name || seenNames.has(name)) continue;
+            seenNames.add(name);
+            orgDangers.push({
+              id:   'orgd_' + _simpleHash(name),
+              name,
+              p3:   (r[iDName + 1] || '').trim() || null,
+              p4:   (r[iDName + 2] || '').trim() || null,
+              p5:   (r[iDName + 3] || '').trim() || null,
+            });
+          }
+        }
         issuersList.sort((a, b) => a.fio.localeCompare(b.fio, 'ru'));
         allEmployeesList.sort((a, b) => a.fio.localeCompare(b.fio, 'ru'));
         rebuildIssuerPpuFilter();
         rebuildCrewPpuFilter();
         updateCrewPickerBtn();
+        renderCustomCheckboxes();
         syncEnabled = true;
         syncAllRows();
       })
       .catch(() => console.warn('Не удалось загрузить сотрудников организации:', org));
-  }
 }
 
 function syncAllRows() {
@@ -3317,7 +3304,7 @@ async function buildPPRVDocument(data) {
 }
 
 // ─── Проверка актуальности версии ─────────────────────────────────────────
-const CURRENT_VERSION = 'v2.49';
+const CURRENT_VERSION = 'v2.51';
 const VERSION_CHECK_TTL = 5 * 60 * 1000; // 5 минут
 let _versionCheckTime = null;
 let _versionCheckPassed = false;
@@ -3683,6 +3670,13 @@ const SETTINGS_KEY = 'narad_settings_v1';
 const CUSTOM_KEY   = 'narad_custom_v1';
 let factorOverrides = {};
 let customFactors   = []; // [{id, name, p3, p4, p5}]
+let orgDangers      = []; // [{id, name, p3, p4, p5}] — из колонки «Название опасности» в таблице орг.
+
+function _simpleHash(s) {
+  let h = 0;
+  for (let i = 0; i < s.length; i++) h = (Math.imul(31, h) + s.charCodeAt(i)) | 0;
+  return Math.abs(h).toString(36);
+}
 
 function loadCustomFactors() {
   try {
@@ -3692,15 +3686,26 @@ function loadCustomFactors() {
   renderCustomCheckboxes();
 }
 
+function _makeCbLabel(f) {
+  const label = document.createElement('label');
+  label.className = 'cb-item';
+  label.innerHTML = `<input type="checkbox" id="${f.id}" onchange="checkButtons()"><div class="cb-box"><svg width="11" height="9" viewBox="0 0 11 9" fill="none"><path d="M1 4.5L4 7.5L10 1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="cb-label">${escHtml(f.name)}</span>`;
+  return label;
+}
+
 function renderCustomCheckboxes() {
   const container = document.getElementById('cbCustom');
   container.innerHTML = '';
-  customFactors.forEach(f => {
-    const label = document.createElement('label');
-    label.className = 'cb-item';
-    label.innerHTML = `<input type="checkbox" id="${f.id}"> ${escHtml(f.name)}`;
-    container.appendChild(label);
-  });
+
+  customFactors.forEach(f => container.appendChild(_makeCbLabel(f)));
+
+  if (orgDangers.length > 0) {
+    const divider = document.createElement('div');
+    divider.className = 'org-dangers-divider';
+    divider.textContent = 'Дополнительные опасности организации';
+    container.appendChild(divider);
+    orgDangers.forEach(f => container.appendChild(_makeCbLabel(f)));
+  }
 }
 
 function buildCustomFactorsTable() {
@@ -3999,6 +4004,7 @@ function clearFormUI(withRows) {
   });
   CB_IDS.forEach(id => { const el = document.getElementById(id); if (el) el.checked = false; });
   customFactors.forEach(f => { const el = document.getElementById(f.id); if (el) el.checked = false; });
+  orgDangers.forEach(f => { const el = document.getElementById(f.id); if (el) el.checked = false; });
   document.getElementById('execBody').innerHTML = '';
   rowCount = 0;
   if (withRows !== false) { addRow(); addRow(); }
@@ -4014,6 +4020,7 @@ function saveFormData() {
   const cbStates = {};
   CB_IDS.forEach(id => { const el = document.getElementById(id); if (el) cbStates[id] = el.checked; });
   customFactors.forEach(f => { const el = document.getElementById(f.id); if (el) cbStates[f.id] = el.checked; });
+  orgDangers.forEach(f => { const el = document.getElementById(f.id); if (el) cbStates[f.id] = el.checked; });
 
   const execRows = [];
   document.querySelectorAll('#execBody tr').forEach(tr => {
@@ -4508,6 +4515,19 @@ async function buildOgnevoyDocument(data) {
 // ─── История обновлений ───────────────────────────────────────────────────
 const CHANGELOG = [
   {
+    version: 'v2.51', date: '28.06.2026',
+    changes: [
+      'ЮЭМ переведена на единый мастер-реестр — старая отдельная таблица больше не используется',
+    ]
+  },
+  {
+    version: 'v2.50', date: '28.06.2026',
+    changes: [
+      'Опасности организации из таблицы (колонка «Название опасности») теперь отображаются в блоке 2 отдельным разделом с разделителем',
+      'Почта разработчика внизу страницы — клик копирует адрес в буфер обмена',
+    ]
+  },
+  {
     version: 'v2.49', date: '28.06.2026',
     changes: [
       'Критический баг: данные авторизованного пользователя теперь корректно попадают в скачиваемый документ',
@@ -4844,10 +4864,19 @@ document.addEventListener('change', scheduleSave);
     if (btn) btn.click();
   }, 500);
 })();
+
+function copyDevEmail() {
+  navigator.clipboard.writeText('lingidanm@gmail.com').then(() => {
+    const msg = document.getElementById('devEmailCopied');
+    msg.style.display = 'inline';
+    clearTimeout(msg._t);
+    msg._t = setTimeout(() => msg.style.display = 'none', 2500);
+  });
+}
 </script>
 
 <div style="text-align:center; padding:24px 16px 32px; font-size:12px; color:var(--gray-400)">
-  Связь с разработчиком: <a href="mailto:lingidanm@gmail.com" style="color:var(--navy); text-decoration:none; font-weight:600">lingidanm@gmail.com</a>
+  Связь с разработчиком: <span id="devEmail" onclick="copyDevEmail()" title="Нажмите, чтобы скопировать" style="color:var(--navy); font-weight:600; cursor:pointer; border-bottom:1px dotted var(--navy)">lingidanm@gmail.com</span><span id="devEmailCopied" style="display:none; color:#22a05b; font-size:11px; margin-left:8px; font-weight:600">✓ Скопировано в буфер</span>
 </div>
 
 </body>

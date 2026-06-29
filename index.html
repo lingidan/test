@@ -456,18 +456,18 @@
   /* ── Модал инструкции ── */
   #guideOverlay {
     display: none; position: fixed; inset: 0;
-    background: rgba(0,0,0,.5); z-index: 900;
+    background: rgba(0,0,0,.55); z-index: 900;
     justify-content: center; align-items: center;
   }
   #guideOverlay.open { display: flex; }
   #guideModal {
-    background: var(--surface); width: 660px; max-width: calc(100vw - 24px);
-    border-radius: 16px; box-shadow: 0 12px 48px rgba(0,0,0,.28);
-    display: flex; flex-direction: column; max-height: calc(100vh - 48px);
+    background: var(--surface); width: 100vw;
+    border-radius: 0; box-shadow: none;
+    display: flex; flex-direction: column; height: 100vh;
     overflow: hidden;
   }
   .guide-header {
-    background: var(--navy); padding: 16px 20px;
+    background: var(--navy); padding: 14px 20px;
     display: flex; align-items: center; gap: 14px; flex-shrink: 0;
   }
   .guide-header h3 { color: white; font-size: 15px; font-weight: 700; margin: 0; flex: 1; }
@@ -488,25 +488,58 @@
 
   /* ── Режим слайдов ── */
   .guide-slide-body {
-    flex: 1; display: flex; flex-direction: column; overflow: hidden;
+    flex: 1; display: flex; flex-direction: column; overflow: hidden; min-height: 0;
   }
   .guide-slide-content {
-    flex: 1; padding: 32px 36px 24px; overflow-y: auto;
+    flex: 1; display: flex; min-height: 0; overflow: hidden;
   }
-  .guide-slide-icon {
-    font-size: 36px; margin-bottom: 14px; display: block;
+  /* Двухколоночный layout (схема + текст) */
+  .guide-slide-cols {
+    display: flex; width: 100%; min-height: 0; overflow: hidden;
   }
-  .guide-slide-title {
-    font-size: 20px; font-weight: 700; color: var(--navy); margin-bottom: 12px;
+  .guide-slide-visual {
+    flex: 0 0 57%; background: #f0f4f9; border-right: 1px solid var(--gray-100);
+    display: flex; align-items: center; justify-content: center;
+    padding: 16px; overflow: hidden;
   }
-  .guide-slide-text {
-    font-size: 14px; line-height: 1.7; color: var(--text);
+  .guide-slide-visual svg { max-width: 100%; max-height: 100%; display: block; }
+  .guide-slide-desc {
+    flex: 1; padding: 30px 28px 24px; overflow-y: auto;
   }
-  .guide-slide-text p { margin-bottom: 10px; }
-  .guide-slide-text p:last-child { margin-bottom: 0; }
-  .guide-slide-text strong { color: var(--navy); }
+  .guide-slide-desc .guide-slide-title {
+    font-size: 19px; font-weight: 700; color: var(--navy); margin-bottom: 14px;
+  }
+  .guide-slide-desc .guide-slide-text {
+    font-size: 13.5px; line-height: 1.75; color: var(--text);
+  }
+  /* Одноколоночный fallback */
+  .guide-slide-single {
+    flex: 1; padding: 32px 40px 24px; overflow-y: auto; width: 100%;
+  }
+  .guide-slide-icon { font-size: 36px; margin-bottom: 14px; display: block; }
+  .guide-slide-title { font-size: 20px; font-weight: 700; color: var(--navy); margin-bottom: 12px; }
+  .guide-slide-text { font-size: 14px; line-height: 1.7; color: var(--text); }
+  .guide-slide-text p, .guide-slide-desc .guide-slide-text p { margin-bottom: 10px; }
+  .guide-slide-text p:last-child, .guide-slide-desc .guide-slide-text p:last-child { margin-bottom: 0; }
+  .guide-slide-text strong, .guide-slide-desc .guide-slide-text strong { color: var(--navy); }
+  /* Плашка подсказки внутри слайда */
+  .guide-tip {
+    margin-top: 16px; padding: 12px 14px; border-radius: 10px;
+    background: var(--accent-light); border-left: 3px solid var(--accent);
+    font-size: 13px; line-height: 1.55; color: var(--navy);
+  }
+  .guide-tip strong { color: var(--accent); }
+  /* Тестовый аккаунт */
+  .guide-creds {
+    margin-top: 18px; padding: 14px 16px; border-radius: 12px;
+    background: #1a3a5c; color: white; font-size: 13px; line-height: 1.7;
+  }
+  .guide-creds .cred-label { font-size: 11px; font-weight: 700; opacity: .6; letter-spacing: .5px; text-transform: uppercase; margin-bottom: 8px; }
+  .guide-creds .cred-row { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+  .guide-creds .cred-key { opacity: .7; min-width: 58px; }
+  .guide-creds .cred-val { font-size: 15px; font-weight: 700; background: rgba(255,255,255,.15); padding: 2px 10px; border-radius: 20px; }
   .guide-slide-nav {
-    padding: 16px 24px; border-top: 1px solid var(--gray-100);
+    padding: 14px 24px; border-top: 1px solid var(--gray-100);
     display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
   }
   .guide-nav-btn {
@@ -519,9 +552,7 @@
   .guide-nav-btn:disabled { opacity: .35; cursor: default; }
   .guide-nav-btn.primary { background: var(--accent); border-color: var(--accent); color: white; }
   .guide-nav-btn.primary:hover:not(:disabled) { background: var(--navy); border-color: var(--navy); color: white; }
-  .guide-dots {
-    display: flex; gap: 7px; align-items: center;
-  }
+  .guide-dots { display: flex; gap: 7px; align-items: center; }
   .guide-dot {
     width: 8px; height: 8px; border-radius: 50%;
     background: var(--gray-200); cursor: pointer; transition: background .2s, transform .2s;
@@ -529,21 +560,13 @@
   .guide-dot.active { background: var(--accent); transform: scale(1.25); }
 
   /* ── Режим списка ── */
-  .guide-list-body {
-    flex: 1; overflow-y: auto; padding: 8px 0;
-  }
-  .guide-list-item {
-    padding: 20px 28px; border-bottom: 1px solid var(--gray-100);
-  }
+  .guide-list-body { flex: 1; overflow-y: auto; padding: 8px 0; }
+  .guide-list-item { padding: 20px 28px; border-bottom: 1px solid var(--gray-100); }
   .guide-list-item:last-child { border-bottom: none; }
-  .guide-list-item-head {
-    display: flex; align-items: center; gap: 12px; margin-bottom: 8px;
-  }
+  .guide-list-item-head { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
   .guide-list-icon { font-size: 22px; flex-shrink: 0; }
   .guide-list-title { font-size: 15px; font-weight: 700; color: var(--navy); }
-  .guide-list-text {
-    font-size: 13px; line-height: 1.65; color: var(--text); padding-left: 34px;
-  }
+  .guide-list-text { font-size: 13px; line-height: 1.65; color: var(--text); padding-left: 34px; }
   .guide-list-text p { margin-bottom: 8px; }
   .guide-list-text p:last-child { margin-bottom: 0; }
   .guide-list-text strong { color: var(--navy); }
@@ -902,6 +925,105 @@
   .exec-ac-item:hover, .exec-ac-item.active { background: var(--accent-light); }
   .exec-ac-fio { font-weight: 600; color: var(--text); }
   .exec-ac-dolzh { font-size: 11.5px; color: var(--gray-400); }
+
+  /* ── Room Picker ── */
+  #roomPickerOverlay {
+    display: none; position: fixed; inset: 0; z-index: 9600;
+    background: rgba(0,0,0,.88); flex-direction: column;
+  }
+  #roomPickerOverlay.open { display: flex; }
+  #roomPickerHeader {
+    background: var(--navy); color: white;
+    padding: 10px 18px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; gap: 12px;
+  }
+  #roomPickerHeader h3 { font-size: 14px; font-weight: 700; margin: 0; }
+  #roomPickerHeader p  { font-size: 11px; opacity: .6; margin: 2px 0 0; }
+  #roomPickerCloseBtn {
+    background: rgba(255,255,255,.15); border: none; color: white;
+    border-radius: 8px; padding: 7px 16px; cursor: pointer; font-size: 13px; font-weight: 600; white-space: nowrap;
+  }
+  #roomPickerCloseBtn:hover { background: rgba(255,255,255,.28); }
+  #roomPickerContent {
+    flex: 1; display: flex; overflow: hidden;
+  }
+  #roomPickerSVGArea {
+    flex: 1; overflow: auto; background: #1a2236; position: relative;
+    display: flex; align-items: flex-start; justify-content: flex-start;
+  }
+  #roomPickerSVGWrap {
+    position: relative; display: inline-block; cursor: default;
+  }
+  #roomPickerSVGWrap svg:first-child { display: block; }
+  #roomPickerOverlaySVG { position: absolute; top: 0; left: 0; pointer-events: none; }
+  #roomPickerOverlaySVG .rp-room { pointer-events: all; cursor: pointer; }
+  #roomPickerOverlaySVG .rp-room rect { fill: rgba(46,122,191,.10); stroke: rgba(46,122,191,.35); stroke-width: 1; rx: 3; transition: fill .12s; }
+  #roomPickerOverlaySVG .rp-room:hover rect { fill: rgba(46,122,191,.35); stroke: rgba(46,122,191,.8); }
+  #roomPickerOverlaySVG .rp-room.selected rect { fill: rgba(22,163,74,.45); stroke: rgba(22,163,74,.9); stroke-width: 2; }
+  #roomPickerOverlaySVG .rp-room text { font-size: 9px; fill: rgba(46,122,191,.85); font-family: monospace; pointer-events: none; }
+  #roomPickerOverlaySVG .rp-room.selected text { fill: rgba(22,163,74,1); font-weight: 700; }
+  #roomPickerSidebar {
+    width: 220px; flex-shrink: 0; background: var(--surface); border-left: 1px solid var(--border);
+    display: flex; flex-direction: column; overflow: hidden;
+  }
+  #roomPickerSidebarInner { flex: 1; overflow-y: auto; padding: 10px; }
+  .rp-building-label { font-size: 11px; font-weight: 700; color: var(--gray-400); text-transform: uppercase; letter-spacing: .05em; margin: 0 0 6px; }
+  .rp-building-select { width: 100%; padding: 6px 8px; border: 1px solid var(--border); border-radius: 6px; font-size: 13px; background: var(--bg); color: var(--text); margin-bottom: 12px; }
+  .rp-floor-btn {
+    display: block; width: 100%; text-align: left; padding: 7px 10px; margin-bottom: 3px;
+    border: 1px solid var(--border); border-radius: 6px; background: var(--bg); color: var(--text);
+    cursor: pointer; font-size: 12px; font-weight: 500; transition: background .12s, border-color .12s;
+  }
+  .rp-floor-btn:hover { background: var(--accent-light); border-color: var(--navy); }
+  .rp-floor-btn.active { background: var(--navy); color: white; border-color: var(--navy); font-weight: 700; }
+  .rp-floor-count { font-size: 10px; opacity: .65; float: right; margin-top: 1px; }
+  #roomPickerBottom {
+    border-top: 1px solid var(--border); background: var(--bg); padding: 10px 14px; flex-shrink: 0;
+    display: flex; flex-direction: column; gap: 8px; max-height: 160px;
+  }
+  #roomPickerPreviewLabel { font-size: 11px; font-weight: 700; color: var(--gray-400); text-transform: uppercase; letter-spacing: .04em; }
+  #roomPickerPreviewText {
+    font-size: 12px; color: var(--text); line-height: 1.5; flex: 1; overflow-y: auto;
+    white-space: pre-wrap; font-family: monospace; min-height: 40px; background: var(--surface);
+    border: 1px solid var(--border); border-radius: 6px; padding: 6px 8px; max-height: 80px;
+  }
+  #roomPickerSaveBtn {
+    background: var(--navy); color: white; border: none; border-radius: 8px;
+    padding: 8px 20px; font-size: 13px; font-weight: 700; cursor: pointer; align-self: flex-end;
+  }
+  #roomPickerSaveBtn:hover { background: var(--navy-light); }
+  #roomPickerSaveBtn:disabled { opacity: .4; cursor: default; }
+  #roomPickerLoader { color: rgba(255,255,255,.5); font-size: 13px; padding: 40px; text-align: center; }
+
+  /* ── Map Picker ── */
+  #mapPickerOverlay {
+    display: none; position: fixed; inset: 0; z-index: 9500;
+    background: rgba(0,0,0,.82); flex-direction: column;
+  }
+  #mapPickerOverlay.open { display: flex; }
+  #mapPickerHeader {
+    background: var(--navy); color: white;
+    padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
+  }
+  #mapPickerHeader h3 { font-size: 15px; font-weight: 700; }
+  #mapPickerHeader p  { font-size: 12px; opacity: .65; margin-top: 2px; }
+  #mapPickerClose {
+    background: rgba(255,255,255,.15); border: none; color: white;
+    border-radius: 8px; padding: 8px 18px; cursor: pointer; font-size: 14px; font-weight: 600;
+  }
+  #mapPickerClose:hover { background: rgba(255,255,255,.28); }
+  #mapPickerBody {
+    flex: 1; overflow: auto; display: flex; align-items: center; justify-content: center; padding: 16px;
+  }
+  #sitePlanSVG { max-width: 100%; max-height: 100%; border-radius: 8px; }
+  .map-zone { cursor: pointer; transition: filter .15s; }
+  .map-zone:hover > rect,
+  .map-zone:hover > circle,
+  .map-zone:hover > ellipse { filter: brightness(1.18); }
+  .map-zone:hover { filter: drop-shadow(0 0 6px rgba(46,122,191,.7)); }
+  #mapPickerStatus {
+    background: var(--navy-dark); color: rgba(255,255,255,.8);
+    padding: 8px 20px; font-size: 13px; flex-shrink: 0; min-height: 34px;
+  }
 </style>
 </head>
 <body>
@@ -1201,7 +1323,7 @@
     <p>Форма заполнения разрешительной документации на опасные работы</p>
   </div>
   <div style="font-size:12px; color:var(--gray-400); text-align:right; white-space:nowrap">
-    <div style="font-size:14px; font-weight:700; color:var(--navy); margin-bottom:4px">v2.58</div>
+    <div style="font-size:14px; font-weight:700; color:var(--navy); margin-bottom:4px">v2.64</div>
     Разработал<br>Лингидан Максим Дмитриевич
   </div>
 </div>
@@ -1359,7 +1481,21 @@
 
         <div class="field col-span-2">
           <label>Место выполнения работ <span class="req">*</span></label>
-          <input type="text" id="mesto" placeholder="" oninput="checkButtons()">
+          <div style="display:flex;gap:6px;align-items:stretch">
+            <input type="text" id="mesto" placeholder="" oninput="checkButtons()" style="flex:1;min-width:0">
+            <button type="button" onclick="openMapPicker()" title="Открыть схему площадки"
+              style="flex-shrink:0;background:var(--navy);color:white;border:none;border-radius:var(--radius);padding:0 14px;cursor:pointer;font-size:12px;font-weight:600;white-space:nowrap;display:flex;align-items:center;gap:5px;transition:background .15s"
+              onmouseover="this.style.background='var(--navy-light)'" onmouseout="this.style.background='var(--navy)'">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              Схема
+            </button>
+            <button type="button" onclick="openRoomPicker()" title="Выбрать помещения на плане"
+              style="flex-shrink:0;background:var(--navy);color:white;border:none;border-radius:var(--radius);padding:0 14px;cursor:pointer;font-size:12px;font-weight:600;white-space:nowrap;display:flex;align-items:center;gap:5px;transition:background .15s"
+              onmouseover="this.style.background='var(--navy-light)'" onmouseout="this.style.background='var(--navy)'">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+              Выбрать помещения
+            </button>
+          </div>
         </div>
 
         <div class="field col-span-2">
@@ -2751,7 +2887,11 @@ async function buildNaryadDocument(data) {
       margins: { top: 0, bottom: 0, left: 0, right: 0 },
       verticalAlign: opts.vAlign || VerticalAlign.CENTER,
       columnSpan: opts.span,
-      children: items.map(c => (typeof c === 'string' ? p(c, opts) : c))
+      children: items.flatMap(c => {
+        if (typeof c !== 'string') return [c];
+        const lines = c.split('\n');
+        return lines.map((line, li) => p(line, li < lines.length - 1 ? { ...opts, spacing: { after: 0 } } : opts));
+      })
     });
   }
   function emptyRows(widths, count) {
@@ -3221,7 +3361,7 @@ async function buildPPRVDocument(data) {
 }
 
 // ─── Проверка актуальности версии ─────────────────────────────────────────
-const CURRENT_VERSION = 'v2.58';
+const CURRENT_VERSION = 'v2.64';
 const VERSION_CHECK_TTL = 5 * 60 * 1000; // 5 минут
 let _versionCheckTime = null;
 let _versionCheckPassed = false;
@@ -4441,6 +4581,47 @@ async function buildOgnevoyDocument(data) {
 // ─── История обновлений ───────────────────────────────────────────────────
 const CHANGELOG = [
   {
+    version: 'v2.64', date: '29.06.2026',
+    changes: [
+      'Добавлен пикер помещений: кнопка «Выбрать помещения» рядом с полем «Место выполнения работ»',
+      'Поэтажные планы здания 20UKC — все 9 отметок от -5.400 до +27.600 с кликабельными помещениями',
+    ]
+  },
+  {
+    version: 'v2.63', date: '29.06.2026',
+    changes: [
+      'Добавлена интерактивная схема площадки Курской АЭС-2 в поле «Место выполнения работ»',
+      'Нажатие на здание на схеме автоматически заполняет поле',
+    ]
+  },
+  {
+    version: 'v2.62', date: '29.06.2026',
+    changes: [
+      'Инструкция открывается на весь экран',
+    ]
+  },
+  {
+    version: 'v2.61', date: '29.06.2026',
+    changes: [
+      'Инструкция расширена: слайды «Быстрый старт», «Если кнопки не появляются», «Полезные трюки», «Обратная связь»',
+      'Блок 4 в инструкции: исправлены цвета кнопок скачивания, добавлено описание когда нужен каждый документ',
+      'Авторизация: добавлена заметка о конфиденциальности данных',
+    ]
+  },
+  {
+    version: 'v2.60', date: '29.06.2026',
+    changes: [
+      'Инструкция: исправлены логические расхождения со схемами — реальные названия факторов, правильные обязательные поля, кнопка Синхронизация в Блоке 3',
+    ]
+  },
+  {
+    version: 'v2.59', date: '29.06.2026',
+    changes: [
+      'Инструкция переработана: полноэкранная презентация с SVG-схемами интерфейса',
+      'Добавлен тестовый аккаунт (логин тест / пароль тест) в слайде авторизации',
+    ]
+  },
+  {
     version: 'v2.58', date: '28.06.2026',
     changes: [
       'Блок 2 теперь показывает шаблонные опасности когда пользователь не авторизован',
@@ -4639,61 +4820,605 @@ document.addEventListener('click', function(e) {
 
 const GUIDE_SLIDES = [
   {
-    icon: '👋',
-    title: 'Добро пожаловать в Конструктор',
-    text: `<p>Этот сайт создан для руководителей работ и всех, кто занимается оформлением нарядов-допусков. Если вам нужно быстро подготовить документы на опасные работы — Конструктор сделает это в разы быстрее и проще, чем вручную.</p>
-<p>Никаких установок и регистраций для старта: открыл браузер — и сразу работаешь. Всё заполняется в форме, а готовые файлы скачиваются одной кнопкой.</p>`
+    icon: '🚀',
+    title: 'Быстрый старт',
+    text: `<p>Весь процесс — <strong>пять шагов</strong>. Заполняйте блоки сверху вниз, система подскажет что нужно.</p>
+<p>Войдите перед заполнением — это сэкономит время: организация, ФИО руководителя и список бригады заполнятся <strong>автоматически</strong>.</p>
+<div class="guide-tip">Не хотите входить — всё равно можно заполнить вручную и скачать документы.</div>`,
+    visual: `<svg viewBox="0 0 520 330" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI,system-ui,sans-serif">
+  <rect width="520" height="330" fill="#e4eaf3" rx="8"/>
+  <text x="260" y="24" fill="#1a3a5c" font-size="11" font-weight="700" text-anchor="middle">От открытия сайта до готового документа</text>
+  <circle cx="44" cy="62" r="18" fill="#2e7abf"/>
+  <text x="44" y="67" fill="white" font-size="14" text-anchor="middle" font-weight="700">1</text>
+  <text x="72" y="57" fill="#1a3a5c" font-size="10" font-weight="700">Войдите в систему</text>
+  <text x="72" y="72" fill="#3d5168" font-size="8.5">Кнопка «👤 Войти» справа — данные профиля подтянутся автоматически</text>
+  <line x1="44" y1="80" x2="44" y2="94" stroke="#2e7abf" stroke-width="1.5" stroke-dasharray="3,2"/>
+  <circle cx="44" cy="108" r="18" fill="#1a3a5c"/>
+  <text x="44" y="113" fill="white" font-size="14" text-anchor="middle" font-weight="700">2</text>
+  <text x="72" y="103" fill="#1a3a5c" font-size="10" font-weight="700">Заполните Блок 1 — Реквизиты</text>
+  <text x="72" y="118" fill="#3d5168" font-size="8.5">Дата, вид работ, место, руководитель, лицо выдавшее наряд</text>
+  <line x1="44" y1="126" x2="44" y2="140" stroke="#1a3a5c" stroke-width="1.5" stroke-dasharray="3,2"/>
+  <circle cx="44" cy="154" r="18" fill="#1a3a5c"/>
+  <text x="44" y="159" fill="white" font-size="14" text-anchor="middle" font-weight="700">3</text>
+  <text x="72" y="149" fill="#1a3a5c" font-size="10" font-weight="700">Отметьте опасные факторы — Блок 2</text>
+  <text x="72" y="164" fill="#3d5168" font-size="8.5">Выберите условия на объекте: высота, огонь, электроустановки…</text>
+  <line x1="44" y1="172" x2="44" y2="186" stroke="#1a3a5c" stroke-width="1.5" stroke-dasharray="3,2"/>
+  <circle cx="44" cy="200" r="18" fill="#1a3a5c"/>
+  <text x="44" y="205" fill="white" font-size="14" text-anchor="middle" font-weight="700">4</text>
+  <text x="72" y="195" fill="#1a3a5c" font-size="10" font-weight="700">Добавьте бригаду — Блок 3</text>
+  <text x="72" y="210" fill="#3d5168" font-size="8.5">Вручную «+ Добавить строку» или «Из базы» (после входа)</text>
+  <line x1="44" y1="218" x2="44" y2="232" stroke="#1a3a5c" stroke-width="1.5" stroke-dasharray="3,2"/>
+  <circle cx="44" cy="246" r="18" fill="#1a5c3a"/>
+  <text x="44" y="251" fill="white" font-size="14" text-anchor="middle" font-weight="700">5</text>
+  <text x="72" y="241" fill="#1a5c3a" font-size="10" font-weight="700">Скачайте документы — Блок 4</text>
+  <text x="72" y="256" fill="#3d5168" font-size="8.5">Блок 4 появится автоматически. Выбирайте нужные файлы .docx</text>
+  <rect x="20" y="275" width="480" height="40" rx="8" fill="#f0fdf4" stroke="#22c55e" stroke-width="1.5"/>
+  <text x="260" y="292" fill="#166534" font-size="8" text-anchor="middle" font-weight="700">✓ Готово! Файлы формируются прямо в браузере — данные никуда не отправляются</text>
+  <text x="260" y="308" fill="#166534" font-size="7.5" text-anchor="middle">Для следующего наряда нажмите «+» вверху — прошлый сохранится</text>
+</svg>`
+  },
+  {
+    icon: '🗺️',
+    title: 'Как устроена страница',
+    text: `<p>Страница состоит из <strong>четырёх блоков</strong> — заполняйте их сверху вниз по порядку.</p>
+<p><strong>① Реквизиты</strong> — организация, дата, место работ<br>
+<strong>② Факторы</strong> — опасные условия производства<br>
+<strong>③ Бригада</strong> — состав исполнителей<br>
+<strong>④ Скачать</strong> — готовые документы Word</p>
+<p>Справа (поверх страницы) всегда видна панель кнопок: <strong>Войти, Инструкция, Обновления, Тема</strong>.</p>
+<p>Вверху — <strong>панель вкладок</strong>. Жмите «+» чтобы вести несколько нарядов одновременно.</p>`,
+    visual: `<svg viewBox="0 0 520 330" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI,system-ui,sans-serif">
+  <rect width="520" height="330" fill="#e4eaf3" rx="8"/>
+  <rect x="10" y="10" width="354" height="36" rx="7" fill="#1a3a5c"/>
+  <rect x="18" y="17" width="22" height="22" rx="5" fill="rgba(255,255,255,.18)"/>
+  <text x="29" y="32" fill="white" font-size="9" text-anchor="middle">◻</text>
+  <text x="50" y="27" fill="white" font-size="9" font-weight="700">Наряд-допуск</text>
+  <text x="50" y="40" fill="#8fa6be" font-size="5.5">Форма заполнения разрешительной документации</text>
+  <rect x="374" y="10" width="136" height="18" rx="9" fill="#1a3a5c"/>
+  <text x="442" y="22" fill="white" font-size="7.5" text-anchor="middle">👤 Войти</text>
+  <rect x="374" y="32" width="136" height="18" rx="9" fill="#2e7abf"/>
+  <text x="442" y="44" fill="white" font-size="7" text-anchor="middle">ℹ Инструкция</text>
+  <rect x="374" y="54" width="136" height="18" rx="9" fill="#1a3a5c"/>
+  <text x="442" y="66" fill="white" font-size="7" text-anchor="middle">🕐 Обновления</text>
+  <rect x="374" y="76" width="136" height="18" rx="9" fill="#1a3a5c"/>
+  <text x="442" y="88" fill="white" font-size="7.5" text-anchor="middle">☀ Тема</text>
+  <text x="442" y="108" fill="#8fa6be" font-size="6" text-anchor="middle" font-style="italic">фиксированная панель</text>
+  <rect x="10" y="50" width="354" height="20" rx="5" fill="white"/>
+  <rect x="18" y="54" width="48" height="12" rx="6" fill="#2e7abf"/>
+  <text x="42" y="63" fill="white" font-size="6" text-anchor="middle">Наряд 1</text>
+  <rect x="70" y="54" width="48" height="12" rx="6" fill="#eef2f7"/>
+  <text x="94" y="63" fill="#3d5168" font-size="6" text-anchor="middle">Наряд 2</text>
+  <rect x="122" y="56" width="12" height="8" rx="4" fill="#e8f2fa"/>
+  <text x="128" y="63" fill="#2e7abf" font-size="9" text-anchor="middle" font-weight="700">+</text>
+  <text x="310" y="63" fill="#8fa6be" font-size="5.5">🗑 Очистить бланк</text>
+  <rect x="10" y="74" width="354" height="47" rx="6" fill="white"/>
+  <rect x="10" y="74" width="354" height="17" rx="6" fill="#1a3a5c"/>
+  <rect x="10" y="82" width="354" height="9" fill="#1a3a5c"/>
+  <rect x="18" y="77" width="22" height="10" rx="5" fill="rgba(255,255,255,.18)"/>
+  <text x="29" y="85" fill="white" font-size="5" text-anchor="middle" font-weight="700">БЛОК 1</text>
+  <text x="48" y="85" fill="white" font-size="6.5" font-weight="600">Реквизиты и общие сведения</text>
+  <rect x="18" y="96" width="96" height="10" rx="3" fill="#eef2f7"/>
+  <rect x="120" y="96" width="70" height="10" rx="3" fill="#eef2f7"/>
+  <rect x="196" y="96" width="68" height="10" rx="3" fill="#eef2f7"/>
+  <rect x="270" y="96" width="86" height="10" rx="3" fill="#eef2f7"/>
+  <text x="22" y="93" fill="#8fa6be" font-size="4.5">Организация</text>
+  <text x="124" y="93" fill="#8fa6be" font-size="4.5">Номер наряда</text>
+  <text x="200" y="93" fill="#8fa6be" font-size="4.5">Дата выдачи *</text>
+  <text x="274" y="93" fill="#8fa6be" font-size="4.5">Вид работ *</text>
+  <text x="22" y="113" fill="#3d5168" font-size="5">ООО «ЮЭМ»</text>
+  <text x="196" y="113" fill="#d8e2ee" font-size="5">обязательное поле</text>
+  <rect x="10" y="125" width="354" height="42" rx="6" fill="white"/>
+  <rect x="10" y="125" width="354" height="17" rx="6" fill="#1a3a5c"/>
+  <rect x="10" y="133" width="354" height="9" fill="#1a3a5c"/>
+  <rect x="18" y="128" width="22" height="10" rx="5" fill="rgba(255,255,255,.18)"/>
+  <text x="29" y="136" fill="white" font-size="5" text-anchor="middle" font-weight="700">БЛОК 2</text>
+  <text x="48" y="136" fill="white" font-size="6.5" font-weight="600">Опасные и вредные производственные факторы</text>
+  <rect x="286" y="128" width="68" height="10" rx="5" fill="rgba(255,255,255,.18)"/>
+  <text x="320" y="136" fill="white" font-size="5.5" text-anchor="middle">⚙ Настройки</text>
+  <rect x="18" y="148" width="7" height="7" rx="1.5" fill="#2e7abf"/>
+  <text x="29" y="154" fill="#1e2d3d" font-size="5.5">Высотные работы</text>
+  <rect x="104" y="148" width="7" height="7" rx="1.5" fill="white" stroke="#d8e2ee" stroke-width="1"/>
+  <text x="115" y="154" fill="#1e2d3d" font-size="5.5">Огневые работы</text>
+  <rect x="190" y="148" width="7" height="7" rx="1.5" fill="white" stroke="#d8e2ee" stroke-width="1"/>
+  <text x="201" y="154" fill="#1e2d3d" font-size="5.5">Электроустановки</text>
+  <rect x="278" y="148" width="7" height="7" rx="1.5" fill="white" stroke="#d8e2ee" stroke-width="1"/>
+  <text x="289" y="154" fill="#1e2d3d" font-size="5.5">Земляные работы</text>
+  <rect x="10" y="171" width="354" height="50" rx="6" fill="white"/>
+  <rect x="10" y="171" width="354" height="17" rx="6" fill="#1a3a5c"/>
+  <rect x="10" y="179" width="354" height="9" fill="#1a3a5c"/>
+  <rect x="18" y="174" width="22" height="10" rx="5" fill="rgba(255,255,255,.18)"/>
+  <text x="29" y="182" fill="white" font-size="5" text-anchor="middle" font-weight="700">БЛОК 3</text>
+  <text x="48" y="182" fill="white" font-size="6.5" font-weight="600">Состав исполнителей работ</text>
+  <text x="18" y="197" fill="#8fa6be" font-size="5">№  ФИО</text>
+  <text x="120" y="197" fill="#8fa6be" font-size="5">Должность</text>
+  <text x="228" y="197" fill="#8fa6be" font-size="5">Разряд</text>
+  <text x="264" y="197" fill="#8fa6be" font-size="5">Гр.ЭБ</text>
+  <line x1="18" y1="199" x2="356" y2="199" stroke="#eef2f7" stroke-width="0.8"/>
+  <text x="18" y="207" fill="#1e2d3d" font-size="5">1  Иванов Иван Иванович</text>
+  <text x="120" y="207" fill="#1e2d3d" font-size="5">Электромонтажник</text>
+  <text x="228" y="207" fill="#1e2d3d" font-size="5">5</text>
+  <text x="264" y="207" fill="#1e2d3d" font-size="5">III</text>
+  <rect x="18" y="212" width="58" height="11" rx="5" fill="white" stroke="#d8e2ee" stroke-width="1"/>
+  <text x="47" y="221" fill="#1e2d3d" font-size="5.5" text-anchor="middle">+ Добавить строку</text>
+  <rect x="80" y="212" width="34" height="11" rx="5" fill="#2e7abf"/>
+  <text x="97" y="221" fill="white" font-size="5.5" text-anchor="middle">Из базы</text>
+  <rect x="10" y="225" width="354" height="44" rx="6" fill="white"/>
+  <rect x="10" y="225" width="354" height="17" rx="6" fill="#1a3a5c"/>
+  <rect x="10" y="233" width="354" height="9" fill="#1a3a5c"/>
+  <rect x="18" y="228" width="22" height="10" rx="5" fill="rgba(255,255,255,.18)"/>
+  <text x="29" y="236" fill="white" font-size="5" text-anchor="middle" font-weight="700">БЛОК 4</text>
+  <text x="48" y="236" fill="white" font-size="6.5" font-weight="600">Скачать документы</text>
+  <rect x="18" y="246" width="56" height="17" rx="6" fill="#1a3a5c"/>
+  <text x="46" y="258" fill="white" font-size="5.5" text-anchor="middle">Наряд-допуск</text>
+  <rect x="78" y="246" width="40" height="17" rx="6" fill="#2e7abf"/>
+  <text x="98" y="258" fill="white" font-size="5.5" text-anchor="middle">ППРв</text>
+  <rect x="122" y="246" width="48" height="17" rx="6" fill="#2e7abf"/>
+  <text x="146" y="258" fill="white" font-size="5.5" text-anchor="middle">Акт-высота</text>
+  <rect x="174" y="246" width="32" height="17" rx="6" fill="#2e7abf"/>
+  <text x="190" y="258" fill="white" font-size="5.5" text-anchor="middle">ОПФ</text>
+  <rect x="210" y="246" width="60" height="17" rx="6" fill="#2e7abf"/>
+  <text x="240" y="258" fill="white" font-size="5.5" text-anchor="middle">Огневой наряд</text>
+  <text x="18" y="276" fill="#8fa6be" font-size="5" font-style="italic">Данные хранятся в браузере — автосохранение</text>
+</svg>`
   },
   {
     icon: '📋',
-    title: 'Блок 1 — Реквизиты и общие сведения',
-    text: `<p>Здесь заполняются основные данные: организация, номер наряда, дата выдачи, вид и место работ.</p>
-<p>Поля, отмеченные <strong>красной звёздочкой (*)</strong>, обязательны — без них кнопки скачивания не появятся.</p>
-<p><strong>Руководитель работ</strong> — человек, непосредственно отвечающий за безопасность на месте производства работ.<br>
-<strong>Лицо, выдавшее наряд</strong> — тот, кто оформляет документ: инженер, мастер или начальник участка.</p>`
+    title: 'Блок 1 — Реквизиты',
+    text: `<p>Заполните основные сведения о наряде. Поля со <strong style="color:#e53e3e">звёздочкой *</strong> — обязательные.</p>
+<p>Для появления кнопок скачивания нужны все шесть:<br>
+<strong>Дата выдачи *</strong><br>
+<strong>Вид работ *</strong><br>
+<strong>Место производства работ *</strong><br>
+<strong>ФИО руководителя работ *</strong><br>
+<strong>Должность руководителя *</strong><br>
+<strong>ФИО лица, выдавшего наряд *</strong></p>
+<p><strong>Руководитель</strong> — тот, кто непосредственно ведёт бригаду на объекте.<br>
+<strong>Лицо, выдавшее наряд</strong> — инженер или специалист ОТ, кто оформляет документ.</p>
+<div class="guide-tip">Пока не заполнены все шесть полей — кнопки скачивания в Блоке 4 не появятся.</div>`,
+    visual: `<svg viewBox="0 0 520 330" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI,system-ui,sans-serif">
+  <rect width="520" height="330" fill="#e4eaf3" rx="8"/>
+  <rect x="20" y="14" width="480" height="300" rx="10" fill="white" filter="url(#sh)"/>
+  <defs><filter id="sh"><feDropShadow dx="0" dy="2" stdDeviation="6" flood-color="rgba(26,58,92,.12)"/></filter></defs>
+  <rect x="20" y="14" width="480" height="28" rx="10" fill="#1a3a5c"/>
+  <rect x="20" y="32" width="480" height="10" fill="#1a3a5c"/>
+  <rect x="30" y="19" width="28" height="14" rx="7" fill="rgba(255,255,255,.18)"/>
+  <text x="44" y="29" fill="white" font-size="6" text-anchor="middle" font-weight="700">БЛОК 1</text>
+  <text x="70" y="29" fill="white" font-size="9" font-weight="600">Реквизиты и общие сведения</text>
+  <text x="30" y="64" fill="#8fa6be" font-size="8">Организация</text>
+  <rect x="30" y="68" width="460" height="22" rx="5" fill="#eef2f7"/>
+  <text x="42" y="83" fill="#1e2d3d" font-size="9">ООО «ЮЭМ»</text>
+  <text x="30" y="108" fill="#8fa6be" font-size="8">Номер наряда</text>
+  <rect x="30" y="112" width="140" height="22" rx="5" fill="#eef2f7"/>
+  <text x="42" y="127" fill="#1e2d3d" font-size="9">НД-124</text>
+  <text x="198" y="108" fill="#8fa6be" font-size="8">Дата выдачи <tspan fill="#e53e3e" font-weight="700">*</tspan></text>
+  <rect x="198" y="112" width="140" height="22" rx="5" fill="#eef2f7" stroke="#2e7abf" stroke-width="1.5"/>
+  <text x="210" y="127" fill="#1e2d3d" font-size="9">29.06.2026</text>
+  <text x="362" y="108" fill="#8fa6be" font-size="8">Вид работ <tspan fill="#e53e3e" font-weight="700">*</tspan></text>
+  <rect x="362" y="112" width="128" height="22" rx="5" fill="#fff3cd" stroke="#f6ad55" stroke-width="1.5"/>
+  <text x="374" y="127" fill="#8fa6be" font-size="8">не заполнено</text>
+  <circle cx="489" cy="108" r="5" fill="#f6ad55"/>
+  <text x="489" y="112" fill="white" font-size="7" text-anchor="middle" font-weight="700">!</text>
+  <text x="30" y="154" fill="#8fa6be" font-size="8">Место производства работ <tspan fill="#e53e3e" font-weight="700">*</tspan></text>
+  <rect x="30" y="158" width="460" height="22" rx="5" fill="#eef2f7"/>
+  <text x="42" y="173" fill="#1e2d3d" font-size="9">Кровля корпуса №3, ул. Ленина д. 12</text>
+  <text x="30" y="202" fill="#8fa6be" font-size="8">Руководитель работ (ФИО) <tspan fill="#e53e3e" font-weight="700">*</tspan></text>
+  <rect x="30" y="206" width="222" height="22" rx="5" fill="#eef2f7"/>
+  <text x="42" y="221" fill="#1e2d3d" font-size="9">Петров Пётр Петрович</text>
+  <text x="268" y="202" fill="#8fa6be" font-size="8">Должность руководителя <tspan fill="#e53e3e" font-weight="700">*</tspan></text>
+  <rect x="268" y="206" width="222" height="22" rx="5" fill="#eef2f7"/>
+  <text x="280" y="221" fill="#1e2d3d" font-size="9">Мастер строительных работ</text>
+  <text x="30" y="250" fill="#8fa6be" font-size="8">Лицо, выдавшее наряд (ФИО) <tspan fill="#e53e3e" font-weight="700">*</tspan></text>
+  <rect x="30" y="254" width="296" height="22" rx="5" fill="#fff3cd" stroke="#f6ad55" stroke-width="1.5"/>
+  <text x="42" y="269" fill="#8fa6be" font-size="8">не заполнено</text>
+  <circle cx="326" cy="254" r="5" fill="#f6ad55"/>
+  <text x="326" y="258" fill="white" font-size="7" text-anchor="middle" font-weight="700">!</text>
+  <text x="342" y="250" fill="#8fa6be" font-size="8">Должность</text>
+  <rect x="342" y="254" width="148" height="22" rx="5" fill="#eef2f7"/>
+  <text x="354" y="269" fill="#1e2d3d" font-size="8">Инженер по ОТ</text>
+  <rect x="30" y="285" width="460" height="22" rx="6" fill="#f0fdf4" stroke="#22c55e" stroke-width="1"/>
+  <text x="260" y="295" fill="#166534" font-size="6.5" text-anchor="middle" font-weight="600">После авторизации: Организация, ФИО и Должность руководителя заполнятся и заблокируются автоматически</text>
+  <text x="260" y="304" fill="#166534" font-size="6.5" text-anchor="middle">Поле «Лицо, выдавшее наряд» получит список выбора из базы сотрудников</text>
+</svg>`
   },
   {
     icon: '⚠️',
-    title: 'Блок 2 — Опасные и вредные факторы',
-    text: `<p>Отметьте все производственные факторы, которые присутствуют на вашем объекте. От выбора зависит содержание итогового наряда-допуска — нужные разделы и требования подставятся автоматически.</p>
-<p>Кнопка <strong>«Настройки»</strong> в правом углу шапки блока позволяет добавить нестандартные факторы, характерные именно для вашего объекта.</p>`
+    title: 'Блок 2 — Опасные факторы',
+    text: `<p>Отметьте галочками все опасные факторы, которые есть на вашем объекте.</p>
+<p>От выбора зависит <strong>содержание наряда</strong> — нужные пункты и требования безопасности подставятся автоматически.</p>
+<p>Кнопка <strong>«⚙ Настройки»</strong> (в правом углу заголовка) позволяет добавить нестандартные факторы, которых нет в списке.</p>
+<div class="guide-tip">Можно выбирать сразу несколько факторов. Например: «Высота» + «Электроинструмент» одновременно. Факторы «Высота», «Высота + Эстокада», «Вышка тура» — дополнительно активируют кнопку <strong>«Акт-высота»</strong> в Блоке 4.</div>`,
+    visual: `<svg viewBox="0 0 520 330" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI,system-ui,sans-serif">
+  <rect width="520" height="330" fill="#e4eaf3" rx="8"/>
+  <rect x="20" y="14" width="480" height="300" rx="10" fill="white"/>
+  <rect x="20" y="14" width="480" height="30" rx="10" fill="#1a3a5c"/>
+  <rect x="20" y="32" width="480" height="12" fill="#1a3a5c"/>
+  <rect x="30" y="19" width="28" height="16" rx="8" fill="rgba(255,255,255,.18)"/>
+  <text x="44" y="31" fill="white" font-size="6" text-anchor="middle" font-weight="700">БЛОК 2</text>
+  <text x="70" y="31" fill="white" font-size="9" font-weight="600">Опасные и вредные производственные факторы</text>
+  <rect x="390" y="20" width="100" height="18" rx="9" fill="rgba(255,255,255,.22)" stroke="rgba(255,255,255,.5)" stroke-width="1.5"/>
+  <text x="440" y="32" fill="white" font-size="8" text-anchor="middle" font-weight="600">⚙ Настройки</text>
+  <line x1="440" y1="44" x2="440" y2="56" stroke="#f6ad55" stroke-width="2"/>
+  <polygon points="434,56 440,64 446,56" fill="#f6ad55"/>
+  <text x="440" y="76" fill="#c07800" font-size="7" text-anchor="middle" font-weight="600">нажмите для добавления</text>
+  <text x="440" y="86" fill="#c07800" font-size="7" text-anchor="middle">нестандартных факторов</text>
+  <rect x="30" y="96" width="214" height="46" rx="8" fill="#e8f2fa" stroke="#2e7abf" stroke-width="1.5"/>
+  <rect x="42" y="108" width="14" height="14" rx="3" fill="#2e7abf"/>
+  <text x="49" y="119" fill="white" font-size="10" text-anchor="middle" font-weight="700">✓</text>
+  <text x="64" y="115" fill="#1a3a5c" font-size="8" font-weight="700">Высота</text>
+  <text x="64" y="127" fill="#3d5168" font-size="6.5">падение с высоты, травмы при падении</text>
+  <rect x="258" y="96" width="214" height="46" rx="8" fill="#e8f2fa" stroke="#2e7abf" stroke-width="1.5"/>
+  <rect x="270" y="108" width="14" height="14" rx="3" fill="#2e7abf"/>
+  <text x="277" y="119" fill="white" font-size="10" text-anchor="middle" font-weight="700">✓</text>
+  <text x="292" y="115" fill="#1a3a5c" font-size="8" font-weight="700">Вышка тура</text>
+  <text x="292" y="127" fill="#3d5168" font-size="6.5">передвижные леса и подмости</text>
+  <rect x="30" y="150" width="214" height="46" rx="8" fill="#f7f9fc" stroke="#d8e2ee" stroke-width="1"/>
+  <rect x="42" y="162" width="14" height="14" rx="3" fill="white" stroke="#d8e2ee" stroke-width="1.5"/>
+  <text x="64" y="169" fill="#1e2d3d" font-size="8" font-weight="600">Электроинструмент</text>
+  <text x="64" y="181" fill="#8fa6be" font-size="6.5">травмы рук, возгорание, кабели</text>
+  <rect x="258" y="150" width="214" height="46" rx="8" fill="#f7f9fc" stroke="#d8e2ee" stroke-width="1"/>
+  <rect x="270" y="162" width="14" height="14" rx="3" fill="white" stroke="#d8e2ee" stroke-width="1.5"/>
+  <text x="292" y="169" fill="#1e2d3d" font-size="8" font-weight="600">Земляные работы</text>
+  <text x="292" y="181" fill="#8fa6be" font-size="6.5">траншеи, котлованы, выемки</text>
+  <rect x="30" y="204" width="214" height="46" rx="8" fill="#f7f9fc" stroke="#d8e2ee" stroke-width="1"/>
+  <rect x="42" y="216" width="14" height="14" rx="3" fill="white" stroke="#d8e2ee" stroke-width="1.5"/>
+  <text x="64" y="223" fill="#1e2d3d" font-size="8" font-weight="600">Повышенные температуры</text>
+  <text x="64" y="235" fill="#8fa6be" font-size="6.5">перегрев, обезвоживание</text>
+  <rect x="258" y="204" width="214" height="46" rx="8" fill="#f7f9fc" stroke="#d8e2ee" stroke-width="1"/>
+  <rect x="270" y="216" width="14" height="14" rx="3" fill="white" stroke="#d8e2ee" stroke-width="1.5"/>
+  <text x="292" y="223" fill="#1e2d3d" font-size="8" font-weight="600">Погрузочно-разгрузочные</text>
+  <text x="292" y="235" fill="#8fa6be" font-size="6.5">строповка, перемещение грузов</text>
+  <text x="30" y="265" fill="#8fa6be" font-size="6.5">Также: Недостаточное освещение, Пониженные температуры, Ночные работы, Высота + Эстокада</text>
+  <text x="30" y="280" fill="#8fa6be" font-size="6.5">+ нестандартные факторы через кнопку «⚙ Настройки»</text>
+  <rect x="30" y="288" width="460" height="16" rx="5" fill="#fff3cd"/>
+  <text x="260" y="299" fill="#8a6200" font-size="6.5" text-anchor="middle" font-weight="600">Факторы «Высота» / «Высота + Эстокада» / «Вышка тура» — активируют кнопку «Акт-высота» в Блоке 4</text>
+</svg>`
   },
   {
     icon: '👷',
     title: 'Блок 3 — Состав исполнителей',
-    text: `<p>Добавляйте членов бригады двумя способами:</p>
-<p>• <strong>«Добавить строку»</strong> — ручной ввод данных по одному человеку.<br>
-• <strong>«Из базы»</strong> — раскрывающийся список сотрудников вашей организации. Можно выбрать сразу нескольких — ФИО, должность и квалификация подставятся автоматически.</p>
-<p>Кнопка <strong>«Из базы»</strong> становится доступна только после авторизации в системе.</p>`
+    text: `<p>Добавляйте членов бригады тремя способами:</p>
+<p>• <strong>«+ Добавить строку»</strong> — ручной ввод данных<br>
+• <strong>«🔄 Синхронизация»</strong> — кнопка до входа, открывает форму авторизации<br>
+• <strong>«👥 Из базы»</strong> — выбор из базы сотрудников (только после входа)</p>
+<p>После выбора «Из базы» ФИО, должность, разряд, группа ЭБ и группа высотных работ <strong>заполняются автоматически</strong>.</p>
+<p>Кнопка <strong>«А→Я»</strong> сортирует бригаду по алфавиту. Строка 1 — бригадир, она не сортируется.</p>
+<div class="guide-tip">«Синхронизация» и «Из базы» — это одна логика: первая зовёт войти, вторая работает после входа.</div>`,
+    visual: `<svg viewBox="0 0 520 330" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI,system-ui,sans-serif">
+  <rect width="520" height="330" fill="#e4eaf3" rx="8"/>
+  <rect x="20" y="14" width="480" height="300" rx="10" fill="white"/>
+  <rect x="20" y="14" width="480" height="30" rx="10" fill="#1a3a5c"/>
+  <rect x="20" y="32" width="480" height="12" fill="#1a3a5c"/>
+  <rect x="30" y="19" width="28" height="16" rx="8" fill="rgba(255,255,255,.18)"/>
+  <text x="44" y="31" fill="white" font-size="6" text-anchor="middle" font-weight="700">БЛОК 3</text>
+  <text x="70" y="31" fill="white" font-size="9" font-weight="600">Состав исполнителей работ</text>
+  <rect x="30" y="52" width="460" height="20" rx="4" fill="#f0f4f8"/>
+  <text x="44" y="66" fill="#8fa6be" font-size="7.5" font-weight="600">№</text>
+  <text x="70" y="66" fill="#8fa6be" font-size="7.5" font-weight="600">ФИО</text>
+  <text x="210" y="66" fill="#8fa6be" font-size="7.5" font-weight="600">Должность</text>
+  <text x="340" y="66" fill="#8fa6be" font-size="7.5" font-weight="600">Разряд</text>
+  <text x="380" y="66" fill="#8fa6be" font-size="7.5" font-weight="600">Гр. ЭБ</text>
+  <text x="420" y="66" fill="#8fa6be" font-size="7.5" font-weight="600">Гр. выс.</text>
+  <rect x="30" y="72" width="460" height="1" fill="#eef2f7"/>
+  <rect x="30" y="73" width="460" height="26" fill="white"/>
+  <text x="44" y="90" fill="#1e2d3d" font-size="8">1</text>
+  <text x="70" y="90" fill="#1e2d3d" font-size="8" font-weight="600">Иванов Иван Иванович</text>
+  <text x="210" y="90" fill="#1e2d3d" font-size="8">Бригадир-электрик</text>
+  <text x="344" y="90" fill="#1e2d3d" font-size="8">6</text>
+  <text x="381" y="90" fill="#1e2d3d" font-size="8">IV</text>
+  <text x="421" y="90" fill="#1e2d3d" font-size="8">II</text>
+  <rect x="30" y="99" width="460" height="1" fill="#eef2f7"/>
+  <rect x="30" y="100" width="460" height="26" fill="#f7f9fc"/>
+  <text x="44" y="117" fill="#1e2d3d" font-size="8">2</text>
+  <text x="70" y="117" fill="#1e2d3d" font-size="8">Петров Сергей Михайлович</text>
+  <text x="210" y="117" fill="#1e2d3d" font-size="8">Электромонтажник</text>
+  <text x="344" y="117" fill="#1e2d3d" font-size="8">5</text>
+  <text x="381" y="117" fill="#1e2d3d" font-size="8">III</text>
+  <text x="421" y="117" fill="#1e2d3d" font-size="8">—</text>
+  <rect x="30" y="126" width="460" height="1" fill="#eef2f7"/>
+  <rect x="30" y="127" width="460" height="26" fill="white"/>
+  <text x="44" y="144" fill="#1e2d3d" font-size="8">3</text>
+  <text x="70" y="144" fill="#1e2d3d" font-size="8">Сидоров Алексей Викторович</text>
+  <text x="210" y="144" fill="#1e2d3d" font-size="8">Стропальщик</text>
+  <text x="344" y="144" fill="#1e2d3d" font-size="8">4</text>
+  <text x="381" y="144" fill="#1e2d3d" font-size="8">—</text>
+  <text x="421" y="144" fill="#1e2d3d" font-size="8">I</text>
+  <rect x="30" y="162" width="124" height="28" rx="14" fill="white" stroke="#d8e2ee" stroke-width="1.5"/>
+  <text x="92" y="180" fill="#1e2d3d" font-size="8.5" text-anchor="middle" font-weight="600">+ Добавить строку</text>
+  <rect x="164" y="162" width="80" height="28" rx="14" fill="#d8e2ee"/>
+  <text x="204" y="180" fill="#8fa6be" font-size="8" text-anchor="middle">👥 Из базы</text>
+  <text x="204" y="196" fill="#8fa6be" font-size="5.5" text-anchor="middle" font-style="italic">после входа</text>
+  <rect x="252" y="162" width="106" height="28" rx="14" fill="#1a3a5c"/>
+  <text x="305" y="178" fill="white" font-size="8" text-anchor="middle" font-weight="700">🔄 Синхронизация</text>
+  <text x="305" y="190" fill="#8fa6be" font-size="5.5" text-anchor="middle">до авторизации</text>
+  <line x1="305" y1="192" x2="305" y2="206" stroke="#1a3a5c" stroke-width="1.5"/>
+  <polygon points="300,206 305,214 310,206" fill="#1a3a5c"/>
+  <rect x="218" y="216" width="174" height="30" rx="7" fill="#1a3a5c"/>
+  <text x="305" y="228" fill="white" font-size="6.5" text-anchor="middle" font-weight="700">Открывает форму входа</text>
+  <text x="305" y="240" fill="#8fa6be" font-size="6" text-anchor="middle">после входа — скрывается</text>
+  <rect x="366" y="162" width="60" height="28" rx="14" fill="white" stroke="#d8e2ee" stroke-width="1.5"/>
+  <text x="396" y="180" fill="#1e2d3d" font-size="8.5" text-anchor="middle">А → Я</text>
+  <text x="30" y="272" fill="#8fa6be" font-size="7" font-style="italic">Строка 1 — всегда бригадир, не сортируется. «А→Я» сортирует остальных по алфавиту.</text>
+  <rect x="30" y="280" width="460" height="16" rx="5" fill="#e8f2fa"/>
+  <text x="260" y="291" fill="#1a3a5c" font-size="6.5" text-anchor="middle">После входа: «Синхронизация» исчезает → появляется «Из базы» с полным списком сотрудников</text>
+</svg>`
   },
   {
     icon: '📄',
     title: 'Блок 4 — Скачать документы',
-    text: `<p>Кнопки скачивания появляются автоматически, как только все обязательные поля заполнены.</p>
+    text: `<p>Весь блок <strong>появляется автоматически</strong> после заполнения 6 обязательных полей Блока 1.</p>
 <p>Доступные документы:<br>
-<strong>Наряд-допуск</strong>, <strong>ППРв</strong> (план производства работ на высоте), <strong>Акт-высота</strong>, <strong>ОПФ</strong>, <strong>Огневой наряд</strong>.</p>
-<p>Все файлы формируются прямо в вашем браузере — данные никуда не отправляются и не сохраняются на сервере.</p>`
+<strong>Наряд-допуск</strong> — основной документ<br>
+<strong>ППРв</strong> — план производства работ на высоте<br>
+<strong>Акт-высота</strong> — приёмка рабочего места на высоте<br>
+<strong>ОПФ</strong> — карта оценки профессиональных факторов<br>
+<strong>Огневой наряд</strong> — для работ с открытым огнём</p>
+<p>Кнопка <strong>«Акт-высота»</strong> активна только если в Блоке 2 выбран хотя бы один высотный фактор: «Высота», «Высота + Эстокада» или «Вышка тура». Без них кнопка полупрозрачная и недоступна.</p>
+<div class="guide-tip">Все файлы формируются прямо в браузере — данные никуда не отправляются. Формат: Word (.docx).</div>`,
+    visual: `<svg viewBox="0 0 520 330" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI,system-ui,sans-serif">
+  <rect width="520" height="330" fill="#e4eaf3" rx="8"/>
+  <rect x="20" y="14" width="480" height="300" rx="10" fill="white"/>
+  <rect x="20" y="14" width="480" height="30" rx="10" fill="#1a3a5c"/>
+  <rect x="20" y="32" width="480" height="12" fill="#1a3a5c"/>
+  <rect x="30" y="19" width="28" height="16" rx="8" fill="rgba(255,255,255,.18)"/>
+  <text x="44" y="31" fill="white" font-size="6" text-anchor="middle" font-weight="700">БЛОК 4</text>
+  <text x="70" y="31" fill="white" font-size="9" font-weight="600">Скачать документы</text>
+  <!-- Кнопки скачивания — ряд 1 -->
+  <rect x="30" y="55" width="190" height="38" rx="8" fill="#1a5c3a"/>
+  <text x="125" y="79" fill="white" font-size="9.5" text-anchor="middle" font-weight="600">↓  Скачать Наряд-допуск</text>
+  <rect x="230" y="55" width="122" height="38" rx="8" fill="#234d78"/>
+  <text x="291" y="79" fill="white" font-size="9.5" text-anchor="middle" font-weight="600">↓  Скачать ППРв</text>
+  <rect x="362" y="55" width="138" height="38" rx="8" fill="#5c3a1a"/>
+  <text x="431" y="79" fill="white" font-size="9.5" text-anchor="middle" font-weight="600">↓  Скачать Акт-высота</text>
+  <!-- Кнопки скачивания — ряд 2 -->
+  <rect x="30" y="103" width="122" height="38" rx="8" fill="#3a1a5c"/>
+  <text x="91" y="127" fill="white" font-size="9.5" text-anchor="middle" font-weight="600">↓  Скачать ОПФ</text>
+  <rect x="162" y="103" width="200" height="38" rx="8" fill="#8b1a1a"/>
+  <text x="262" y="127" fill="white" font-size="9.5" text-anchor="middle" font-weight="600">↓  Скачать Огневой наряд</text>
+  <!-- Условия активации -->
+  <rect x="30" y="152" width="460" height="48" rx="8" fill="#fff8e6" stroke="#f6ad55" stroke-width="1"/>
+  <text x="48" y="170" fill="#8a4f00" font-size="8.5" font-weight="700">⚠  Условия активации кнопок:</text>
+  <text x="48" y="185" fill="#8a4f00" font-size="8">«Акт-высота» — только если в Блоке 2: «Высота», «Высота + Эстокада» или «Вышка тура»</text>
+  <text x="48" y="198" fill="#8a4f00" font-size="8">«Огневой наряд» — только если в Блоке 2 выбран фактор «Огневые работы»</text>
+  <!-- Когда нужен каждый документ -->
+  <text x="30" y="220" fill="#8fa6be" font-size="7.5" font-weight="600">Когда нужен каждый документ:</text>
+  <rect x="30" y="226" width="460" height="62" rx="6" fill="#f7f9fc"/>
+  <text x="44" y="242" fill="#1a5c3a" font-size="7.5" font-weight="700">Наряд-допуск</text><text x="128" y="242" fill="#3d5168" font-size="7.5"> — основной разрешительный документ, нужен всегда</text>
+  <text x="44" y="257" fill="#234d78" font-size="7.5" font-weight="700">ППРв</text><text x="71" y="257" fill="#3d5168" font-size="7.5"> — при работах на высоте (план производства работ)</text>
+  <text x="44" y="272" fill="#5c3a1a" font-size="7.5" font-weight="700">Акт-высота</text><text x="112" y="272" fill="#3d5168" font-size="7.5"> — приёмка рабочего места перед началом высотных работ</text>
+  <text x="44" y="287" fill="#8b1a1a" font-size="7.5" font-weight="700">ОПФ / Огневой наряд</text><text x="182" y="287" fill="#3d5168" font-size="7.5"> — по требованию надзорного органа / для огневых работ</text>
+  <!-- Главное условие -->
+  <rect x="30" y="296" width="460" height="18" rx="6" fill="#fff3cd" stroke="#f6ad55" stroke-width="1"/>
+  <text x="260" y="308" fill="#8a6200" font-size="7" text-anchor="middle" font-weight="600">⚠ Весь Блок 4 появится только когда заполнены все 6 обязательных полей Блока 1</text>
+</svg>`
+  },
+  {
+    icon: '❓',
+    title: 'Кнопки скачивания не появляются?',
+    text: `<p>Блок 4 со всеми кнопками скрыт, пока не заполнены <strong>все 6 обязательных полей</strong> в Блоке 1.</p>
+<p>Незаполненные поля <strong>подсвечиваются жёлтым</strong> — прокрутите к Блоку 1 и заполните их.</p>
+<p>Проверьте каждое:<br>
+✓ Дата выдачи<br>
+✓ Вид работ<br>
+✓ Место производства работ<br>
+✓ ФИО руководителя работ<br>
+✓ Должность руководителя<br>
+✓ ФИО лица, выдавшего наряд</p>
+<div class="guide-tip">Самые частые пропуски: «Вид работ» и «ФИО лица, выдавшего наряд». Если авторизованы — организация и руководитель заполнились автоматически.</div>`,
+    visual: `<svg viewBox="0 0 520 330" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI,system-ui,sans-serif">
+  <rect width="520" height="330" fill="#e4eaf3" rx="8"/>
+  <text x="260" y="24" fill="#1a3a5c" font-size="11" font-weight="700" text-anchor="middle">Чеклист: 6 полей для появления Блока 4</text>
+  <rect x="20" y="34" width="234" height="36" rx="8" fill="white" stroke="#22c55e" stroke-width="1.5"/>
+  <circle cx="42" cy="52" r="10" fill="#22c55e"/>
+  <text x="42" y="56" fill="white" font-size="9" text-anchor="middle" font-weight="700">✓</text>
+  <text x="58" y="48" fill="#166534" font-size="9" font-weight="600">Дата выдачи *</text>
+  <text x="58" y="61" fill="#22c55e" font-size="7.5">29.06.2026 — заполнено</text>
+  <rect x="20" y="76" width="234" height="36" rx="8" fill="#fffbeb" stroke="#f6ad55" stroke-width="1.5"/>
+  <circle cx="42" cy="94" r="10" fill="#f6ad55"/>
+  <text x="42" y="100" fill="white" font-size="12" text-anchor="middle" font-weight="700">!</text>
+  <text x="58" y="90" fill="#8a4f00" font-size="9" font-weight="600">Вид работ *</text>
+  <text x="58" y="103" fill="#d97706" font-size="7.5">не заполнено — подсвечено жёлтым</text>
+  <rect x="20" y="118" width="234" height="36" rx="8" fill="white" stroke="#22c55e" stroke-width="1.5"/>
+  <circle cx="42" cy="136" r="10" fill="#22c55e"/>
+  <text x="42" y="140" fill="white" font-size="9" text-anchor="middle" font-weight="700">✓</text>
+  <text x="58" y="132" fill="#166534" font-size="9" font-weight="600">Место производства работ *</text>
+  <text x="58" y="145" fill="#22c55e" font-size="7.5">Кровля корпуса №3 — заполнено</text>
+  <rect x="262" y="34" width="238" height="36" rx="8" fill="white" stroke="#22c55e" stroke-width="1.5"/>
+  <circle cx="284" cy="52" r="10" fill="#22c55e"/>
+  <text x="284" y="56" fill="white" font-size="9" text-anchor="middle" font-weight="700">✓</text>
+  <text x="300" y="48" fill="#166534" font-size="9" font-weight="600">ФИО руководителя работ *</text>
+  <text x="300" y="61" fill="#22c55e" font-size="7.5">Петров П. П. — заполнено</text>
+  <rect x="262" y="76" width="238" height="36" rx="8" fill="white" stroke="#22c55e" stroke-width="1.5"/>
+  <circle cx="284" cy="94" r="10" fill="#22c55e"/>
+  <text x="284" y="98" fill="white" font-size="9" text-anchor="middle" font-weight="700">✓</text>
+  <text x="300" y="90" fill="#166534" font-size="9" font-weight="600">Должность руководителя *</text>
+  <text x="300" y="103" fill="#22c55e" font-size="7.5">Мастер строительных работ</text>
+  <rect x="262" y="118" width="238" height="36" rx="8" fill="#fffbeb" stroke="#f6ad55" stroke-width="1.5"/>
+  <circle cx="284" cy="136" r="10" fill="#f6ad55"/>
+  <text x="284" y="142" fill="white" font-size="12" text-anchor="middle" font-weight="700">!</text>
+  <text x="300" y="132" fill="#8a4f00" font-size="9" font-weight="600">ФИО лица, выдавшего наряд *</text>
+  <text x="300" y="145" fill="#d97706" font-size="7.5">не заполнено</text>
+  <rect x="20" y="166" width="480" height="44" rx="10" fill="#fef2f2" stroke="#fca5a5" stroke-width="1.5"/>
+  <text x="260" y="185" fill="#991b1b" font-size="9.5" text-anchor="middle" font-weight="700">Блок 4 скрыт — есть незаполненные поля</text>
+  <text x="260" y="200" fill="#b91c1c" font-size="8" text-anchor="middle">Найдите поля с жёлтой рамкой в Блоке 1 и заполните их</text>
+  <line x1="260" y1="214" x2="260" y2="226" stroke="#22c55e" stroke-width="2"/>
+  <polygon points="254,226 260,234 266,226" fill="#22c55e"/>
+  <rect x="20" y="236" width="480" height="44" rx="10" fill="#f0fdf4" stroke="#22c55e" stroke-width="1.5"/>
+  <text x="260" y="255" fill="#166534" font-size="9.5" text-anchor="middle" font-weight="700">✓ Все 6 полей заполнены → Блок 4 появился</text>
+  <text x="260" y="270" fill="#166534" font-size="8" text-anchor="middle">Кнопки скачивания доступны — выбирайте нужные документы</text>
+  <text x="260" y="304" fill="#8fa6be" font-size="8" text-anchor="middle" font-style="italic">💡 Самые частые пропуски: «Вид работ» и «ФИО лица, выдавшего наряд»</text>
+</svg>`
   },
   {
     icon: '🔐',
-    title: 'Авторизация — что она даёт',
-    text: `<p>После входа в систему сайт автоматически подставляет ваши данные (ФИО, должность, организацию) в нужные поля наряда.</p>
-<p>Главное преимущество — доступ к <strong>базе сотрудников вашей организации</strong>. В блоке 3 появляется раскрывающийся список: выбирайте нужных людей одним нажатием, и все данные — должность, разряд, группа электробезопасности — заполнятся сами.</p>
-<p>Это значительно ускоряет работу при повторном оформлении нарядов.</p>`
-  },
-  {
-    icon: '🗂️',
-    title: 'Как получить доступ к базе сотрудников',
-    text: `<p>База сотрудников вашей организации формируется отдельно. Вы можете предоставить данные самостоятельно или попросить <strong>специалиста по охране труда</strong> — он взаимодействует с разработчиком напрямую.</p>
-<p>При регистрации аккаунта обязательно укажите <strong>номер телефона или e-mail</strong>. Без контактных данных восстановить доступ к аккаунту в случае утери будет невозможно.</p>
-<p>Связь с разработчиком: <strong>lingidanm@gmail.com</strong></p>`
+    title: 'Авторизация',
+    text: `<p>Нажмите кнопку <strong>«👤 Войти»</strong> в правой панели, введите логин и пароль.</p>
+<p><strong>Что происходит после входа:</strong><br>
+✓ Поля <em>Организация, ФИО руководителя, Должность</em> — заполняются и <strong>блокируются</strong> (данные из вашего профиля)<br>
+✓ Поле <em>«Лицо, выдавшее наряд»</em> — получает выпадающий список сотрудников, у которых есть право выдавать наряды<br>
+✓ В Блоке 3 появляется кнопка <strong>«👥 Из базы»</strong> — вся бригада с должностями и группами ЭБ добавляется за несколько кликов<br>
+✓ Кнопка «Войти» меняется на ваши инициалы</p>
+<p>Для получения личного аккаунта: <strong>lingidanm@gmail.com</strong></p>
+<div class="guide-tip">Все данные обрабатываются только в вашем браузере — на сервер ничего не отправляется.</div>
+<div class="guide-creds">
+  <div class="cred-label">Тестовый доступ — попробуй прямо сейчас</div>
+  <div class="cred-row"><span class="cred-key">Логин:</span><span class="cred-val">тест</span></div>
+  <div class="cred-row"><span class="cred-key">Пароль:</span><span class="cred-val">тест</span></div>
+</div>`,
+    visual: `<svg viewBox="0 0 520 330" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI,system-ui,sans-serif">
+  <rect width="520" height="330" fill="#e4eaf3" rx="8"/>
+  <rect x="14" y="14" width="200" height="80" rx="8" fill="#1a3a5c" opacity=".25"/>
+  <text x="24" y="34" fill="#3d5168" font-size="7.5" font-weight="600">Правая панель (всегда видна)</text>
+  <rect x="24" y="40" width="180" height="20" rx="10" fill="#1a3a5c"/>
+  <text x="114" y="54" fill="white" font-size="8" text-anchor="middle" font-weight="700">👤 Войти</text>
+  <rect x="24" y="64" width="180" height="20" rx="10" fill="#1a3a5c" opacity=".5"/>
+  <text x="114" y="77" fill="rgba(255,255,255,.6)" font-size="7.5" text-anchor="middle">ℹ Инструкция</text>
+  <line x1="114" y1="96" x2="114" y2="116" stroke="#2e7abf" stroke-width="2" stroke-dasharray="4,3"/>
+  <polygon points="108,116 114,124 120,116" fill="#2e7abf"/>
+  <rect x="30" y="128" width="480" height="168" rx="10" fill="white" stroke="#2e7abf" stroke-width="2"/>
+  <rect x="30" y="128" width="480" height="26" rx="10" fill="#1a3a5c"/>
+  <rect x="30" y="142" width="480" height="12" fill="#1a3a5c"/>
+  <text x="270" y="145" fill="white" font-size="10" text-anchor="middle" font-weight="700">Авторизация</text>
+  <text x="60" y="178" fill="#8fa6be" font-size="8">Логин</text>
+  <rect x="60" y="182" width="420" height="26" rx="6" fill="#eef2f7"/>
+  <text x="74" y="200" fill="#1e2d3d" font-size="10">тест</text>
+  <text x="60" y="222" fill="#8fa6be" font-size="8">Пароль</text>
+  <rect x="60" y="226" width="420" height="26" rx="6" fill="#eef2f7"/>
+  <text x="74" y="244" fill="#1e2d3d" font-size="10">••••</text>
+  <rect x="60" y="264" width="420" height="26" rx="13" fill="#2e7abf"/>
+  <text x="270" y="281" fill="white" font-size="10" text-anchor="middle" font-weight="700">Войти</text>
+  <rect x="14" y="110" width="20" height="20" rx="10" fill="#22c55e"/>
+  <text x="24" y="124" fill="white" font-size="10" text-anchor="middle" font-weight="700">1</text>
+  <rect x="20" y="296" width="480" height="26" rx="8" fill="#f0fdf4" stroke="#22c55e" stroke-width="1.5"/>
+  <text x="260" y="307" fill="#166534" font-size="7.5" text-anchor="middle" font-weight="700">✓ После входа:</text>
+  <text x="260" y="317" fill="#166534" font-size="7" text-anchor="middle">Ваши данные подставятся в бланк автоматически • В Блоке 3 появится кнопка «Из базы»</text>
+</svg>`
   },
   {
     icon: '✨',
-    title: 'Другие возможности',
-    text: `<p><strong>Несколько нарядов одновременно</strong> — нажмите «+» в панели вкладок вверху страницы. Каждую вкладку можно переименовать нажатием на иконку карандаша.</p>
-<p><strong>Автосохранение</strong> — данные сохраняются в браузере автоматически. Даже если закрыть вкладку, всё восстановится при следующем открытии.</p>
-<p><strong>Тёмная и светлая тема</strong> — переключайте кнопкой «Тема» в правой панели под свои предпочтения или условия освещения.</p>`
+    title: 'Вкладки и другие возможности',
+    text: `<p><strong>Несколько нарядов одновременно</strong> — нажмите «+» в панели вкладок. До 10 нарядов в одном окне.</p>
+<p><strong>Переименование</strong> — нажмите иконку карандаша на вкладке и введите своё название.</p>
+<p><strong>Автосохранение</strong> — данные хранятся в браузере. Закройте вкладку — всё восстановится.</p>
+<p><strong>Темы оформления</strong> — нажмите «☀ Тема» в правой панели: светлая, синяя, тёмная.</p>
+<div class="guide-tip">На каждой вкладке — свой независимый наряд. Удобно когда нужно оформить несколько нарядов на один объект.</div>`,
+    visual: `<svg viewBox="0 0 520 330" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI,system-ui,sans-serif">
+  <rect width="520" height="330" fill="#e4eaf3" rx="8"/>
+  <rect x="10" y="14" width="500" height="48" rx="10" fill="white"/>
+  <rect x="18" y="22" width="80" height="30" rx="8" fill="#2e7abf"/>
+  <text x="58" y="35" fill="white" font-size="7.5" text-anchor="middle" font-weight="700">Наряд 1</text>
+  <text x="58" y="46" fill="rgba(255,255,255,.7)" font-size="6" text-anchor="middle">Корпус №3</text>
+  <rect x="102" y="22" width="80" height="30" rx="8" fill="#eef2f7" stroke="#d8e2ee" stroke-width="1"/>
+  <text x="138" y="35" fill="#3d5168" font-size="7.5" text-anchor="middle">Наряд 2</text>
+  <text x="138" y="46" fill="#8fa6be" font-size="6" text-anchor="middle">Склад А</text>
+  <rect x="186" y="22" width="80" height="30" rx="8" fill="#eef2f7" stroke="#d8e2ee" stroke-width="1"/>
+  <text x="222" y="35" fill="#3d5168" font-size="7.5" text-anchor="middle">Наряд 3</text>
+  <text x="222" y="46" fill="#8fa6be" font-size="6" text-anchor="middle">Кровля</text>
+  <rect x="270" y="22" width="80" height="30" rx="8" fill="#eef2f7" stroke="#d8e2ee" stroke-width="1"/>
+  <text x="306" y="35" fill="#3d5168" font-size="7.5" text-anchor="middle">Наряд 4</text>
+  <text x="306" y="46" fill="#8fa6be" font-size="6" text-anchor="middle">Котельная</text>
+  <rect x="358" y="28" width="28" height="18" rx="9" fill="#e8f2fa" stroke="#2e7abf" stroke-width="1.5"/>
+  <text x="372" y="40" fill="#2e7abf" font-size="14" text-anchor="middle" font-weight="700">+</text>
+  <text x="372" y="55" fill="#8fa6be" font-size="6" text-anchor="middle">новая вкладка</text>
+  <rect x="434" y="28" width="68" height="18" rx="9" fill="#eef2f7"/>
+  <text x="468" y="40" fill="#8fa6be" font-size="7" text-anchor="middle">🗑 Очистить</text>
+  <line x1="18" y1="82" x2="18" y2="114" stroke="#2e7abf" stroke-width="2"/>
+  <rect x="30" y="82" width="220" height="70" rx="8" fill="white" stroke="#d8e2ee" stroke-width="1"/>
+  <text x="40" y="100" fill="#1a3a5c" font-size="8.5" font-weight="700">✏ Переименование вкладки</text>
+  <text x="40" y="114" fill="#3d5168" font-size="7.5">Нажмите иконку карандаша</text>
+  <text x="40" y="127" fill="#3d5168" font-size="7.5">рядом с названием вкладки</text>
+  <text x="40" y="140" fill="#3d5168" font-size="7.5">и введите удобное название</text>
+  <line x1="160" y1="82" x2="160" y2="114" stroke="#22c55e" stroke-width="2"/>
+  <rect x="30" y="164" width="220" height="70" rx="8" fill="white" stroke="#d8e2ee" stroke-width="1"/>
+  <text x="40" y="182" fill="#1a3a5c" font-size="8.5" font-weight="700">💾 Автосохранение</text>
+  <text x="40" y="196" fill="#3d5168" font-size="7.5">Данные хранятся в браузере</text>
+  <text x="40" y="209" fill="#3d5168" font-size="7.5">Закройте — откройте снова:</text>
+  <text x="40" y="222" fill="#22c55e" font-size="7.5" font-weight="600">всё будет на месте ✓</text>
+  <rect x="270" y="82" width="240" height="152" rx="8" fill="white" stroke="#d8e2ee" stroke-width="1"/>
+  <text x="284" y="100" fill="#1a3a5c" font-size="8.5" font-weight="700">☀ Темы оформления</text>
+  <text x="284" y="116" fill="#8fa6be" font-size="7">нажмите «Тема» в правой панели</text>
+  <rect x="284" y="124" width="212" height="28" rx="8" fill="#f0f4f9" stroke="#2e7abf" stroke-width="1.5"/>
+  <text x="390" y="142" fill="#1a3a5c" font-size="8.5" text-anchor="middle" font-weight="600">Светлая</text>
+  <rect x="284" y="158" width="212" height="28" rx="8" fill="#1a3a5c"/>
+  <text x="390" y="176" fill="white" font-size="8.5" text-anchor="middle" font-weight="600">Тёмная</text>
+  <rect x="284" y="192" width="212" height="28" rx="8" fill="#1e4d8c"/>
+  <text x="390" y="210" fill="white" font-size="8.5" text-anchor="middle" font-weight="600">Синяя</text>
+</svg>`
+  },
+  {
+    icon: '⌨️',
+    title: 'Полезные трюки',
+    text: `<p>Несколько вещей, которые не бросаются в глаза, но сильно ускоряют работу.</p>
+<p><strong>В окне инструкции:</strong> ← → — переключение слайдов, Esc — закрыть.</p>
+<p><strong>Бригада:</strong> строка 1 всегда бригадир — не сортируется. «А→Я» сортирует остальных. Иконка 🗑 в строке — удалить одного работника.</p>
+<p><strong>Данные в безопасности:</strong> всё хранится в браузере, файлы .docx формируются локально — на сервер ничего не уходит.</p>
+<div class="guide-tip">Вкладки работают независимо — удобно вести несколько нарядов на один объект одновременно.</div>`,
+    visual: `<svg viewBox="0 0 520 330" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI,system-ui,sans-serif">
+  <rect width="520" height="330" fill="#e4eaf3" rx="8"/>
+  <rect x="14" y="14" width="238" height="140" rx="10" fill="white"/>
+  <rect x="14" y="14" width="238" height="30" rx="10" fill="#1a3a5c"/>
+  <rect x="14" y="34" width="238" height="10" fill="#1a3a5c"/>
+  <text x="133" y="33" fill="white" font-size="9" text-anchor="middle" font-weight="700">⌨ Горячие клавиши</text>
+  <text x="30" y="62" fill="#3d5168" font-size="9" font-weight="700">← →</text>
+  <text x="64" y="62" fill="#8fa6be" font-size="8"> — переключать слайды инструкции</text>
+  <text x="30" y="80" fill="#3d5168" font-size="9" font-weight="700">Esc</text>
+  <text x="55" y="80" fill="#8fa6be" font-size="8"> — закрыть любое окно</text>
+  <text x="30" y="98" fill="#8fa6be" font-size="8" font-style="italic">Эти сочетания работают когда открыта</text>
+  <text x="30" y="110" fill="#8fa6be" font-size="8" font-style="italic">инструкция или модальное окно</text>
+  <rect x="262" y="14" width="244" height="140" rx="10" fill="white"/>
+  <rect x="262" y="14" width="244" height="30" rx="10" fill="#1a3a5c"/>
+  <rect x="262" y="34" width="244" height="10" fill="#1a3a5c"/>
+  <text x="384" y="33" fill="white" font-size="9" text-anchor="middle" font-weight="700">📑 Вкладки</text>
+  <text x="278" y="62" fill="#3d5168" font-size="8.5">«+»</text><text x="298" y="62" fill="#8fa6be" font-size="8"> — новая вкладка (до 10 нарядов)</text>
+  <text x="278" y="80" fill="#3d5168" font-size="8.5">✏</text><text x="294" y="80" fill="#8fa6be" font-size="8"> — переименовать (иконка рядом с именем)</text>
+  <text x="278" y="98" fill="#3d5168" font-size="8.5">🗑</text><text x="294" y="98" fill="#8fa6be" font-size="8"> — очистить бланк текущей вкладки</text>
+  <text x="278" y="116" fill="#3d5168" font-size="8.5">☀</text><text x="294" y="116" fill="#8fa6be" font-size="8"> — сменить тему оформления</text>
+  <rect x="14" y="166" width="238" height="150" rx="10" fill="white"/>
+  <rect x="14" y="166" width="238" height="30" rx="10" fill="#1a3a5c"/>
+  <rect x="14" y="186" width="238" height="10" fill="#1a3a5c"/>
+  <text x="133" y="185" fill="white" font-size="9" text-anchor="middle" font-weight="700">👷 Бригада — подсказки</text>
+  <text x="30" y="214" fill="#3d5168" font-size="8">• Строка 1 — бригадир, не сортируется</text>
+  <text x="30" y="230" fill="#3d5168" font-size="8">• «А→Я» — сортировка остальных по алфавиту</text>
+  <text x="30" y="246" fill="#3d5168" font-size="8">• Иконка 🗑 в строке — удалить работника</text>
+  <text x="30" y="262" fill="#3d5168" font-size="8">• «Из базы» — данные подставятся автоматически</text>
+  <text x="30" y="278" fill="#3d5168" font-size="8">• Можно заполнять вручную без авторизации</text>
+  <rect x="262" y="166" width="244" height="150" rx="10" fill="white"/>
+  <rect x="262" y="166" width="244" height="30" rx="10" fill="#1a3a5c"/>
+  <rect x="262" y="186" width="244" height="10" fill="#1a3a5c"/>
+  <text x="384" y="185" fill="white" font-size="9" text-anchor="middle" font-weight="700">💾 Данные и безопасность</text>
+  <text x="278" y="214" fill="#3d5168" font-size="8">• Автосохранение — данные в браузере</text>
+  <text x="278" y="230" fill="#3d5168" font-size="8">• Закрыли страницу — откроете, всё на месте</text>
+  <text x="278" y="246" fill="#3d5168" font-size="8">• Данные НЕ уходят на сервер</text>
+  <text x="278" y="262" fill="#3d5168" font-size="8">• Очистка кэша браузера = потеря нарядов</text>
+  <text x="278" y="278" fill="#3d5168" font-size="8">• Файлы .docx формируются без сервера</text>
+</svg>`
+  },
+  {
+    icon: '✉️',
+    title: 'Обратная связь',
+    text: `<p>Если вы нашли ошибку или хотите предложить улучшение — напишите разработчику. Каждое сообщение помогает сделать сервис лучше.</p>
+<p>При сообщении о баге укажите:<br>
+• <strong>Что делали</strong> — какое поле заполняли, что нажимали<br>
+• <strong>Что произошло</strong> — опишите ошибку<br>
+• <strong>Чего ожидали</strong> — как должно было работать</p>
+<p>Для предложений — просто напишите идею, даже вчерне.</p>`,
+    visual: `<svg viewBox="0 0 520 330" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI,system-ui,sans-serif">
+  <rect width="520" height="330" fill="#e4eaf3" rx="8"/>
+  <defs><filter id="shfb"><feDropShadow dx="0" dy="3" stdDeviation="8" flood-color="rgba(26,58,92,.12)"/></filter></defs>
+  <rect x="80" y="30" width="360" height="270" rx="16" fill="white" filter="url(#shfb)"/>
+  <rect x="80" y="30" width="360" height="80" rx="16" fill="#1a3a5c"/>
+  <rect x="80" y="88" width="360" height="22" fill="#1a3a5c"/>
+  <text x="260" y="72" fill="white" font-size="28" text-anchor="middle">✉</text>
+  <text x="260" y="97" fill="white" font-size="10" text-anchor="middle" font-weight="700">Нашли баг? Есть идея? Напишите нам</text>
+  <text x="180" y="138" fill="#8fa6be" font-size="8">Разработчик</text>
+  <text x="180" y="157" fill="#1a3a5c" font-size="13" font-weight="700">Лингидан</text>
+  <text x="180" y="184" fill="#8fa6be" font-size="8">Электронная почта</text>
+  <rect x="130" y="190" width="260" height="32" rx="8" fill="#e8f2fa"/>
+  <text x="260" y="211" fill="#2e7abf" font-size="11" text-anchor="middle" font-weight="700">lingidanm@gmail.com</text>
+  <text x="260" y="244" fill="#8fa6be" font-size="8" text-anchor="middle">Опишите: что случилось · при каких условиях · чего ожидали</text>
+  <text x="260" y="258" fill="#8fa6be" font-size="8" text-anchor="middle">Для идей — просто напишите, что хотели бы видеть</text>
+  <rect x="100" y="272" width="320" height="24" rx="8" fill="#f0fdf4" stroke="#22c55e" stroke-width="1"/>
+  <text x="260" y="288" fill="#166534" font-size="8.5" text-anchor="middle" font-weight="600">Отвечаем быстро — помогаем всем пользователям</text>
+</svg>`
   }
 ];
 
@@ -4744,12 +5469,25 @@ function _applyGuideView() {
 }
 
 function _renderGuideSlide() {
-  const s   = GUIDE_SLIDES[_guideIdx];
-  const n   = GUIDE_SLIDES.length;
-  document.getElementById('guideSlideContent').innerHTML =
-    `<span class="guide-slide-icon">${s.icon}</span>
-     <div class="guide-slide-title">${s.title}</div>
-     <div class="guide-slide-text">${s.text}</div>`;
+  const s = GUIDE_SLIDES[_guideIdx];
+  const n = GUIDE_SLIDES.length;
+  if (s.visual) {
+    document.getElementById('guideSlideContent').innerHTML =
+      `<div class="guide-slide-cols">
+        <div class="guide-slide-visual">${s.visual}</div>
+        <div class="guide-slide-desc">
+          <div class="guide-slide-title">${s.title}</div>
+          <div class="guide-slide-text">${s.text}</div>
+        </div>
+      </div>`;
+  } else {
+    document.getElementById('guideSlideContent').innerHTML =
+      `<div class="guide-slide-single">
+        <span class="guide-slide-icon">${s.icon || ''}</span>
+        <div class="guide-slide-title">${s.title}</div>
+        <div class="guide-slide-text">${s.text}</div>
+      </div>`;
+  }
 
   // Точки
   document.getElementById('guideDots').innerHTML = GUIDE_SLIDES.map((_, i) =>
@@ -4789,6 +5527,214 @@ function guideTo(idx) {
   _guideIdx = idx;
   _renderGuideSlide();
 }
+
+// ─── Map Picker ───────────────────────────────────────────────────────────
+function openMapPicker() {
+  document.getElementById('mapPickerOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  // Hover tooltips
+  document.querySelectorAll('#sitePlanSVG .map-zone').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      document.getElementById('mapPickerStatus').textContent =
+        '▶ ' + (el.dataset.info || el.dataset.label || '');
+    });
+    el.addEventListener('mouseleave', () => {
+      document.getElementById('mapPickerStatus').textContent =
+        'Наведите на здание для просмотра информации';
+    });
+  });
+}
+function closeMapPicker() {
+  document.getElementById('mapPickerOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function selectLocation(code) {
+  const el = document.getElementById('mesto');
+  if (!el) return;
+  el.value = code;
+  el.dispatchEvent(new Event('input'));
+  closeMapPicker();
+}
+// Закрытие по Escape
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeMapPicker();
+});
+
+// ─── Room Picker ──────────────────────────────────────────────────────────
+const RP_BUILDINGS = {
+  '20UKC': {
+    label: '20UKC',
+    path: 'plans_20UKC',
+    floors: {
+      '-5.400':  { file: 'floor_m5_400.svg',   w: 1691, h: 1197 },
+      '0.000':   { file: 'floor_0_000.svg',    w: 1691, h: 1197 },
+      '+4.800':  { file: 'floor_p4_800.svg',   w: 1691, h: 1197 },
+      '+8.400':  { file: 'floor_p8_400.svg',   w: 1691, h: 1197 },
+      '+12.000': { file: 'floor_p12_000.svg',  w: 1691, h: 1197 },
+      '+15.900': { file: 'floor_p15_900.svg',  w: 1691, h: 1197 },
+      '+19.500': { file: 'floor_p19_500.svg',  w: 1691, h: 1197 },
+      '+23.400': { file: 'floor_p23_400.svg',  w: 1691, h: 1197 },
+      '+27.600': { file: 'floor_p27_600.svg',  w: 1691, h: 1197 },
+    }
+  }
+};
+
+const RP_ROOMS = {"20UKC":{"-5.400":{"20UKC04R001":{"cx":350.4,"cy":862.0},"20UKC04R002":{"cx":368.9,"cy":787.4},"20UKC04R003":{"cx":261.0,"cy":649.3},"20UKC04R004":{"cx":439.6,"cy":726.5},"20UKC04R005":{"cx":673.7,"cy":745.1},"20UKC04R006":{"cx":664.1,"cy":821.0},"20UKC04R007":{"cx":529.9,"cy":875.8},"20UKC04R008":{"cx":585.2,"cy":598.0},"20UKC04R009":{"cx":326.2,"cy":546.0},"20UKC04R010":{"cx":365.4,"cy":362.0},"20UKC04R011":{"cx":361.9,"cy":482.3},"20UKC04R012":{"cx":664.4,"cy":176.6},"20UKC04R013":{"cx":448.6,"cy":431.7},"20UKC04R014":{"cx":355.6,"cy":242.6},"20UKC04R015":{"cx":416.8,"cy":168.9},"20UKC04R016":{"cx":556.0,"cy":168.5},"20UKC04R017":{"cx":530.8,"cy":235.9},"20UKC04R018":{"cx":560.4,"cy":288.4},"20UKC04R019":{"cx":753.7,"cy":336.3},"20UKC04R020":{"cx":811.2,"cy":242.4},"20UKC04R021":{"cx":743.1,"cy":243.2},"20UKC04R022":{"cx":769.7,"cy":206.6},"20UKC04R023":{"cx":634.9,"cy":386.7},"20UKC04R024":{"cx":868.6,"cy":545.1},"20UKC04R025":{"cx":622.6,"cy":307.2},"20UKC04R026":{"cx":559.1,"cy":355.3},"20UKC04R027":{"cx":531.0,"cy":485.4},"20UKC04R028":{"cx":623.3,"cy":548.4},"20UKC04R029":{"cx":972.2,"cy":156.7},"20UKC04R030":{"cx":881.0,"cy":201.5},"20UKC04R031":{"cx":961.3,"cy":202.6},"20UKC04R032":{"cx":1043.6,"cy":212.6},"20UKC04R033":{"cx":889.9,"cy":241.9},"20UKC04R034":{"cx":958.9,"cy":241.1},"20UKC04R035":{"cx":1040.0,"cy":239.0},"20UKC04R036":{"cx":843.8,"cy":335.9},"20UKC04R037":{"cx":671.1,"cy":243.5},"20UKC04R038":{"cx":1145.0,"cy":174.1},"20UKC04R039":{"cx":1222.4,"cy":267.2},"20UKC04R040":{"cx":1222.6,"cy":320.0},"20UKC04R041":{"cx":1110.7,"cy":366.9},"20UKC04R042":{"cx":1178.6,"cy":399.7},"20UKC04R043":{"cx":1123.1,"cy":519.3},"20UKC04R044":{"cx":1013.5,"cy":484.9},"20UKC04R045":{"cx":945.1,"cy":438.6},"20UKC04R046":{"cx":948.0,"cy":631.8},"20UKC04R047":{"cx":1031.2,"cy":600.6},"20UKC04R049":{"cx":1085.3,"cy":599.9},"20UKC04R050":{"cx":1226.3,"cy":647.0},"20UKC04R051":{"cx":1010.0,"cy":829.4},"20UKC04R052":{"cx":1140.8,"cy":853.9},"20UKC04R053":{"cx":826.7,"cy":822.0},"20UKC04R054":{"cx":915.3,"cy":868.4},"20UKC04R055":{"cx":1028.7,"cy":729.6},"20UKC04R056":{"cx":922.2,"cy":741.4},"20UKC04R057":{"cx":1222.6,"cy":620.9},"20UKC04R058":{"cx":302.6,"cy":630.0},"20UKC04R301":{"cx":352.6,"cy":168.6},"20UKC04R402":{"cx":451.5,"cy":790.6},"20UKC04R403":{"cx":514.9,"cy":397.9},"20UKC04R404":{"cx":913.4,"cy":375.2},"20UKC04R405":{"cx":933.1,"cy":752.3},"20UKC04R501":{"cx":260.1,"cy":731.0},"20UKC04R502":{"cx":305.4,"cy":220.4},"20UKC04R503":{"cx":1228.9,"cy":165.7},"20UKC04R504":{"cx":1226.6,"cy":759.1},"20UKC04R601":{"cx":431.1,"cy":289.1},"20UKC04R602":{"cx":1223.3,"cy":202.5},"20UKC04R802":{"cx":1225.4,"cy":889.4},"20UKC04R901":{"cx":360.4,"cy":810.0},"20UKC04R902":{"cx":258.5,"cy":124.6},"20UKC04R904":{"cx":1083.7,"cy":161.8},"20UKC04R905":{"cx":1227.1,"cy":127.8},"20UKC04R907":{"cx":1236.9,"cy":819.6}},"0.000":{"20UKC04R001":{"cx":370.6,"cy":916.1},"20UKC04R020":{"cx":803.1,"cy":348.5},"20UKC04R021":{"cx":734.2,"cy":348.4},"20UKC04R033":{"cx":888.8,"cy":347.0},"20UKC04R034":{"cx":974.8,"cy":347.0},"20UKC04R035":{"cx":1060.9,"cy":347.0},"20UKC04R037":{"cx":662.3,"cy":348.4},"20UKC04R052":{"cx":1159.5,"cy":899.9},"20UKC04R057":{"cx":1240.9,"cy":689.4},"20UKC04R058":{"cx":234.4,"cy":697.0},"20UKC04R502":{"cx":205.8,"cy":266.6},"20UKC04R503":{"cx":1245.1,"cy":240.6},"20UKC04R901":{"cx":292.8,"cy":902.3},"20UKC04R902":{"cx":229.5,"cy":175.4},"20UKC04R904":{"cx":1061.1,"cy":256.2},"20UKC04R905":{"cx":1242.5,"cy":166.6},"20UKC04R907":{"cx":1128.5,"cy":850.5},"20UKC10R001":{"cx":236.0,"cy":938.9},"20UKC10R002":{"cx":323.6,"cy":968.2},"20UKC10R003":{"cx":349.5,"cy":859.7},"20UKC10R004":{"cx":235.1,"cy":715.5},"20UKC10R005":{"cx":494.8,"cy":671.8},"20UKC10R006":{"cx":403.4,"cy":698.2},"20UKC10R007":{"cx":395.3,"cy":759.4},"20UKC10R008":{"cx":674.4,"cy":842.0},"20UKC10R009":{"cx":527.3,"cy":548.7},"20UKC10R010":{"cx":346.6,"cy":555.7},"20UKC10R012":{"cx":347.5,"cy":506.7},"20UKC10R013":{"cx":348.9,"cy":380.2},"20UKC10R014":{"cx":234.2,"cy":361.9},"20UKC10R015":{"cx":514.0,"cy":217.7},"20UKC10R016":{"cx":554.6,"cy":337.5},"20UKC10R017":{"cx":615.9,"cy":226.7},"20UKC10R018":{"cx":422.9,"cy":216.8},"20UKC10R019":{"cx":646.9,"cy":491.8},"20UKC10R020":{"cx":919.5,"cy":253.6},"20UKC10R021":{"cx":813.9,"cy":432.0},"20UKC10R022":{"cx":880.3,"cy":383.1},"20UKC10R023":{"cx":665.4,"cy":379.6},"20UKC10R024":{"cx":606.1,"cy":286.0},"20UKC10R025":{"cx":708.9,"cy":253.6},"20UKC10R026":{"cx":1124.9,"cy":334.8},"20UKC10R027":{"cx":1099.7,"cy":216.6},"20UKC10R028":{"cx":1099.0,"cy":175.3},"20UKC10R029":{"cx":1125.7,"cy":355.3},"20UKC10R031":{"cx":819.8,"cy":477.5},"20UKC10R032":{"cx":627.2,"cy":579.4},"20UKC10R033":{"cx":552.4,"cy":730.8},"20UKC10R034":{"cx":654.0,"cy":728.9},"20UKC10R035":{"cx":546.3,"cy":842.1},"20UKC10R036":{"cx":825.7,"cy":643.7},"20UKC10R037":{"cx":850.2,"cy":802.6},"20UKC10R038":{"cx":1035.8,"cy":516.0},"20UKC10R039":{"cx":1042.5,"cy":470.5},"20UKC10R040":{"cx":1114.4,"cy":516.3},"20UKC10R041":{"cx":1154.1,"cy":598.8},"20UKC10R042":{"cx":1240.6,"cy":709.1},"20UKC10R043":{"cx":1088.4,"cy":721.8},"20UKC10R044":{"cx":932.2,"cy":838.8},"20UKC10R045":{"cx":606.6,"cy":889.7},"20UKC10R046":{"cx":523.3,"cy":955.2},"20UKC10R047":{"cx":621.8,"cy":955.3},"20UKC10R048":{"cx":739.1,"cy":954.4},"20UKC10R049":{"cx":858.2,"cy":956.3},"20UKC10R050":{"cx":947.4,"cy":956.0},"20UKC10R051":{"cx":1155.9,"cy":922.7},"20UKC10R052":{"cx":1144.2,"cy":958.4},"20UKC10R301":{"cx":345.0,"cy":246.8},"20UKC10R401":{"cx":453.1,"cy":1067.8},"20UKC10R402":{"cx":436.2,"cy":866.6},"20UKC10R403":{"cx":530.6,"cy":458.4},"20UKC10R404":{"cx":945.7,"cy":471.6},"20UKC10R405":{"cx":1034.8,"cy":799.0},"20UKC10R406":{"cx":1085.1,"cy":1015.4},"20UKC10R501":{"cx":321.8,"cy":813.7},"20UKC10R502":{"cx":228.0,"cy":186.4},"20UKC10R503":{"cx":1247.7,"cy":213.7},"20UKC10R504":{"cx":1245.2,"cy":835.3},"20UKC10R505":{"cx":1128.9,"cy":1025.3},"20UKC10R506":{"cx":338.9,"cy":1026.0},"20UKC10R603":{"cx":1244.9,"cy":1060.2},"20UKC10R801":{"cx":933.5,"cy":616.4},"20UKC10R802":{"cx":534.6,"cy":607.3},"20UKC10R803":{"cx":447.3,"cy":353.5},"20UKC10R804":{"cx":1253.7,"cy":1001.7},"20UKC10R906":{"cx":1254.2,"cy":1014.1},"20UKC10R907":{"cx":352.9,"cy":845.3},"20UKC10R908":{"cx":230.5,"cy":1018.7},"20UKC10R909":{"cx":428.0,"cy":254.8},"20UKC10R910":{"cx":294.7,"cy":379.0},"20UKC10R911":{"cx":1126.7,"cy":384.8},"20UKC10R912":{"cx":1083.8,"cy":780.2},"20UKC10R913":{"cx":411.0,"cy":842.7},"20UKC10R914":{"cx":836.4,"cy":822.5},"20UKC10R915":{"cx":1043.5,"cy":847.3},"20UKC10R916":{"cx":409.1,"cy":441.5},"20UKC10R917":{"cx":235.5,"cy":906.9},"20UKC10R918":{"cx":1244.6,"cy":884.9}},"+4.800":{"20UKC04R904":{"cx":1065.4,"cy":218.1},"20UKC10R009":{"cx":543.4,"cy":536.3},"20UKC10R019":{"cx":672.5,"cy":483.5},"20UKC10R031":{"cx":958.2,"cy":469.8},"20UKC10R032":{"cx":680.6,"cy":625.5},"20UKC10R033":{"cx":580.2,"cy":717.1},"20UKC10R034":{"cx":683.2,"cy":717.4},"20UKC10R035":{"cx":569.7,"cy":779.6},"20UKC10R036":{"cx":868.5,"cy":660.1},"20UKC10R037":{"cx":863.1,"cy":722.9},"20UKC10R043":{"cx":1081.9,"cy":644.0},"20UKC10R044":{"cx":934.1,"cy":769.9},"20UKC10R046":{"cx":493.9,"cy":875.7},"20UKC10R047":{"cx":677.2,"cy":877.2},"20UKC10R049":{"cx":811.2,"cy":873.9},"20UKC10R050":{"cx":933.0,"cy":970.1},"20UKC10R401":{"cx":466.3,"cy":1005.8},"20UKC10R402":{"cx":465.3,"cy":820.0},"20UKC10R405":{"cx":1038.7,"cy":740.9},"20UKC10R406":{"cx":1068.7,"cy":962.4},"20UKC10R501":{"cx":244.8,"cy":756.0},"20UKC10R502":{"cx":240.6,"cy":225.7},"20UKC10R503":{"cx":1159.7,"cy":282.3},"20UKC10R504":{"cx":1149.4,"cy":703.3},"20UKC10R801":{"cx":933.3,"cy":550.3},"20UKC10R802":{"cx":549.3,"cy":565.2},"20UKC10R803":{"cx":523.4,"cy":317.5},"20UKC10R903":{"cx":1074.6,"cy":339.1},"20UKC10R907":{"cx":417.2,"cy":743.0},"20UKC10R910":{"cx":315.8,"cy":327.3},"20UKC10R912":{"cx":1058.9,"cy":751.4},"20UKC10R913":{"cx":439.0,"cy":769.0},"20UKC10R914":{"cx":848.0,"cy":769.7},"20UKC10R916":{"cx":394.8,"cy":389.7},"20UKC14R001":{"cx":409.2,"cy":958.6},"20UKC14R002":{"cx":449.9,"cy":856.3},"20UKC14R003":{"cx":229.4,"cy":824.5},"20UKC14R004":{"cx":333.0,"cy":686.9},"20UKC14R005":{"cx":436.5,"cy":713.6},"20UKC14R006":{"cx":660.1,"cy":778.5},"20UKC14R007":{"cx":369.3,"cy":606.8},"20UKC14R008":{"cx":434.6,"cy":606.6},"20UKC14R009":{"cx":359.6,"cy":437.6},"20UKC14R010":{"cx":451.5,"cy":493.7},"20UKC14R011":{"cx":366.8,"cy":496.8},"20UKC14R012":{"cx":387.8,"cy":306.9},"20UKC14R013":{"cx":466.0,"cy":173.6},"20UKC14R014":{"cx":352.5,"cy":211.0},"20UKC14R015":{"cx":374.7,"cy":128.2},"20UKC14R016":{"cx":462.2,"cy":142.0},"20UKC14R017":{"cx":636.7,"cy":225.3},"20UKC14R018":{"cx":867.4,"cy":177.1},"20UKC14R019":{"cx":803.5,"cy":215.8},"20UKC14R020":{"cx":958.0,"cy":168.5},"20UKC14R021":{"cx":1014.8,"cy":231.0},"20UKC14R022":{"cx":1099.8,"cy":167.5},"20UKC14R023":{"cx":865.8,"cy":337.9},"20UKC14R024":{"cx":833.5,"cy":820.5},"20UKC14R025":{"cx":687.9,"cy":821.9},"20UKC14R026":{"cx":675.1,"cy":339.3},"20UKC14R027":{"cx":1049.3,"cy":406.5},"20UKC14R028":{"cx":1034.0,"cy":486.1},"20UKC14R029":{"cx":1104.2,"cy":518.3},"20UKC14R030":{"cx":744.1,"cy":211.2},"20UKC14R031":{"cx":1168.0,"cy":680.9},"20UKC14R032":{"cx":1234.6,"cy":804.6},"20UKC14R033":{"cx":1085.2,"cy":843.4},"20UKC14R034":{"cx":661.7,"cy":184.3},"20UKC14R035":{"cx":1178.7,"cy":967.6},"20UKC14R301":{"cx":362.2,"cy":270.9},"20UKC14R801":{"cx":813.2,"cy":362.5},"20UKC14R901":{"cx":667.0,"cy":412.4}},"+8.400":{"20UKC10R019":{"cx":666.4,"cy":453.0},"20UKC10R031":{"cx":892.0,"cy":458.6},"20UKC10R032":{"cx":661.9,"cy":610.8},"20UKC10R033":{"cx":542.5,"cy":740.8},"20UKC10R034":{"cx":657.8,"cy":740.9},"20UKC10R035":{"cx":565.0,"cy":805.3},"20UKC10R036":{"cx":873.6,"cy":685.6},"20UKC10R037":{"cx":874.2,"cy":710.7},"20UKC10R046":{"cx":523.4,"cy":946.2},"20UKC10R047":{"cx":656.6,"cy":945.8},"20UKC10R049":{"cx":847.1,"cy":945.9},"20UKC10R050":{"cx":958.6,"cy":945.2},"20UKC10R301":{"cx":355.2,"cy":207.3},"20UKC10R401":{"cx":390.9,"cy":1054.0},"20UKC10R406":{"cx":1087.8,"cy":988.7},"20UKC10R504":{"cx":1125.7,"cy":821.5},"20UKC10R505":{"cx":1078.2,"cy":1028.9},"20UKC10R506":{"cx":326.6,"cy":956.3},"20UKC10R801":{"cx":886.8,"cy":547.8},"20UKC10R802":{"cx":597.3,"cy":598.7},"20UKC10R803":{"cx":538.2,"cy":289.2},"20UKC10R903":{"cx":1063.3,"cy":338.8},"20UKC10R907":{"cx":393.0,"cy":749.1},"20UKC10R910":{"cx":336.6,"cy":360.3},"20UKC10R911":{"cx":1164.3,"cy":363.7},"20UKC10R912":{"cx":1059.6,"cy":824.1},"20UKC10R913":{"cx":446.7,"cy":749.2},"20UKC10R915":{"cx":1059.6,"cy":809.8},"20UKC10R916":{"cx":408.1,"cy":362.6},"20UKC14R005":{"cx":402.2,"cy":712.5},"20UKC14R006":{"cx":674.4,"cy":803.3},"20UKC14R009":{"cx":401.0,"cy":447.6},"20UKC14R017":{"cx":566.0,"cy":338.7},"20UKC14R018":{"cx":914.4,"cy":188.5},"20UKC14R019":{"cx":820.8,"cy":252.9},"20UKC14R028":{"cx":1035.4,"cy":478.3},"20UKC14R029":{"cx":1083.5,"cy":494.0},"20UKC18CR301":{"cx":455.0,"cy":194.5},"20UKC18R001":{"cx":330.4,"cy":920.3},"20UKC18R002":{"cx":402.8,"cy":910.2},"20UKC18R003":{"cx":402.8,"cy":880.9},"20UKC18R004":{"cx":441.4,"cy":835.6},"20UKC18R005":{"cx":369.3,"cy":658.6},"20UKC18R006":{"cx":433.8,"cy":553.7},"20UKC18R007":{"cx":387.8,"cy":501.9},"20UKC18R008":{"cx":732.2,"cy":339.1},"20UKC18R009":{"cx":426.6,"cy":356.4},"20UKC18R010":{"cx":457.8,"cy":184.2},"20UKC18R011":{"cx":403.2,"cy":316.6},"20UKC18R012":{"cx":352.5,"cy":221.0},"20UKC18R013":{"cx":355.1,"cy":197.5},"20UKC18R014":{"cx":352.3,"cy":161.7},"20UKC18R015":{"cx":349.2,"cy":150.0},"20UKC18R016":{"cx":531.0,"cy":161.0},"20UKC18R017":{"cx":543.0,"cy":233.7},"20UKC18R018":{"cx":601.2,"cy":200.5},"20UKC18R019":{"cx":602.4,"cy":187.6},"20UKC18R020":{"cx":1144.2,"cy":779.3},"20UKC18R021":{"cx":804.6,"cy":262.4},"20UKC18R022":{"cx":824.8,"cy":352.2},"20UKC18R023":{"cx":748.7,"cy":478.5},"20UKC18R024":{"cx":541.6,"cy":456.9},"20UKC18R025":{"cx":485.1,"cy":512.3},"20UKC18R026":{"cx":934.0,"cy":760.3},"20UKC18R027":{"cx":1014.4,"cy":242.4},"20UKC18R028":{"cx":1148.3,"cy":299.8},"20UKC18R029":{"cx":1086.0,"cy":201.4},"20UKC18R030":{"cx":1063.6,"cy":162.0},"20UKC18R031":{"cx":1131.4,"cy":959.6},"20UKC18R032":{"cx":995.0,"cy":554.8},"20UKC18R033":{"cx":1103.5,"cy":389.6},"20UKC18R034":{"cx":1056.6,"cy":573.7},"20UKC18R035":{"cx":1062.6,"cy":676.6},"20UKC18R036":{"cx":695.0,"cy":846.9},"20UKC18R037":{"cx":1052.0,"cy":786.3},"20UKC18R038":{"cx":1243.2,"cy":925.4},"20UKC18R039":{"cx":1078.5,"cy":881.6},"20UKC18R040":{"cx":1079.0,"cy":912.1},"20UKC18R041":{"cx":1169.4,"cy":923.5},"20UKC18R042":{"cx":733.4,"cy":974.7},"20UKC18R043":{"cx":544.1,"cy":305.6},"20UKC18R301":{"cx":355.9,"cy":295.0}},"+12.000":{"20UKC10R301":{"cx":352.0,"cy":225.2},"20UKC10R401":{"cx":390.6,"cy":984.2},"20UKC10R406":{"cx":1073.0,"cy":984.3},"20UKC10R801":{"cx":941.5,"cy":578.3},"20UKC10R903":{"cx":1090.2,"cy":395.0},"20UKC10R911":{"cx":1128.2,"cy":344.5},"20UKC10R913":{"cx":413.5,"cy":757.7},"20UKC10R916":{"cx":402.1,"cy":379.9},"20UKC14R009":{"cx":402.1,"cy":408.6},"20UKC14R017":{"cx":513.9,"cy":280.1},"20UKC14R019":{"cx":816.4,"cy":248.3},"20UKC18R027":{"cx":965.9,"cy":250.1},"20UKC22R001":{"cx":329.0,"cy":905.6},"20UKC22R002":{"cx":403.6,"cy":903.8},"20UKC22R003":{"cx":545.7,"cy":864.2},"20UKC22R004":{"cx":297.7,"cy":627.7},"20UKC22R005":{"cx":376.5,"cy":556.2},"20UKC22R006":{"cx":342.0,"cy":414.1},"20UKC22R007":{"cx":401.8,"cy":330.7},"20UKC22R008":{"cx":647.7,"cy":923.2},"20UKC22R009":{"cx":431.1,"cy":214.7},"20UKC22R010":{"cx":660.1,"cy":654.8},"20UKC22R011":{"cx":380.5,"cy":490.3},"20UKC22R012":{"cx":464.6,"cy":497.7},"20UKC22R013":{"cx":708.5,"cy":229.5},"20UKC22R014":{"cx":1143.0,"cy":307.3},"20UKC22R015":{"cx":1147.0,"cy":190.4},"20UKC22R016":{"cx":1066.9,"cy":468.0},"20UKC22R018":{"cx":843.4,"cy":467.6},"20UKC22R020":{"cx":1040.2,"cy":756.0},"20UKC22R021":{"cx":1099.5,"cy":405.9},"20UKC22R022":{"cx":1147.1,"cy":789.1},"20UKC22R024":{"cx":1083.9,"cy":771.9},"20UKC22R025":{"cx":1100.3,"cy":654.8},"20UKC22R026":{"cx":649.1,"cy":572.4},"20UKC22R027":{"cx":640.4,"cy":396.6},"20UKC22R029":{"cx":533.9,"cy":905.9},"20UKC22R030":{"cx":590.1,"cy":926.9},"20UKC22R031":{"cx":418.5,"cy":622.0},"20UKC22R032":{"cx":946.2,"cy":950.9},"20UKC22R033":{"cx":928.4,"cy":882.6},"20UKC22R034":{"cx":1190.4,"cy":871.9},"20UKC22R035":{"cx":488.5,"cy":734.3},"20UKC22R301":{"cx":351.9,"cy":288.8},"20UKC22R402":{"cx":528.0,"cy":850.9},"20UKC22R403":{"cx":541.5,"cy":347.4},"20UKC22R404":{"cx":935.0,"cy":370.5},"20UKC22R405":{"cx":938.0,"cy":817.5}},"+15.900":{"20UKC10R301":{"cx":352.5,"cy":197.0},"20UKC10R801":{"cx":990.8,"cy":509.4},"20UKC10R803":{"cx":560.3,"cy":261.0},"20UKC10R903":{"cx":1097.2,"cy":362.2},"20UKC10R913":{"cx":436.0,"cy":745.2},"20UKC10R914":{"cx":868.3,"cy":783.5},"20UKC10R916":{"cx":403.2,"cy":348.3},"20UKC14R009":{"cx":404.7,"cy":420.5},"20UKC22R010":{"cx":621.3,"cy":626.9},"20UKC22R013":{"cx":714.3,"cy":207.0},"20UKC22R016":{"cx":1052.9,"cy":467.5},"20UKC22R018":{"cx":835.9,"cy":355.3},"20UKC22R027":{"cx":600.7,"cy":474.6},"20UKC22R031":{"cx":379.1,"cy":600.1},"20UKC25R001":{"cx":243.8,"cy":894.7},"20UKC25R0017":{"cx":491.1,"cy":490.1},"20UKC25R002":{"cx":366.4,"cy":819.4},"20UKC25R003":{"cx":679.1,"cy":912.6},"20UKC25R004":{"cx":864.4,"cy":918.3},"20UKC25R005":{"cx":1101.4,"cy":827.4},"20UKC25R006":{"cx":1239.3,"cy":866.0},"20UKC25R007":{"cx":1196.8,"cy":837.2},"20UKC25R008":{"cx":300.8,"cy":605.3},"20UKC25R009":{"cx":1121.9,"cy":867.8},"20UKC25R011":{"cx":488.8,"cy":668.2},"20UKC25R012":{"cx":868.4,"cy":639.0},"20UKC25R013":{"cx":613.1,"cy":560.2},"20UKC25R015":{"cx":426.1,"cy":500.1},"20UKC25R016":{"cx":354.2,"cy":515.3},"20UKC25R018":{"cx":380.5,"cy":295.2},"20UKC25R019":{"cx":401.6,"cy":167.5},"20UKC25R020":{"cx":575.4,"cy":188.3},"20UKC25R022":{"cx":1059.6,"cy":242.1},"20UKC25R023":{"cx":776.3,"cy":222.3},"20UKC25R024":{"cx":1065.1,"cy":143.0},"20UKC25R025":{"cx":841.5,"cy":223.4},"20UKC25R026":{"cx":899.4,"cy":282.0},"20UKC25R027":{"cx":900.0,"cy":195.4},"20UKC25R028":{"cx":966.0,"cy":194.6},"20UKC25R029":{"cx":1050.8,"cy":190.0},"20UKC25R030":{"cx":1108.4,"cy":106.0},"20UKC25R031":{"cx":972.7,"cy":243.2},"20UKC25R034":{"cx":1103.6,"cy":548.4},"20UKC25R035":{"cx":1096.5,"cy":604.8},"20UKC25R036":{"cx":1191.3,"cy":599.1},"20UKC25R037":{"cx":1085.6,"cy":683.6},"20UKC25R038":{"cx":828.6,"cy":505.0},"20UKC25R039":{"cx":921.7,"cy":825.3},"20UKC25R040":{"cx":915.9,"cy":299.7},"20UKC25R041":{"cx":561.0,"cy":324.2},"20UKC25R042":{"cx":572.2,"cy":823.5},"20UKC25R301":{"cx":352.3,"cy":254.2},"20UKC25R401":{"cx":395.6,"cy":947.4},"20UKC25R406":{"cx":995.5,"cy":920.9},"20UKC25R502":{"cx":352.9,"cy":143.2},"20UKC25R503":{"cx":1244.0,"cy":167.5},"20UKC25R505":{"cx":1162.5,"cy":1015.1},"20UKC25R506":{"cx":325.4,"cy":1013.1}},"+19.500":{"20UKC10R301":{"cx":353.0,"cy":179.5},"20UKC10R801":{"cx":940.3,"cy":612.3},"20UKC10R912":{"cx":1156.7,"cy":775.9},"20UKC10R914":{"cx":773.5,"cy":803.2},"20UKC22R031":{"cx":430.0,"cy":666.3},"20UKC25R401":{"cx":344.9,"cy":1009.4},"20UKC25R406":{"cx":1088.8,"cy":967.6},"20UKC25R502":{"cx":261.9,"cy":118.9},"20UKC25R503":{"cx":1245.1,"cy":115.6},"20UKC29R010":{"cx":355.0,"cy":796.1},"20UKC29R011":{"cx":339.8,"cy":396.9},"20UKC29R012":{"cx":404.8,"cy":401.6},"20UKC29R013":{"cx":418.7,"cy":557.9},"20UKC29R014":{"cx":367.7,"cy":527.4},"20UKC29R015":{"cx":348.5,"cy":646.1},"20UKC29R016":{"cx":404.5,"cy":292.4},"20UKC29R017":{"cx":505.9,"cy":194.7},"20UKC29R018":{"cx":354.5,"cy":220.4},"20UKC29R019":{"cx":347.8,"cy":122.2},"20UKC29R020":{"cx":436.0,"cy":110.1},"20UKC29R021":{"cx":510.1,"cy":511.6},"20UKC29R022":{"cx":573.8,"cy":178.2},"20UKC29R023":{"cx":660.6,"cy":274.2},"20UKC29R024":{"cx":869.6,"cy":479.3},"20UKC29R025":{"cx":853.1,"cy":328.5},"20UKC29R026":{"cx":869.7,"cy":390.3},"20UKC29R027":{"cx":655.9,"cy":189.1},"20UKC29R028":{"cx":1104.7,"cy":608.9},"20UKC29R029":{"cx":720.4,"cy":189.3},"20UKC29R030":{"cx":968.7,"cy":199.3},"20UKC29R031":{"cx":610.3,"cy":399.9},"20UKC29R032":{"cx":646.1,"cy":507.6},"20UKC29R033":{"cx":603.6,"cy":655.0},"20UKC29R034":{"cx":641.0,"cy":617.0},"20UKC29R035":{"cx":606.8,"cy":744.0},"20UKC29R036":{"cx":676.8,"cy":665.7},"20UKC29R037":{"cx":361.5,"cy":483.3},"20UKC29R038":{"cx":909.5,"cy":287.1},"20UKC29R039":{"cx":797.2,"cy":245.2},"20UKC29R041":{"cx":871.1,"cy":538.8},"20UKC29R042":{"cx":793.6,"cy":543.4},"20UKC29R043":{"cx":936.2,"cy":450.3},"20UKC29R044":{"cx":895.6,"cy":738.8},"20UKC29R045":{"cx":880.8,"cy":231.1},"20UKC29R046":{"cx":987.9,"cy":527.4},"20UKC29R047":{"cx":1145.0,"cy":299.3},"20UKC29R048":{"cx":1073.9,"cy":238.5},"20UKC29R049":{"cx":1071.4,"cy":175.5},"20UKC29R050":{"cx":1112.2,"cy":398.8},"20UKC29R051":{"cx":1127.0,"cy":549.0},"20UKC29R052":{"cx":1099.7,"cy":500.6},"20UKC29R053":{"cx":792.4,"cy":746.3},"20UKC29R054":{"cx":1095.8,"cy":703.6},"20UKC29R055":{"cx":1056.5,"cy":256.0},"20UKC29R301":{"cx":355.1,"cy":269.5},"20UKC30R001":{"cx":319.3,"cy":933.0},"20UKC30R002":{"cx":676.1,"cy":831.2},"20UKC30R003":{"cx":1131.5,"cy":833.5},"20UKC30R004":{"cx":785.2,"cy":1009.4},"20UKC30R005":{"cx":839.1,"cy":904.1},"20UKC30R006":{"cx":1190.2,"cy":854.2},"20UKC30R007":{"cx":1127.5,"cy":932.6},"20UKC30R008":{"cx":1241.0,"cy":887.8},"20UKC30R507":{"cx":386.2,"cy":1023.6}},"+23.400":{"20UKC10R301":{"cx":357.6,"cy":108.7},"20UKC25R502":{"cx":252.7,"cy":163.8},"20UKC25R503":{"cx":1244.9,"cy":165.5},"20UKC25R505":{"cx":1230.6,"cy":956.5},"20UKC25R506":{"cx":477.6,"cy":959.1},"20UKC33R001":{"cx":337.3,"cy":274.9},"20UKC33R002":{"cx":351.4,"cy":255.1},"20UKC33R003":{"cx":824.0,"cy":470.7},"20UKC33R004":{"cx":425.8,"cy":108.5},"20UKC33R005":{"cx":423.7,"cy":365.8},"20UKC33R006":{"cx":643.7,"cy":308.1},"20UKC33R007":{"cx":620.6,"cy":253.3},"20UKC33R008":{"cx":380.2,"cy":435.4},"20UKC33R009":{"cx":859.6,"cy":135.2},"20UKC33R010":{"cx":935.3,"cy":134.8},"20UKC33R011":{"cx":658.2,"cy":133.7},"20UKC33R012":{"cx":773.5,"cy":133.3},"20UKC33R013":{"cx":758.9,"cy":306.9},"20UKC33R014":{"cx":822.7,"cy":309.5},"20UKC33R015":{"cx":1110.3,"cy":268.8},"20UKC33R016":{"cx":1002.4,"cy":133.2},"20UKC33R017":{"cx":1141.7,"cy":137.4},"20UKC33R018":{"cx":560.6,"cy":132.6},"20UKC33R019":{"cx":1113.5,"cy":373.3},"20UKC33R020":{"cx":494.2,"cy":464.4},"20UKC33R021":{"cx":988.2,"cy":427.4},"20UKC33R022":{"cx":668.1,"cy":680.6},"20UKC33R023":{"cx":906.0,"cy":676.0},"20UKC33R024":{"cx":253.5,"cy":474.7},"20UKC33R025":{"cx":634.8,"cy":104.3},"20UKC33R026":{"cx":913.3,"cy":104.9},"20UKC33R027":{"cx":1105.6,"cy":166.0},"20UKC33R028":{"cx":574.3,"cy":331.0},"20UKC33R029":{"cx":894.5,"cy":308.8},"20UKC33R030":{"cx":936.7,"cy":557.6},"20UKC33R031":{"cx":1105.9,"cy":490.4},"20UKC33R032":{"cx":1100.0,"cy":606.4},"20UKC33R033":{"cx":1104.8,"cy":711.9},"20UKC33R036":{"cx":309.5,"cy":578.2},"20UKC33R037":{"cx":334.3,"cy":755.8},"20UKC33R038":{"cx":1243.7,"cy":361.2},"20UKC33R039":{"cx":1244.5,"cy":490.0},"20UKC33R040":{"cx":1243.3,"cy":581.0},"20UKC33R041":{"cx":1244.1,"cy":684.1},"20UKC33R042":{"cx":1243.6,"cy":728.9},"20UKC33R043":{"cx":779.9,"cy":690.6},"20UKC33R044":{"cx":463.3,"cy":71.3},"20UKC33R045":{"cx":1116.6,"cy":75.4},"20UKC33R046":{"cx":550.2,"cy":517.2},"20UKC33R047":{"cx":615.4,"cy":517.8},"20UKC33R048":{"cx":701.7,"cy":564.6},"20UKC33R049":{"cx":723.4,"cy":628.8},"20UKC33R050":{"cx":775.7,"cy":465.2},"20UKC33R051":{"cx":367.6,"cy":344.6},"20UKC33R052":{"cx":423.4,"cy":304.0},"20UKC33R053":{"cx":656.6,"cy":629.0},"20UKC33R054":{"cx":935.8,"cy":519.2},"20UKC33R301":{"cx":355.8,"cy":162.7},"20UKC33R909":{"cx":412.5,"cy":145.2},"20UKC34R001":{"cx":368.5,"cy":861.9},"20UKC34R002":{"cx":642.3,"cy":807.9},"20UKC34R003":{"cx":825.1,"cy":827.7},"20UKC34R004":{"cx":1156.4,"cy":832.7},"20UKC34R005":{"cx":332.3,"cy":850.4}},"+27.600":{"20UKC25R506":{"cx":456.9,"cy":980.9},"20UKC33R003":{"cx":839.6,"cy":605.5},"20UKC33R005":{"cx":756.4,"cy":538.7},"20UKC33R006":{"cx":652.4,"cy":394.9},"20UKC33R009":{"cx":862.0,"cy":228.3},"20UKC33R010":{"cx":938.7,"cy":228.3},"20UKC33R011":{"cx":654.1,"cy":228.0},"20UKC33R012":{"cx":770.4,"cy":228.0},"20UKC33R013":{"cx":717.6,"cy":394.9},"20UKC33R014":{"cx":796.6,"cy":394.4},"20UKC33R018":{"cx":561.6,"cy":228.0},"20UKC33R019":{"cx":1146.3,"cy":495.3},"20UKC33R022":{"cx":669.6,"cy":758.6},"20UKC33R023":{"cx":892.1,"cy":758.1},"20UKC33R029":{"cx":867.7,"cy":394.3},"20UKC33R031":{"cx":1146.3,"cy":544.0},"20UKC33R032":{"cx":1146.3,"cy":667.9},"20UKC33R033":{"cx":1146.3,"cy":753.9},"20UKC33R037":{"cx":609.0,"cy":855.7},"20UKC33R038":{"cx":1199.3,"cy":402.4},"20UKC33R039":{"cx":1199.6,"cy":586.0},"20UKC33R040":{"cx":1199.5,"cy":684.5},"20UKC33R041":{"cx":1199.6,"cy":771.4},"20UKC33R042":{"cx":925.2,"cy":855.5},"20UKC33R047":{"cx":624.6,"cy":605.5},"20UKC33R048":{"cx":713.6,"cy":605.3},"20UKC33R049":{"cx":778.7,"cy":635.2},"20UKC33R050":{"cx":779.2,"cy":604.7},"20UKC33R055":{"cx":779.7,"cy":757.7},"20UKC37R001":{"cx":1113.5,"cy":356.5},"20UKC37R002":{"cx":1118.6,"cy":249.7},"20UKC37R003":{"cx":964.2,"cy":193.9},"20UKC37R004":{"cx":618.2,"cy":192.4},"20UKC37R005":{"cx":377.4,"cy":189.9},"20UKC37R006":{"cx":341.4,"cy":256.9},"20UKC37R007":{"cx":421.2,"cy":313.1},"20UKC39R003":{"cx":434.6,"cy":933.0},"20UKC39R004":{"cx":836.5,"cy":862.6},"20UKC39R005":{"cx":1139.5,"cy":960.8},"20UKC39R008":{"cx":371.3,"cy":892.1}}}};
+
+let _rpBuilding = '20UKC';
+let _rpFloor = null;
+let _rpSelected = new Map(); // Map<roomId, floorKey>
+let _rpSvgCache = {};
+
+function openRoomPicker() {
+  _rpSelected = new Map();
+  _rpFloor = null;
+  document.getElementById('roomPickerOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  rpSelectBuilding('20UKC');
+}
+
+function closeRoomPicker() {
+  document.getElementById('roomPickerOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function saveRoomPicker() {
+  const text = rpFormatText();
+  if (!text) return;
+  const el = document.getElementById('mesto');
+  if (el) { el.value = text; el.dispatchEvent(new Event('input')); }
+  closeRoomPicker();
+}
+
+function rpSelectBuilding(bld) {
+  _rpBuilding = bld;
+  document.getElementById('rpBuildingTitle').textContent = bld;
+  const floors = RP_BUILDINGS[bld].floors;
+  const list = document.getElementById('rpFloorList');
+  list.innerHTML = Object.keys(floors).map(f => {
+    const rooms = (RP_ROOMS[bld] && RP_ROOMS[bld][f]) ? Object.keys(RP_ROOMS[bld][f]).length : 0;
+    return `<button class="rp-floor-btn" onclick="rpSelectFloor('${f}')" id="rpFloorBtn_${f.replace(/[^a-z0-9]/gi,'_')}">${f === '0.000' ? '0.000' : f}<span class="rp-floor-count">${rooms}</span></button>`;
+  }).join('');
+  // Auto-select first floor
+  rpSelectFloor(Object.keys(floors)[0]);
+}
+
+function rpSelectFloor(floor) {
+  _rpFloor = floor;
+  document.querySelectorAll('.rp-floor-btn').forEach(b => b.classList.remove('active'));
+  const btn = document.getElementById('rpFloorBtn_' + floor.replace(/[^a-z0-9]/gi,'_'));
+  if (btn) btn.classList.add('active');
+  rpLoadFloor(floor);
+}
+
+async function rpLoadFloor(floor) {
+  const bld = _rpBuilding;
+  const meta = RP_BUILDINGS[bld].floors[floor];
+  const wrap = document.getElementById('roomPickerSVGWrap');
+  wrap.innerHTML = '<div id="roomPickerLoader">Загрузка плана…</div>';
+
+  let svgText = _rpSvgCache[bld + floor];
+  if (!svgText) {
+    try {
+      const res = await fetch(`plans_20UKC/${meta.file}`);
+      svgText = await res.text();
+      _rpSvgCache[bld + floor] = svgText;
+    } catch(e) {
+      wrap.innerHTML = '<div id="roomPickerLoader">Ошибка загрузки плана</div>';
+      return;
+    }
+  }
+
+  // Insert SVG (remove outer svg tag, wrap in a sized container)
+  const tmp = document.createElement('div');
+  tmp.innerHTML = svgText;
+  const svgEl = tmp.querySelector('svg');
+  if (!svgEl) { wrap.innerHTML = '<div id="roomPickerLoader">Ошибка SVG</div>'; return; }
+  svgEl.style.display = 'block';
+  svgEl.style.width = meta.w + 'px';
+  svgEl.style.height = meta.h + 'px';
+  wrap.innerHTML = '';
+  wrap.appendChild(svgEl);
+
+  // Create overlay SVG
+  const overlay = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  overlay.id = 'roomPickerOverlaySVG';
+  overlay.setAttribute('width', meta.w);
+  overlay.setAttribute('height', meta.h);
+  overlay.setAttribute('viewBox', `0 0 ${meta.w} ${meta.h}`);
+  overlay.style.cssText = `position:absolute;top:0;left:0;width:${meta.w}px;height:${meta.h}px;`;
+
+  const rooms = (RP_ROOMS[bld] && RP_ROOMS[bld][floor]) || {};
+  Object.entries(rooms).forEach(([id, pos]) => {
+    const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    g.setAttribute('class', 'rp-room' + (_rpSelected.has(id) ? ' selected' : ''));
+    g.setAttribute('id', 'rp_' + id);
+    g.setAttribute('data-id', id);
+    g.setAttribute('data-floor', floor);
+
+    // Short label (last part of code)
+    const shortId = id.replace('20UKC', '');
+    const W = Math.max(shortId.length * 6.5 + 8, 70), H = 18;
+    const rx = pos.cx - W/2, ry = pos.cy - H/2;
+
+    const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+    rect.setAttribute('x', rx); rect.setAttribute('y', ry);
+    rect.setAttribute('width', W); rect.setAttribute('height', H);
+    rect.setAttribute('rx', 3);
+
+    const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    text.setAttribute('x', pos.cx); text.setAttribute('y', pos.cy + 3.5);
+    text.setAttribute('text-anchor', 'middle');
+    text.textContent = shortId;
+
+    g.appendChild(rect); g.appendChild(text);
+    g.addEventListener('click', () => rpToggleRoom(id, floor));
+    overlay.appendChild(g);
+  });
+
+  wrap.appendChild(overlay);
+  rpUpdatePreview();
+}
+
+function rpToggleRoom(id, floor) {
+  if (_rpSelected.has(id)) {
+    _rpSelected.delete(id);
+  } else {
+    _rpSelected.set(id, floor);
+  }
+  const g = document.getElementById('rp_' + id);
+  if (g) g.classList.toggle('selected', _rpSelected.has(id));
+  rpUpdatePreview();
+}
+
+function rpFormatText() {
+  if (!_rpSelected.size) return '';
+  // Group by floor
+  const byFloor = {};
+  _rpSelected.forEach((floor, id) => {
+    if (!byFloor[floor]) byFloor[floor] = [];
+    byFloor[floor].push(id);
+  });
+  // Sort floors
+  const floors = Object.keys(byFloor).sort();
+  return floors.map(f => {
+    const rooms = byFloor[f].sort();
+    return `Отм. ${f}: ${rooms.join(', ')}`;
+  }).join('\n');
+}
+
+function rpUpdatePreview() {
+  const text = rpFormatText();
+  document.getElementById('roomPickerPreviewText').textContent = text || '—';
+  document.getElementById('roomPickerSaveBtn').disabled = !text;
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && document.getElementById('roomPickerOverlay').classList.contains('open')) {
+    closeRoomPicker();
+  }
+});
 
 // ─── Init ─────────────────────────────────────────────────────────────────
 // Восстанавливаем сессию авторизации
@@ -4848,6 +5794,256 @@ function copyDevEmail() {
   });
 }
 </script>
+
+<!-- ── Map Picker Modal ── -->
+<div id="mapPickerOverlay">
+  <div id="mapPickerHeader">
+    <div>
+      <h3>Схема площадки Курской АЭС-2</h3>
+      <p>Нажмите на здание или зону — код вставится в поле «Место выполнения работ»</p>
+    </div>
+    <button id="mapPickerClose" onclick="closeMapPicker()">✕ Закрыть</button>
+  </div>
+  <div id="mapPickerBody">
+    <svg id="sitePlanSVG" viewBox="0 0 1240 880" xmlns="http://www.w3.org/2000/svg">
+      <!-- Фон площадки -->
+      <rect width="1240" height="880" fill="#e2d5b0"/>
+      <!-- Перimeter -->
+      <rect x="8" y="8" width="1224" height="864" fill="none" stroke="#9a8660" stroke-width="3" rx="4"/>
+
+      <!-- Дороги горизонтальные -->
+      <rect x="8" y="188" width="1224" height="32" fill="#d6c99a" opacity=".9"/>
+      <rect x="8" y="420" width="1224" height="32" fill="#d6c99a" opacity=".9"/>
+      <rect x="8" y="660" width="1224" height="32" fill="#d6c99a" opacity=".9"/>
+      <!-- Дороги вертикальные -->
+      <rect x="168" y="8" width="30" height="864" fill="#d6c99a" opacity=".9"/>
+      <rect x="430" y="8" width="30" height="864" fill="#d6c99a" opacity=".9"/>
+      <rect x="780" y="8" width="30" height="864" fill="#d6c99a" opacity=".9"/>
+      <rect x="1050" y="8" width="30" height="864" fill="#d6c99a" opacity=".9"/>
+
+      <!-- ════ ГРАДИРНИ ════ -->
+      <g class="map-zone" onclick="selectLocation('Градирня №1')" data-info="Градирня №1">
+        <ellipse cx="90" cy="100" rx="76" ry="82" fill="#b8a88a" stroke="#7a6a50" stroke-width="2"/>
+        <ellipse cx="90" cy="100" rx="48" ry="54" fill="#a09070" stroke="#7a6a50" stroke-width="1.5"/>
+        <ellipse cx="90" cy="118" rx="38" ry="14" fill="#8a7a60" stroke="#7a6a50" stroke-width="1"/>
+        <text x="90" y="96" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10" fill="#3a2a10">Градирня</text>
+        <text x="90" y="110" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="13" font-weight="700" fill="#3a2a10">№1</text>
+      </g>
+      <g class="map-zone" onclick="selectLocation('Градирня №2')" data-info="Градирня №2">
+        <ellipse cx="295" cy="100" rx="76" ry="82" fill="#b8a88a" stroke="#7a6a50" stroke-width="2"/>
+        <ellipse cx="295" cy="100" rx="48" ry="54" fill="#a09070" stroke="#7a6a50" stroke-width="1.5"/>
+        <ellipse cx="295" cy="118" rx="38" ry="14" fill="#8a7a60" stroke="#7a6a50" stroke-width="1"/>
+        <text x="295" y="96" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10" fill="#3a2a10">Градирня</text>
+        <text x="295" y="110" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="13" font-weight="700" fill="#3a2a10">№2</text>
+      </g>
+
+      <!-- ════ ЗДАНИЕ 21А (турбинное, левое длинное) ════ -->
+      <g class="map-zone" onclick="selectLocation('ЭБ-1, зд. 21А')" data-info="Здание 21А — Турбинное здание">
+        <rect x="14" y="224" width="150" height="190" fill="#9ab4c8" stroke="#4a7090" stroke-width="2" rx="2"/>
+        <text x="89" y="318" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="18" font-weight="700" fill="#1a3a52">21А</text>
+        <text x="89" y="334" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="9" fill="#2a5070">Турбинное</text>
+        <text x="89" y="345" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="9" fill="#2a5070">здание</text>
+      </g>
+
+      <!-- ════ ЗДАНИЕ 19А ════ -->
+      <g class="map-zone" onclick="selectLocation('ЭБ-1, зд. 19А')" data-info="Здание 19А">
+        <rect x="14" y="456" width="150" height="100" fill="#9ab4c8" stroke="#4a7090" stroke-width="2" rx="2"/>
+        <text x="89" y="512" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="18" font-weight="700" fill="#1a3a52">19А</text>
+      </g>
+
+      <!-- ════ ЗДАНИЕ 20А (левее реактора) ════ -->
+      <g class="map-zone" onclick="selectLocation('зд. 20А')" data-info="Здание 20А">
+        <rect x="200" y="224" width="220" height="190" fill="#9ab4c8" stroke="#4a7090" stroke-width="2" rx="2"/>
+        <text x="310" y="318" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="18" font-weight="700" fill="#1a3a52">20А</text>
+      </g>
+
+      <!-- ════ 20UMH (верхнее здание над реакторным комплексом) ════ -->
+      <g class="map-zone" onclick="selectLocation('зд. 20UMH')" data-info="20UMH">
+        <rect x="462" y="14" width="348" height="60" fill="#aab8cc" stroke="#5a7090" stroke-width="1.5" rx="2"/>
+        <text x="636" y="50" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="14" font-weight="700" fill="#1a3050">20UMH</text>
+      </g>
+
+      <!-- ════ 20UMA ════ -->
+      <g class="map-zone" onclick="selectLocation('зд. 20UMA')" data-info="20UMA">
+        <rect x="462" y="80" width="210" height="104" fill="#aab8cc" stroke="#5a7090" stroke-width="1.5" rx="2"/>
+        <text x="567" y="138" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="14" font-weight="700" fill="#1a3050">20UMA</text>
+      </g>
+
+      <!-- ════ 20UQR (слева от реакторного) ════ -->
+      <g class="map-zone" onclick="selectLocation('зд. 20UQR')" data-info="20UQR">
+        <rect x="462" y="224" width="130" height="190" fill="#aab8cc" stroke="#5a7090" stroke-width="1.5" rx="2"/>
+        <text x="527" y="322" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="13" font-weight="700" fill="#1a3050">20UQR</text>
+      </g>
+
+      <!-- ════ 20UKC — Вспомогательное реакторное здание (большой прямоугольник) ════ -->
+      <g class="map-zone" onclick="selectLocation('20UKC')" data-info="20UKC — Вспомогательное реакторное здание (2 энергоблок)">
+        <rect x="600" y="80" width="380" height="510" fill="#b0c2d8" stroke="#3a6090" stroke-width="3" rx="3"/>
+        <!-- Сетка помещений -->
+        <line x1="660" y1="80" x2="660" y2="590" stroke="#8090a8" stroke-width=".6" opacity=".5"/>
+        <line x1="730" y1="80" x2="730" y2="590" stroke="#8090a8" stroke-width=".6" opacity=".5"/>
+        <line x1="810" y1="80" x2="810" y2="590" stroke="#8090a8" stroke-width=".6" opacity=".5"/>
+        <line x1="890" y1="80" x2="890" y2="590" stroke="#8090a8" stroke-width=".6" opacity=".5"/>
+        <line x1="600" y1="155" x2="980" y2="155" stroke="#8090a8" stroke-width=".6" opacity=".5"/>
+        <line x1="600" y1="230" x2="980" y2="230" stroke="#8090a8" stroke-width=".6" opacity=".5"/>
+        <line x1="600" y1="310" x2="980" y2="310" stroke="#8090a8" stroke-width=".6" opacity=".5"/>
+        <line x1="600" y1="390" x2="980" y2="390" stroke="#8090a8" stroke-width=".6" opacity=".5"/>
+        <line x1="600" y1="456" x2="980" y2="456" stroke="#8090a8" stroke-width=".6" opacity=".5"/>
+        <line x1="600" y1="520" x2="980" y2="520" stroke="#8090a8" stroke-width=".6" opacity=".5"/>
+        <text x="790" y="348" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="20" font-weight="700" fill="#1a3a5c">20UKC</text>
+        <text x="790" y="370" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10" fill="#2a4a70">Вспомогательное реакторное здание</text>
+        <text x="790" y="383" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10" fill="#2a4a70">2-й энергоблок</text>
+      </g>
+
+      <!-- ════ 20UJA — Реакторное здание (круглый купол) ════ -->
+      <g class="map-zone" onclick="selectLocation('20UJA')" data-info="20UJA — Реакторное здание">
+        <!-- Outer containment ring -->
+        <circle cx="790" cy="310" r="108" fill="#8aaac4" stroke="#2a5080" stroke-width="3"/>
+        <!-- Pre-stressed containment -->
+        <circle cx="790" cy="310" r="80" fill="#7090ac" stroke="#2a5080" stroke-width="2"/>
+        <!-- Inner dome -->
+        <circle cx="790" cy="310" r="50" fill="#5878a0" stroke="#2a5080" stroke-width="1.5"/>
+        <!-- Reactor symbol -->
+        <circle cx="790" cy="310" r="20" fill="#3a5880" stroke="#1a3a60" stroke-width="1.5"/>
+        <text x="790" y="315" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10" font-weight="700" fill="white">ВВЭР</text>
+        <text x="790" y="218" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11" font-weight="700" fill="#102040">20UJA</text>
+      </g>
+
+      <!-- ════ 20UBA (внизу реакторного) ════ -->
+      <g class="map-zone" onclick="selectLocation('зд. 20UBA')" data-info="20UBA">
+        <rect x="462" y="456" width="130" height="100" fill="#aab8cc" stroke="#5a7090" stroke-width="1.5" rx="2"/>
+        <text x="527" y="512" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="13" font-weight="700" fill="#1a3050">20UBA</text>
+      </g>
+
+      <!-- ════ 20USC (правее реакторного комплекса) ════ -->
+      <g class="map-zone" onclick="selectLocation('зд. 20USC')" data-info="20USC">
+        <rect x="815" y="600" width="165" height="90" fill="#aab8cc" stroke="#5a7090" stroke-width="1.5" rx="2"/>
+        <text x="897" y="650" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="13" font-weight="700" fill="#1a3050">20USC</text>
+      </g>
+
+      <!-- ════ 21USF — Резервуары (справа) ════ -->
+      <g class="map-zone" onclick="selectLocation('зд. 21USF')" data-info="21USF — Резервуары аварийного охлаждения">
+        <rect x="1085" y="14" width="148" height="200" fill="#b0c8b0" stroke="#4a7a50" stroke-width="1.5" rx="2"/>
+        <circle cx="1130" cy="80" r="38" fill="#88a888" stroke="#4a7a50" stroke-width="1.5"/>
+        <circle cx="1195" cy="80" r="38" fill="#88a888" stroke="#4a7a50" stroke-width="1.5"/>
+        <circle cx="1130" cy="160" r="38" fill="#88a888" stroke="#4a7a50" stroke-width="1.5"/>
+        <circle cx="1195" cy="160" r="38" fill="#88a888" stroke="#4a7a50" stroke-width="1.5"/>
+        <text x="1159" y="225" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="12" font-weight="700" fill="#1a3a1a">21USF</text>
+      </g>
+
+      <!-- ════ Правый блок 1 ════ -->
+      <g class="map-zone" onclick="selectLocation('зд. 20UBC')" data-info="20UBC">
+        <rect x="1085" y="224" width="148" height="190" fill="#aab8cc" stroke="#5a7090" stroke-width="1.5" rx="2"/>
+        <text x="1159" y="322" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="13" font-weight="700" fill="#1a3050">20UBC</text>
+      </g>
+
+      <!-- ════ Правый блок 2 ════ -->
+      <g class="map-zone" onclick="selectLocation('зд. 20UBP')" data-info="20UBP">
+        <rect x="1085" y="456" width="148" height="200" fill="#aab8cc" stroke="#5a7090" stroke-width="1.5" rx="2"/>
+        <text x="1159" y="562" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="13" font-weight="700" fill="#1a3050">20UBP</text>
+      </g>
+
+      <!-- ════ Нижний ряд зданий ════ -->
+      <!-- 11UZ -->
+      <g class="map-zone" onclick="selectLocation('зд. 11UZ')" data-info="11UZ">
+        <rect x="200" y="695" width="220" height="100" fill="#c8c8a0" stroke="#8a8a50" stroke-width="1.5" rx="2"/>
+        <text x="310" y="752" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="16" font-weight="700" fill="#3a3a10">11UZ</text>
+      </g>
+      <!-- 13UZ -->
+      <g class="map-zone" onclick="selectLocation('зд. 13UZ')" data-info="13UZ">
+        <rect x="462" y="695" width="310" height="100" fill="#c8c8a0" stroke="#8a8a50" stroke-width="1.5" rx="2"/>
+        <text x="617" y="752" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="16" font-weight="700" fill="#3a3a10">13UZ</text>
+      </g>
+      <!-- 12Б -->
+      <g class="map-zone" onclick="selectLocation('зд. 12Б')" data-info="Здание 12Б">
+        <rect x="14" y="695" width="150" height="100" fill="#c8c8a0" stroke="#8a8a50" stroke-width="1.5" rx="2"/>
+        <text x="89" y="752" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="16" font-weight="700" fill="#3a3a10">12Б</text>
+      </g>
+      <!-- Правое нижнее -->
+      <g class="map-zone" onclick="selectLocation('зд. 21А (вост.)')" data-info="Здание 21А (восточная часть)">
+        <rect x="815" y="695" width="420" height="100" fill="#9ab4c8" stroke="#4a7090" stroke-width="1.5" rx="2"/>
+        <text x="1025" y="752" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="16" font-weight="700" fill="#1a3a52">21А (вост.)</text>
+      </g>
+
+      <!-- ════ КПП ════ -->
+      <g>
+        <rect x="10" y="10" width="60" height="24" fill="#1a3a5c" rx="3"/>
+        <text x="40" y="27" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10" font-weight="700" fill="white">КПП 3а</text>
+      </g>
+      <g>
+        <rect x="575" y="10" width="55" height="24" fill="#1a3a5c" rx="3"/>
+        <text x="602" y="27" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10" font-weight="700" fill="white">КПП 4</text>
+      </g>
+      <g>
+        <rect x="1170" y="10" width="60" height="24" fill="#1a3a5c" rx="3"/>
+        <text x="1200" y="27" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10" font-weight="700" fill="white">КПП 1</text>
+      </g>
+      <g>
+        <rect x="1170" y="846" width="60" height="24" fill="#1a3a5c" rx="3"/>
+        <text x="1200" y="863" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10" font-weight="700" fill="white">КПП 2</text>
+      </g>
+
+      <!-- ════ Компас ════ -->
+      <g transform="translate(1185,810)">
+        <circle r="22" fill="white" stroke="#9a8660" stroke-width="1.5" opacity=".92"/>
+        <polygon points="0,-16 -4,-4 0,0 4,-4" fill="#1a3a5c"/>
+        <polygon points="0,16 -4,4 0,0 4,4" fill="#9a8660"/>
+        <text x="0" y="-19" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="9" font-weight="700" fill="#1a3a5c">С</text>
+        <text x="0" y="27" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="9" fill="#9a8660">Ю</text>
+      </g>
+
+      <!-- Легенда -->
+      <rect x="14" y="810" width="220" height="60" fill="rgba(255,255,255,.75)" rx="6" stroke="#c8b890" stroke-width="1"/>
+      <rect x="24" y="822" width="14" height="10" fill="#9ab4c8" stroke="#4a7090" stroke-width="1"/>
+      <text x="44" y="832" font-family="Segoe UI,sans-serif" font-size="10" fill="#3a3a2a">— здания (кликабельны)</text>
+      <rect x="24" y="838" width="14" height="10" fill="#b8a88a" stroke="#7a6a50" stroke-width="1"/>
+      <text x="44" y="848" font-family="Segoe UI,sans-serif" font-size="10" fill="#3a3a2a">— градирни</text>
+      <rect x="24" y="854" width="14" height="10" fill="#88a888" stroke="#4a7a50" stroke-width="1"/>
+      <text x="44" y="864" font-family="Segoe UI,sans-serif" font-size="10" fill="#3a3a2a">— резервуары / ёмкости</text>
+
+      <!-- Заголовок схемы -->
+      <rect x="380" y="810" width="420" height="62" fill="rgba(26,58,92,.82)" rx="6"/>
+      <text x="590" y="833" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11" font-weight="700" fill="white">КУРСКАЯ АЭС-2</text>
+      <text x="590" y="848" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10" fill="rgba(255,255,255,.8)">Схема расположения объектов (упрощённая)</text>
+      <text x="590" y="863" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="9" fill="rgba(255,255,255,.55)">Выберите здание для заполнения поля «Место выполнения работ»</text>
+    </svg>
+  </div>
+  <div id="mapPickerStatus">Наведите на здание для просмотра информации</div>
+</div>
+
+<!-- ── Room Picker Modal ── -->
+<div id="roomPickerOverlay">
+  <div id="roomPickerHeader">
+    <div>
+      <h3>Выбор помещений — <span id="rpBuildingTitle">20UKC</span></h3>
+      <p>Нажмите на помещение для выбора. Закрытие без сохранения отменяет выбор.</p>
+    </div>
+    <button id="roomPickerCloseBtn" onclick="closeRoomPicker()">✕</button>
+  </div>
+  <div id="roomPickerContent">
+    <div id="roomPickerSVGArea">
+      <div id="roomPickerSVGWrap">
+        <div id="roomPickerLoader">Выберите отметку</div>
+      </div>
+    </div>
+    <div id="roomPickerSidebar">
+      <div id="roomPickerSidebarInner">
+        <p class="rp-building-label">Здание</p>
+        <select class="rp-building-select" id="rpBuildingSelect" onchange="rpSelectBuilding(this.value)">
+          <option value="20UKC">20UKC</option>
+        </select>
+        <p class="rp-building-label">Отметка</p>
+        <div id="rpFloorList"></div>
+      </div>
+    </div>
+  </div>
+  <div id="roomPickerBottom">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+      <span id="roomPickerPreviewLabel">Предварительный просмотр</span>
+      <button id="roomPickerSaveBtn" onclick="saveRoomPicker()" disabled>Сохранить</button>
+    </div>
+    <div id="roomPickerPreviewText">—</div>
+  </div>
+</div>
 
 <div style="text-align:center; padding:24px 16px 32px; font-size:12px; color:var(--gray-400)">
   Связь с разработчиком: <span id="devEmail" onclick="copyDevEmail()" title="Нажмите, чтобы скопировать" style="color:var(--navy); font-weight:600; cursor:pointer; border-bottom:1px dotted var(--navy)">lingidanm@gmail.com</span><span id="devEmailCopied" style="display:none; color:#22a05b; font-size:11px; margin-left:8px; font-weight:600">✓ Скопировано в буфер</span>

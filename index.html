@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
@@ -224,6 +224,14 @@
     display: flex; align-items: center; gap: 6px;
   }
 
+  #dlShareHint {
+    display: none; margin: 10px 22px 4px; padding: 10px 16px;
+    background: var(--accent-light); border: 1px solid var(--accent);
+    border-radius: 8px; color: var(--accent); font-size: 13px;
+    text-align: center; font-weight: 500;
+  }
+  #dlShareHint.visible { display: block; }
+
   #dlPlaceholder {
     padding: 22px; text-align: center; color: var(--gray-400);
     font-size: 14px; display: flex; align-items: center; justify-content: center; gap: 8px;
@@ -289,6 +297,14 @@
   .auth-tooltip-inner p { margin: 0; }
   .auth-tooltip-divider { border: none; border-top: 1px solid var(--gray-200); margin: 10px 0; }
   .auth-tooltip-note { color: var(--gray-400) !important; font-size: 11.5px !important; }
+  .pending-badge {
+    display: inline-block; background: #fff3cd; color: #856404;
+    border: 1px solid #ffc107; border-radius: 10px;
+    font-size: 11px; font-weight: 600; padding: 2px 8px; margin-top: 4px;
+    letter-spacing: 0.01em;
+  }
+  #btnLogin.pending { background: var(--gray-100); color: var(--gray-500); border-color: #ffc107; }
+  #btnLogin.pending::after { content: ''; display: inline-block; width: 7px; height: 7px; background: #ffc107; border-radius: 50%; margin-left: 6px; vertical-align: middle; }
 
   /* ── Модальное окно Авторизации ── */
   #loginOverlay {
@@ -347,6 +363,19 @@
     text-decoration: underline; text-underline-offset: 2px;
   }
   .lm-link:hover { color: var(--navy); }
+
+  /* ── Выбор типа аккаунта при регистрации ── */
+  .reg-type-toggle { display: flex; flex-direction: column; gap: 8px; }
+  .reg-type-opt {
+    display: flex; flex-direction: column; gap: 2px; text-align: left;
+    padding: 10px 12px; border: 1.5px solid var(--gray-200); border-radius: 8px;
+    background: var(--white); cursor: pointer; transition: border-color .15s, background .15s;
+  }
+  .reg-type-opt:hover { border-color: var(--accent); }
+  .reg-type-opt.active { border-color: var(--accent); background: var(--accent-light); }
+  .reg-type-title { font-size: 13px; font-weight: 700; color: var(--navy); }
+  .reg-type-desc { font-size: 11.5px; color: var(--gray-400); line-height: 1.4; }
+
   #regError { color: #dc2626; font-size: 13px; text-align: center; display: none; }
   #regSuccess { color: #217a47; font-size: 13px; text-align: center; display: none; }
   #regSubmit {
@@ -453,6 +482,21 @@
   }
   #btnGuide:hover { background: var(--accent-light); border-color: var(--accent); color: var(--accent); }
 
+  /* ── Кнопки Отмена/Возврат ── */
+  #undoRedoGroup {
+    position: fixed; top: 18px; left: 20px; z-index: 500;
+    display: flex; align-items: center; gap: 4px;
+  }
+  .btn-undo-redo {
+    display: flex; align-items: center; justify-content: center;
+    width: 36px; height: 36px;
+    background: var(--surface); border: 1.5px solid var(--gray-200);
+    border-radius: 50%; cursor: pointer; box-shadow: var(--shadow-sm);
+    color: var(--navy); transition: background .15s, border-color .15s, opacity .15s;
+  }
+  .btn-undo-redo:hover:not(:disabled) { background: var(--accent-light); border-color: var(--accent); color: var(--accent); }
+  .btn-undo-redo:disabled { opacity: .35; cursor: default; }
+
   /* ── Модал инструкции ── */
   #guideOverlay {
     display: none; position: fixed; inset: 0;
@@ -498,7 +542,7 @@
     display: flex; width: 100%; min-height: 0; overflow: hidden;
   }
   .guide-slide-visual {
-    flex: 0 0 57%; background: #f0f4f9; border-right: 1px solid var(--gray-100);
+    flex: 0 0 57%; background: var(--bg-page); border-right: 1px solid var(--gray-100);
     display: flex; align-items: center; justify-content: center;
     padding: 16px; overflow: hidden;
   }
@@ -532,7 +576,7 @@
   /* Тестовый аккаунт */
   .guide-creds {
     margin-top: 18px; padding: 14px 16px; border-radius: 12px;
-    background: #1a3a5c; color: white; font-size: 13px; line-height: 1.7;
+    background: var(--navy); color: white; font-size: 13px; line-height: 1.7;
   }
   .guide-creds .cred-label { font-size: 11px; font-weight: 700; opacity: .6; letter-spacing: .5px; text-transform: uppercase; margin-bottom: 8px; }
   .guide-creds .cred-row { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
@@ -616,6 +660,10 @@
   [data-theme="dark"] .cpm-item.dup { background: rgba(224,82,82,.12); border-color: #e05252; }
   [data-theme="dark"] .cpm-dup-label { color: #f87171; }
   [data-theme="dark"] .lm-tab.active { color: var(--gray-700); }
+  [data-theme="dark"] .btn-sync.active { background: rgba(34,197,94,.12); color: #4ade80; border-color: rgba(34,197,94,.35); }
+  [data-theme="dark"] .btn-sync.active:hover { background: rgba(34,197,94,.2); }
+  [data-theme="dark"] .rp-list-item.selected { background: rgba(34,197,94,.15); color: #4ade80; }
+  [data-theme="dark"] .rp-list-item.selected:hover { background: rgba(34,197,94,.22); color: #86efac; }
   [data-theme="kedr"] {
     --navy: #2d4a3e; --navy-light: #3a5f50; --navy-dark: #1e3329;
     --accent: #3d8a6a; --accent-light: #d0e8dc;
@@ -747,12 +795,12 @@
   .issuer-wrap { position: relative; display: flex; gap: 5px; }
   .issuer-wrap input { flex: 1; min-width: 0; }
   .issuer-pick-btn {
-    flex-shrink: 0; background: var(--surface); border: 1.5px solid var(--gray-200);
-    border-radius: 8px; padding: 0 10px; cursor: pointer; color: var(--gray-400);
-    font-size: 14px; line-height: 1; transition: border-color .15s, color .15s;
-    display: flex; align-items: center;
+    flex-shrink: 0; background: var(--accent-light); border: 1.5px solid var(--accent);
+    border-radius: var(--radius); padding: 0 14px; cursor: pointer; color: var(--accent);
+    font-size: 12px; line-height: 1; transition: background .15s, color .15s;
+    display: flex; align-items: center; gap: 5px; font-weight: 600; white-space: nowrap;
   }
-  .issuer-pick-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .issuer-pick-btn:hover { background: var(--accent); color: white; }
 
   /* Автодополнение */
   .issuer-ac-list {
@@ -772,13 +820,13 @@
   .issuer-ac-dolzh { font-size: 11.5px; color: var(--gray-400); }
 
   /* Модальный пикер */
-  #issuerPickerOverlay {
+  #issuerPickerOverlay, #rukovPickerOverlay {
     display: none; position: fixed; inset: 0;
     background: rgba(0,0,0,.4); z-index: 800;
     justify-content: center; align-items: flex-start; padding-top: 60px;
   }
-  #issuerPickerOverlay.open { display: flex; }
-  #issuerPickerModal {
+  #issuerPickerOverlay.open, #rukovPickerOverlay.open { display: flex; }
+  #issuerPickerModal, #rukovPickerModal {
     background: var(--surface); width: 420px; max-width: calc(100vw - 24px);
     border-radius: 14px; box-shadow: 0 8px 40px rgba(0,0,0,.22);
     display: flex; flex-direction: column; max-height: calc(100vh - 100px);
@@ -947,20 +995,48 @@
     flex: 1; display: flex; overflow: hidden;
   }
   #roomPickerSVGArea {
-    flex: 1; overflow: auto; background: #1a2236; position: relative;
-    display: flex; align-items: flex-start; justify-content: flex-start;
+    flex: 1; overflow: auto; background: #1a2236; cursor: grab;
   }
+  #roomPickerSVGArea.rp-panning { cursor: grabbing; }
   #roomPickerSVGWrap {
-    position: relative; display: inline-block; cursor: default;
+    position: relative; display: inline-block; cursor: default; background: white;
+    transform-origin: top left; transition: transform .1s;
   }
+  #roomPickerSVGWrap img { display: block; }
   #roomPickerSVGWrap svg:first-child { display: block; }
   #roomPickerOverlaySVG { position: absolute; top: 0; left: 0; pointer-events: none; }
   #roomPickerOverlaySVG .rp-room { pointer-events: all; cursor: pointer; }
-  #roomPickerOverlaySVG .rp-room rect { fill: rgba(46,122,191,.10); stroke: rgba(46,122,191,.35); stroke-width: 1; rx: 3; transition: fill .12s; }
-  #roomPickerOverlaySVG .rp-room:hover rect { fill: rgba(46,122,191,.35); stroke: rgba(46,122,191,.8); }
-  #roomPickerOverlaySVG .rp-room.selected rect { fill: rgba(22,163,74,.45); stroke: rgba(22,163,74,.9); stroke-width: 2; }
-  #roomPickerOverlaySVG .rp-room text { font-size: 9px; fill: rgba(46,122,191,.85); font-family: monospace; pointer-events: none; }
-  #roomPickerOverlaySVG .rp-room.selected text { fill: rgba(22,163,74,1); font-weight: 700; }
+  #roomPickerOverlaySVG .rp-room rect { fill: white; stroke: rgba(46,122,191,.7); stroke-width: 1.5; rx: 3; transition: fill .12s, stroke .12s; }
+  #roomPickerOverlaySVG .rp-room:hover rect { fill: #dbeafe; stroke: rgba(46,122,191,1); }
+  #roomPickerOverlaySVG .rp-room.selected rect { fill: #bbf7d0; stroke: rgba(22,163,74,1); stroke-width: 2; }
+  #roomPickerOverlaySVG .rp-room text { font-size: 12px; fill: #1e40af; font-family: monospace; pointer-events: none; font-weight: 600; }
+  #roomPickerOverlaySVG .rp-room.selected text { fill: #15803d; font-weight: 700; }
+  #rpZoomControls { display:flex; align-items:center; gap:4px; }
+  #rpZoomControls button { background:rgba(255,255,255,.15); border:1px solid rgba(255,255,255,.3); color:white; border-radius:6px; width:28px; height:28px; font-size:16px; cursor:pointer; line-height:1; display:flex; align-items:center; justify-content:center; }
+  #rpZoomControls button:hover { background:rgba(255,255,255,.3); }
+  #rpZoomLabel { color:rgba(255,255,255,.8); font-size:12px; min-width:38px; text-align:center; }
+  .rp-resize-handle {
+    width: 5px; flex-shrink: 0; background: var(--border); cursor: col-resize; transition: background .15s; user-select: none;
+  }
+  .rp-resize-handle:hover, .rp-resize-handle.active { background: var(--accent); }
+  #rpRoomList {
+    width: 160px; flex-shrink: 0; background: var(--surface); border-left: 1px solid var(--border); border-right: 1px solid var(--border);
+    display: flex; flex-direction: column; overflow: hidden;
+  }
+  #rpRoomListSearch {
+    padding: 6px 8px; border: none; border-bottom: 1px solid var(--border);
+    background: var(--bg); font-size: 12px; outline: none; color: var(--text); flex-shrink: 0;
+    width: 100%; box-sizing: border-box;
+  }
+  #rpRoomListItems { overflow-y: auto; flex: 1; }
+  .rp-list-item {
+    padding: 5px 10px; font-size: 13px; font-family: monospace; cursor: pointer;
+    border-bottom: 1px solid var(--border); color: var(--text); transition: background .1s; user-select: none;
+  }
+  .rp-list-item:hover { background: var(--navy); color: white; }
+  .rp-list-item.selected { background: #dcfce7; color: #15803d; font-weight: 700; }
+  .rp-list-item.selected:hover { background: #bbf7d0; color: #14532d; }
+  #rpRoomListHeader { padding: 6px 8px 4px; font-size: 10px; font-weight: 700; color: var(--gray-400); text-transform: uppercase; flex-shrink: 0; border-bottom: 1px solid var(--border); }
   #roomPickerSidebar {
     width: 220px; flex-shrink: 0; background: var(--surface); border-left: 1px solid var(--border);
     display: flex; flex-direction: column; overflow: hidden;
@@ -971,7 +1047,7 @@
   .rp-floor-btn {
     display: block; width: 100%; text-align: left; padding: 7px 10px; margin-bottom: 3px;
     border: 1px solid var(--border); border-radius: 6px; background: var(--bg); color: var(--text);
-    cursor: pointer; font-size: 12px; font-weight: 500; transition: background .12s, border-color .12s;
+    cursor: pointer; font-size: 13px; font-weight: 500; transition: background .12s, border-color .12s;
   }
   .rp-floor-btn:hover { background: var(--accent-light); border-color: var(--navy); }
   .rp-floor-btn.active { background: var(--navy); color: white; border-color: var(--navy); font-weight: 700; }
@@ -994,35 +1070,59 @@
   #roomPickerSaveBtn:disabled { opacity: .4; cursor: default; }
   #roomPickerLoader { color: rgba(255,255,255,.5); font-size: 13px; padding: 40px; text-align: center; }
 
-  /* ── Map Picker ── */
-  #mapPickerOverlay {
-    display: none; position: fixed; inset: 0; z-index: 9500;
-    background: rgba(0,0,0,.82); flex-direction: column;
+  /* ── Бургер-меню (только мобиле) ── */
+  #burgerBtn {
+    display: none;
+    position: fixed; top: 14px; right: 14px; z-index: 600;
+    width: 42px; height: 42px;
+    background: var(--navy); border: none; border-radius: 10px;
+    cursor: pointer; align-items: center; justify-content: center;
+    box-shadow: 0 2px 10px rgba(26,58,92,.25);
+    color: white; transition: background .15s;
   }
-  #mapPickerOverlay.open { display: flex; }
-  #mapPickerHeader {
-    background: var(--navy); color: white;
-    padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
+  #burgerBtn:hover { background: var(--navy-light); }
+  #burgerBtn.open { background: var(--accent); }
+
+  #burgerMenu {
+    display: none;
+    position: fixed; top: 64px; right: 14px; z-index: 590;
+    background: var(--surface); border: 1.5px solid var(--gray-200);
+    border-radius: 14px; box-shadow: 0 6px 28px rgba(26,58,92,.18);
+    padding: 10px; min-width: 200px;
+    flex-direction: column; gap: 6px;
   }
-  #mapPickerHeader h3 { font-size: 15px; font-weight: 700; }
-  #mapPickerHeader p  { font-size: 12px; opacity: .65; margin-top: 2px; }
-  #mapPickerClose {
-    background: rgba(255,255,255,.15); border: none; color: white;
-    border-radius: 8px; padding: 8px 18px; cursor: pointer; font-size: 14px; font-weight: 600;
+  #burgerMenu.open { display: flex; }
+
+  .burger-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 14px; border-radius: 8px;
+    font-size: 14px; font-weight: 600; color: var(--navy);
+    background: none; border: none; cursor: pointer; text-align: left; width: 100%;
+    transition: background .12s;
   }
-  #mapPickerClose:hover { background: rgba(255,255,255,.28); }
-  #mapPickerBody {
-    flex: 1; overflow: auto; display: flex; align-items: center; justify-content: center; padding: 16px;
+  .burger-item:hover { background: var(--accent-light); color: var(--accent); }
+  .burger-item.logged-in { color: var(--accent); }
+
+  .burger-divider {
+    border: none; border-top: 1px solid var(--gray-200); margin: 4px 0;
   }
-  #sitePlanSVG { max-width: 100%; max-height: 100%; border-radius: 8px; }
-  .map-zone { cursor: pointer; transition: filter .15s; }
-  .map-zone:hover > rect,
-  .map-zone:hover > circle,
-  .map-zone:hover > ellipse { filter: brightness(1.18); }
-  .map-zone:hover { filter: drop-shadow(0 0 6px rgba(46,122,191,.7)); }
-  #mapPickerStatus {
-    background: var(--navy-dark); color: rgba(255,255,255,.8);
-    padding: 8px 20px; font-size: 13px; flex-shrink: 0; min-height: 34px;
+
+  .burger-undo-row {
+    display: flex; gap: 6px; padding: 4px 6px;
+  }
+  .burger-undo-row .btn-undo-redo {
+    flex: 1; width: auto; height: 38px; border-radius: 8px;
+    font-size: 12px; gap: 6px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .burger-undo-label { font-size: 11px; font-weight: 600; color: var(--gray-400); padding: 4px 8px 0; }
+
+  @media (max-width: 640px) {
+    #header-right-btns { display: none !important; }
+    #undoRedoGroup     { display: none !important; }
+    #burgerBtn         { display: flex; }
+    body { padding-top: 16px; }
+    .page-header { padding-right: 56px; }
   }
 </style>
 </head>
@@ -1166,6 +1266,22 @@
   </div>
 </div>
 
+<!-- Пикер руководителя работ (для аккаунтов-Операторов) -->
+<div id="rukovPickerOverlay" onclick="rukovPickerOverlayClick(event)">
+  <div id="rukovPickerModal">
+    <div class="ipm-header">
+      <h3>Выбор руководителя работ</h3>
+      <button class="ipm-close" onclick="closeRukovPicker()">×</button>
+    </div>
+    <div class="ipm-filter">
+      <select id="rukovPpuFilter" onchange="renderRukovList()">
+        <option value="">Все участки</option>
+      </select>
+    </div>
+    <div class="ipm-list" id="rukovPickerList"></div>
+  </div>
+</div>
+
 <!-- Модальное окно Авторизации -->
 <div id="loginOverlay" onclick="loginOverlayClick(event)">
   <div id="loginModal">
@@ -1191,6 +1307,12 @@
       </div>
       <div id="lmError">Неверный логин или пароль</div>
       <button id="lmSubmit" onclick="doLogin()">Войти</button>
+      <button type="button" onclick="loginAsTest()"
+              style="width:100%;margin-top:8px;padding:9px;background:transparent;border:1.5px dashed var(--gray-200,#d8e2ee);border-radius:8px;color:var(--gray-400,#8fa6be);font-size:13px;font-weight:500;cursor:pointer;transition:border-color .15s,color .15s"
+              onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'"
+              onmouseout="this.style.borderColor='var(--gray-200,#d8e2ee)';this.style.color='var(--gray-400,#8fa6be)'">
+        Тестовый аккаунт
+      </button>
     </div>
     <!-- Панель: Регистрация -->
     <div class="lm-body lm-panel" id="panelReg">
@@ -1206,13 +1328,14 @@
         <label>Отчество <span style="color:var(--gray-400); font-weight:400">(необязательно)</span></label>
         <input type="text" id="regOtchestvo" placeholder="Иванович">
       </div>
-      <div class="lm-field">
+      <div class="lm-field" id="fieldRegDolzh">
         <label>Должность <span style="color:#e05252">*</span></label>
         <input type="text" id="regDolzh" placeholder="Инженер">
       </div>
       <div class="lm-field">
         <label>Организация <span style="color:#e05252">*</span></label>
-        <input type="text" id="regOrg" placeholder="ООО Пример">
+        <input type="text" id="regOrg" placeholder="ООО Пример" list="regOrgList" autocomplete="off">
+        <datalist id="regOrgList"></datalist>
       </div>
       <div class="lm-field">
         <label>Логин <span style="color:#e05252">*</span></label>
@@ -1229,6 +1352,20 @@
       <div class="lm-field">
         <label>Эл. почта <span style="color:var(--gray-400); font-weight:400">(необязательно)</span></label>
         <input type="email" id="regEmail" placeholder="example@mail.ru">
+      </div>
+      <div class="lm-field">
+        <label>Как вы будете работать</label>
+        <input type="hidden" id="regType" value="self">
+        <div class="reg-type-toggle">
+          <div class="reg-type-opt active" id="regTypeSelf" onclick="setRegType('self')">
+            <span class="reg-type-title">Наряды на себя</span>
+            <span class="reg-type-desc">Вы — руководитель работ. ФИО и должность будут подставляться в наряд автоматически</span>
+          </div>
+          <div class="reg-type-opt" id="regTypeOperator" onclick="setRegType('operator')">
+            <span class="reg-type-title">Наряды за других</span>
+            <span class="reg-type-desc">Вы оформляете наряды за других сотрудников организации (роль «Оператор»). При заполнении бланка руководителя работ нужно будет выбирать из списка</span>
+          </div>
+        </div>
       </div>
       <div id="regError">Заполните все обязательные поля</div>
       <div id="regSuccess">Заявка отправлена! Ожидайте подтверждения.</div>
@@ -1260,6 +1397,37 @@
     </div>
   </div>
 </div>
+
+<!-- Кнопка «Рассмотреть заявки» (только для лингидан) -->
+<button id="adminRegBtn" onclick="openAdminRegPanel()"
+  style="display:none;position:fixed;bottom:24px;right:24px;z-index:900;
+         background:var(--navy);color:white;border:none;border-radius:28px;
+         padding:13px 22px;font-size:14px;font-weight:600;cursor:pointer;
+         box-shadow:0 4px 18px rgba(26,58,92,.35);gap:8px;align-items:center;">
+  &#128221; Рассмотреть заявки
+  <span id="adminRegCount" style="display:none;background:#e05252;color:white;
+        font-size:11px;font-weight:700;padding:2px 7px;border-radius:20px;margin-left:4px;"></span>
+</button>
+
+<!-- Модальное окно «Заявки на регистрацию» -->
+<div id="adminRegOverlay" onclick="if(event.target===this)closeAdminRegPanel()"
+     style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:980;
+            justify-content:center;align-items:center;">
+  <div style="background:var(--surface);width:640px;max-width:calc(100vw - 24px);
+              max-height:90vh;border-radius:14px;overflow:hidden;
+              box-shadow:0 8px 40px rgba(0,0,0,.3);display:flex;flex-direction:column;">
+    <div style="background:var(--navy);padding:16px 22px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;">
+      <h2 style="color:white;font-size:15px;font-weight:700;margin:0;">Заявки на регистрацию</h2>
+      <button onclick="closeAdminRegPanel()" style="background:none;border:none;color:white;font-size:22px;line-height:1;cursor:pointer;opacity:.8;padding:0;">×</button>
+    </div>
+    <div id="adminRegBody" style="overflow-y:auto;padding:20px;flex:1;display:flex;flex-direction:column;gap:16px;">
+      <div style="text-align:center;color:var(--gray-400);padding:40px 0;">Загрузка…</div>
+    </div>
+  </div>
+</div>
+
+<!-- Datalist организаций (общий, используется и в регистрации и в панели) -->
+<datalist id="orgDatalist"></datalist>
 
 <!-- Модальное окно Настройки -->
 <div id="settingsOverlay" onclick="overlayClick(event)">
@@ -1310,6 +1478,59 @@
   </div>
 </div>
 
+<!-- Бургер-кнопка (только мобиле) -->
+<button id="burgerBtn" onclick="toggleBurger()" aria-label="Меню">
+  <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" viewBox="0 0 24 24">
+    <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+  </svg>
+</button>
+
+<!-- Бургер-меню -->
+<div id="burgerMenu">
+  <!-- Войти -->
+  <button class="burger-item" id="burgerLogin" onclick="handleAuthClick(); closeBurger()">
+    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    <span id="burgerLoginText">Войти</span>
+  </button>
+  <hr class="burger-divider">
+  <!-- Инструкция -->
+  <button class="burger-item" onclick="openGuide(); closeBurger()">
+    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+    Инструкция
+  </button>
+  <!-- Обновления -->
+  <button class="burger-item" onclick="toggleChangelog(); closeBurger()">
+    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+    Обновления
+  </button>
+  <!-- Тема -->
+  <button class="burger-item" onclick="toggleThemePopup(); closeBurger()">
+    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/></svg>
+    Тема
+  </button>
+  <hr class="burger-divider">
+  <!-- Отменить / Вернуть -->
+  <div class="burger-undo-label">Отмена / Возврат</div>
+  <div class="burger-undo-row">
+    <button class="btn-undo-redo" id="btnUndoBurger" onclick="undoAction()" title="Отменить (Ctrl+Z)" disabled>
+      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M3 7v6h6"/><path d="M3 13C5.2 8.4 9.8 5 15 5a9 9 0 1 1 0 18c-4.2 0-7.8-2.3-9.7-5.7"/></svg>
+    </button>
+    <button class="btn-undo-redo" id="btnRedoBurger" onclick="redoAction()" title="Вернуть (Ctrl+Y)" disabled>
+      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M21 7v6h-6"/><path d="M21 13C18.8 8.4 14.2 5 9 5a9 9 0 1 0 0 18c4.2 0 7.8-2.3 9.7-5.7"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- Кнопки Отмена/Возврат (левый верхний угол) -->
+<div id="undoRedoGroup">
+  <button class="btn-undo-redo" id="btnUndo" onclick="undoAction()" title="Отменить (Ctrl+Z)" disabled>
+    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M3 7v6h6"/><path d="M3 13C5.2 8.4 9.8 5 15 5a9 9 0 1 1 0 18c-4.2 0-7.8-2.3-9.7-5.7"/></svg>
+  </button>
+  <button class="btn-undo-redo" id="btnRedo" onclick="redoAction()" title="Вернуть (Ctrl+Y)" disabled>
+    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M21 7v6h-6"/><path d="M21 13C18.8 8.4 14.2 5 9 5a9 9 0 1 0 0 18c4.2 0 7.8-2.3 9.7-5.7"/></svg>
+  </button>
+</div>
+
 <div class="page-header">
   <div class="logo">
     <svg width="24" height="24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
@@ -1323,7 +1544,7 @@
     <p>Форма заполнения разрешительной документации на опасные работы</p>
   </div>
   <div style="font-size:12px; color:var(--gray-400); text-align:right; white-space:nowrap">
-    <div style="font-size:14px; font-weight:700; color:var(--navy); margin-bottom:4px">v2.64</div>
+    <div style="font-size:14px; font-weight:700; color:var(--navy); margin-bottom:4px">v3.23</div>
     Разработал<br>Лингидан Максим Дмитриевич
   </div>
 </div>
@@ -1451,47 +1672,64 @@
 
         <div class="field" id="fieldRukovFio">
           <label>ФИО руководителя работ <span class="req">*</span></label>
-          <input type="text" id="rukovFio" placeholder="Иванов Иван Иванович" oninput="checkButtons()">
+          <div class="issuer-wrap rukov-wrap">
+            <input type="text" id="rukovFio" placeholder="Иванов Иван Иванович" oninput="rukovOnInput()" onkeydown="rukovKeyDown(event)" autocomplete="off">
+            <div class="issuer-ac-list" id="rukovAcList"></div>
+          </div>
           <span class="auth-value" id="rukovFioDisplay"></span>
         </div>
 
         <div class="field" id="fieldRukovDolzh">
           <label>Должность руководителя <span class="req">*</span></label>
-          <input type="text" id="rukovDolzh" placeholder="Мастер, прораб, начальник участка" oninput="checkButtons()">
+          <div style="display:flex;gap:6px;align-items:stretch">
+            <input type="text" id="rukovDolzh" placeholder="Мастер, прораб, начальник участка" oninput="checkButtons()" style="flex:1;min-width:0">
+            <button class="issuer-pick-btn" type="button" id="rukovPickBtn" onclick="openRukovPicker()" title="Выбрать из списка" style="display:none">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              Из списка
+            </button>
+          </div>
           <span class="auth-value" id="rukovDolzhDisplay"></span>
         </div>
         <div class="field">
           <label>ФИО лица, выдавшего наряд <span class="req">*</span></label>
           <div class="issuer-wrap">
             <input type="text" id="naradVydalFio" placeholder="Иванов Иван Иванович" oninput="issuerOnInput()" onkeydown="issuerKeyDown(event)" autocomplete="off">
-            <button class="issuer-pick-btn" type="button" onclick="openIssuerPicker()" title="Выбрать из списка">▾</button>
             <div class="issuer-ac-list" id="issuerAcList"></div>
           </div>
         </div>
         <div class="field">
           <label>Должность лица, выдавшего наряд <span class="req">*</span></label>
-          <input type="text" id="naradVydalDolzh" placeholder="Мастер, прораб, начальник участка" oninput="updateNaradVydal()">
+          <div style="display:flex;gap:6px;align-items:stretch">
+            <input type="text" id="naradVydalDolzh" placeholder="Мастер, прораб, начальник участка" oninput="updateNaradVydal()" style="flex:1;min-width:0">
+            <button class="issuer-pick-btn" type="button" onclick="openIssuerPicker()" title="Выбрать из списка">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              Из списка
+            </button>
+          </div>
         </div>
         <input type="hidden" id="naradVydal">
 
         <div class="field col-span-2">
           <label>Вид работ <span class="req">*</span></label>
-          <input type="text" id="vidRabot" placeholder="" oninput="checkButtons()">
+          <div style="display:flex;gap:6px;align-items:stretch">
+            <textarea id="vidRabot" rows="3" placeholder="" oninput="checkButtons()" style="flex:1;min-width:0;resize:vertical;font-family:inherit;font-size:14px;padding:9px 12px;box-sizing:border-box;border:1.5px solid var(--gray-200);border-radius:var(--radius);color:var(--text);background:var(--surface);transition:border-color .15s,box-shadow .15s;outline:none;line-height:1.5" onfocus="this.style.borderColor='var(--accent)';this.style.boxShadow='0 0 0 3px rgba(46,122,191,.18)'" onblur="this.style.borderColor='';this.style.boxShadow=''"></textarea>
+            <button type="button" onclick="openWorkTypePicker()" title="Выбрать вид работ из списка"
+              style="flex-shrink:0;background:var(--accent-light);color:var(--accent);border:1.5px solid var(--accent);border-radius:var(--radius);padding:0 14px;cursor:pointer;font-size:12px;font-weight:600;white-space:nowrap;display:flex;align-items:center;gap:5px;transition:background .15s,color .15s"
+              onmouseover="this.style.background='var(--accent)';this.style.color='white'" onmouseout="this.style.background='var(--accent-light)';this.style.color='var(--accent)'">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+              Из списка
+            </button>
+          </div>
         </div>
 
         <div class="field col-span-2">
           <label>Место выполнения работ <span class="req">*</span></label>
           <div style="display:flex;gap:6px;align-items:stretch">
-            <input type="text" id="mesto" placeholder="" oninput="checkButtons()" style="flex:1;min-width:0">
-            <button type="button" onclick="openMapPicker()" title="Открыть схему площадки"
-              style="flex-shrink:0;background:var(--navy);color:white;border:none;border-radius:var(--radius);padding:0 14px;cursor:pointer;font-size:12px;font-weight:600;white-space:nowrap;display:flex;align-items:center;gap:5px;transition:background .15s"
-              onmouseover="this.style.background='var(--navy-light)'" onmouseout="this.style.background='var(--navy)'">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-              Схема
-            </button>
-            <button type="button" onclick="openRoomPicker()" title="Выбрать помещения на плане"
-              style="flex-shrink:0;background:var(--navy);color:white;border:none;border-radius:var(--radius);padding:0 14px;cursor:pointer;font-size:12px;font-weight:600;white-space:nowrap;display:flex;align-items:center;gap:5px;transition:background .15s"
-              onmouseover="this.style.background='var(--navy-light)'" onmouseout="this.style.background='var(--navy)'">
+            <textarea id="mesto" rows="3" placeholder="" oninput="checkButtons()" style="flex:1;min-width:0;resize:vertical;font-family:inherit;font-size:14px;padding:9px 12px;box-sizing:border-box;border:1.5px solid var(--gray-200);border-radius:var(--radius);color:var(--text);background:var(--surface);transition:border-color .15s,box-shadow .15s;outline:none;line-height:1.5" onfocus="this.style.borderColor='var(--accent)';this.style.boxShadow='0 0 0 3px rgba(46,122,191,.18)'" onblur="this.style.borderColor='';this.style.boxShadow=''"></textarea>
+<button type="button" onclick="openRoomPicker()" title="Выбрать помещения на плане"
+              style="flex-shrink:0;background:var(--accent-light);color:var(--accent);border:1.5px solid var(--accent);border-radius:var(--radius);padding:0 14px;cursor:pointer;font-size:12px;font-weight:600;white-space:nowrap;display:flex;align-items:center;gap:5px;transition:background .15s,color .15s"
+              onmouseover="this.style.background='var(--accent)';this.style.color='white'" onmouseout="this.style.background='var(--accent-light)';this.style.color='var(--accent)'"
+              >
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
               Выбрать помещения
             </button>
@@ -1634,6 +1872,7 @@
         <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
         Файлы генерируются локально в браузере — данные не передаются на сервер.
       </div>
+      <div id="dlShareHint"> Нравится сайт? Расскажи коллегам!</div>
     </div>
 
     <div id="dlPlaceholder">
@@ -1798,9 +2037,10 @@ function applySec11Rows() {
 function setEndDate() {
   const s = document.getElementById('dateStart').value;
   if (!s) { document.getElementById('dateEnd').value = ''; return; }
-  const d = new Date(s);
-  d.setDate(d.getDate() + 14);
-  document.getElementById('dateEnd').value = d.toISOString().split('T')[0];
+  const [y, m, day] = s.split('-').map(Number);
+  const d = new Date(y, m - 1, day + 14);
+  const yy = d.getFullYear(), mm = String(d.getMonth() + 1).padStart(2, '0'), dd = String(d.getDate()).padStart(2, '0');
+  document.getElementById('dateEnd').value = `${yy}-${mm}-${dd}`;
 }
 
 // ─── Кнопки скачивания ────────────────────────────────────────────────────
@@ -1902,13 +2142,32 @@ function collectFormData() {
   };
 }
 
+// ─── Backend API (Google Apps Script) ─────────────────────────────────────
+// Задеплойте Code.gs как Web App и вставьте URL сюда:
+const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbyWKcdkuY-egAz91vu7Pdu3wSmyE1nbMPMFmzKjHbEdUIo8pc2KP1hYH-v0MZvoa6os/exec';
+
+async function _apiCall(params) {
+  const url = BACKEND_URL + '?' + new URLSearchParams(params).toString();
+  const resp = await fetch(url);
+  if (!resp.ok) throw new Error('http ' + resp.status);
+  return resp.json();
+}
+
+function _authToken() {
+  return localStorage.getItem('auth_token') || '';
+}
+
+function _saveAuth(token, user) {
+  if (token) localStorage.setItem('auth_token', token);
+  localStorage.setItem('auth_user', JSON.stringify(user));
+}
+
 // ─── Google Sheets: база сотрудников ──────────────────────────────────────
-// Мастер-реестр: Пользователи + листы организаций
-const MASTER_SHEET_ID = '1Thw1FraaXvuqDD_qQ-Bdd-Kbx7JvScSn-iYRD5v3-ts';
 
 let employeeMap = {};
 let issuersList = [];      // [{fio, dolzh, ppu}] — те, кто может выдавать наряд
 let allEmployeesList = []; // [{fio, dolzh, razr, grEB, grVys, ppu}] — все сотрудники
+let receiversList = [];    // [{fio, dolzh, ppu}] — те, за кого Оператор может оформлять наряд ("Получает" в столбце H)
 
 function _ppuSort(a, b) {
   const aNum = /^\d/.test(a), bNum = /^\d/.test(b);
@@ -1918,24 +2177,6 @@ function _ppuSort(a, b) {
 }
 let currentUser = null;
 
-function _parseSheetCSV(text) {
-  const rows = [];
-  let row = [], cur = '', inQ = false;
-  for (let i = 0; i < text.length; i++) {
-    const c = text[i];
-    if (c === '"') {
-      if (inQ && text[i + 1] === '"') { cur += '"'; i++; } // "" внутри поля → литеральная "
-      else { inQ = !inQ; }
-    }
-    else if (c === ',' && !inQ) { row.push(cur); cur = ''; }
-    else if ((c === '\n' || (c === '\r' && text[i+1] === '\n')) && !inQ) {
-      if (c === '\r') i++;
-      row.push(cur); rows.push(row); row = []; cur = '';
-    } else { cur += c; }
-  }
-  if (cur || row.length) { row.push(cur); rows.push(row); }
-  return rows;
-}
 
 
 function lookupEmployee(fio) {
@@ -1975,21 +2216,36 @@ function switchAuthTab(tab) {
   if (isLogin) {
     document.getElementById('lmLogin').focus();
   } else {
-    document.getElementById('regFio').focus();
+    document.getElementById('regFamiliya')?.focus();
     document.getElementById('regError').style.display = 'none';
     document.getElementById('regSuccess').style.display = 'none';
+    setRegType('self');
+    loadOrgDatalist();
   }
 }
 
-// URL Google Apps Script для записи заявок в лист "Регистрация"
-// Разверните скрипт и вставьте сюда URL:
-const REG_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyjQQ8h5QmyaSV3uvAOEMUPY6V8xiJjwN6gTqxkUogQ-FXWJeer5SHW42VpQ0NY1S0/exec';
+// Выбор типа аккаунта при регистрации: 'self' — обычный сценарий (руководитель
+// работ сам себе), 'operator' — оформляет наряды за других сотрудников;
+// такому аккаунту прописывается должность "Оператор" (см. isOperatorUser()).
+function setRegType(type) {
+  document.getElementById('regType').value = type;
+  document.getElementById('regTypeSelf').classList.toggle('active', type === 'self');
+  document.getElementById('regTypeOperator').classList.toggle('active', type === 'operator');
+  const dolzhField = document.getElementById('fieldRegDolzh');
+  if (type === 'operator') {
+    dolzhField.style.display = 'none';
+    document.getElementById('regDolzh').value = '';
+  } else {
+    dolzhField.style.display = '';
+  }
+}
 
 async function doRegister() {
   const familiya  = document.getElementById('regFamiliya').value.trim();
   const imya      = document.getElementById('regImya').value.trim();
   const otchestvo = document.getElementById('regOtchestvo').value.trim();
-  const dolzh     = document.getElementById('regDolzh').value.trim();
+  const isOperatorReg = document.getElementById('regType').value === 'operator';
+  const dolzh     = isOperatorReg ? 'Оператор' : document.getElementById('regDolzh').value.trim();
   const org       = document.getElementById('regOrg').value.trim();
   const login     = document.getElementById('regLogin').value.trim();
   const pwd       = document.getElementById('regPassword').value.trim();
@@ -2003,7 +2259,7 @@ async function doRegister() {
   errEl.style.display = 'none';
   okEl.style.display  = 'none';
 
-  if (!familiya || !imya || !dolzh || !org || !login || !pwd) {
+  if (!familiya || !imya || (!isOperatorReg && !dolzh) || !org || !login || !pwd) {
     errEl.textContent = 'Заполните все обязательные поля';
     errEl.style.display = 'block';
     return;
@@ -2012,22 +2268,49 @@ async function doRegister() {
   const fio = [familiya, imya, otchestvo].filter(Boolean).join(' ');
 
   btn.disabled = true;
+  btn.textContent = 'Проверка…';
+
+  try {
+    const check = await _apiCall({ action: 'checkLogin', login, fio, org });
+    if (check.loginTaken) {
+      errEl.textContent = 'Этот логин уже занят. Выберите другой.';
+      errEl.style.display = 'block';
+      btn.disabled = false; btn.textContent = 'Отправить заявку';
+      return;
+    }
+    if (check.regLoginDup) {
+      errEl.textContent = 'Заявка с таким логином уже отправлена. Дождитесь одобрения.';
+      errEl.style.display = 'block';
+      btn.disabled = false; btn.textContent = 'Отправить заявку';
+      return;
+    }
+    if (check.regFioOrgDup) {
+      errEl.textContent = 'Заявка от этого сотрудника уже отправлена. Дождитесь одобрения.';
+      errEl.style.display = 'block';
+      btn.disabled = false; btn.textContent = 'Отправить заявку';
+      return;
+    }
+  } catch(e) { /* если проверка не прошла — не блокируем отправку */ }
+
   btn.textContent = 'Отправка…';
 
-  const params = new URLSearchParams({ fio, dolzh, org, login, pwd, phone, email });
-  const url = REG_SCRIPT_URL + '?' + params.toString();
+  try {
+    const result = await _apiCall({ action: 'submitRegistration', fio, dolzh, org, login, password: pwd, phone, email });
+    if (!result.ok) throw new Error(result.error || 'fail');
 
-  // Image-трюк: единственный метод, который гарантированно проходит CORS для Apps Script
-  await new Promise((resolve) => {
-    const img = new Image();
-    img.onload = img.onerror = () => resolve();
-    setTimeout(resolve, 5000); // таймаут 5 сек на случай зависания
-    img.src = url;
-  });
-
-  okEl.style.display = 'block';
-  ['regFamiliya','regImya','regOtchestvo','regDolzh','regOrg','regLogin','regPassword','regPhone','regEmail']
-    .forEach(id => { document.getElementById(id).value = ''; });
+    ['regFamiliya','regImya','regOtchestvo','regDolzh','regOrg','regLogin','regPassword','regPhone','regEmail']
+      .forEach(id => { document.getElementById(id).value = ''; });
+    setRegType('self');
+    const pendingUser = { fio, dolzh, org, login, pending: true };
+    currentUser = pendingUser;
+    _saveAuth('', currentUser);
+    closeLoginModal();
+    updateAuthButton();
+    startPendingCheck();
+  } catch(e) {
+    errEl.textContent = 'Не удалось отправить заявку. Проверьте интернет и попробуйте снова.';
+    errEl.style.display = 'block';
+  }
   btn.disabled = false;
   btn.textContent = 'Отправить заявку';
 }
@@ -2043,20 +2326,35 @@ function updateAuthButton() {
   if (syncBtn) syncBtn.style.display = currentUser ? 'none' : '';
 
   if (currentUser) {
-    btn.classList.add('logged-in');
     const parts = currentUser.fio.trim().split(/\s+/);
     const short = parts.length >= 2 ? parts[0] + ' ' + parts[1][0] + '.' : parts[0];
-    txt.textContent = short + '  ×';
-    // Тултип: показываем данные пользователя
-    body.innerHTML =
-      '<b>' + currentUser.fio + '</b><br>' +
-      (currentUser.dolzh ? currentUser.dolzh + '<br>' : '') +
-      '<span style="color:var(--gray-400)">' + currentUser.org + '</span>';
-    div.style.display = 'block';
-    note.textContent = 'Нажмите, чтобы выйти из системы.';
-    note.style.color = '';
+    if (currentUser.pending) {
+      btn.classList.remove('logged-in');
+      btn.classList.add('pending');
+      txt.textContent = short;
+      body.innerHTML =
+        '<b>' + currentUser.fio + '</b><br>' +
+        (currentUser.dolzh ? currentUser.dolzh + '<br>' : '') +
+        (currentUser.org ? '<span style="color:var(--gray-400)">' + currentUser.org + '</span><br>' : '') +
+        '<span class="pending-badge">&#9203; На рассмотрении</span>';
+      div.style.display = "block";
+      note.textContent = 'Ваша заявка ожидает одобрения. После одобрения доступ откроется автоматически.';
+      note.style.color = '#856404';
+    } else {
+      btn.classList.add('logged-in');
+      btn.classList.remove('pending');
+      txt.textContent = short + "  ×";
+      body.innerHTML =
+        '<b>' + currentUser.fio + '</b><br>' +
+        (currentUser.dolzh ? currentUser.dolzh + '<br>' : '') +
+        '<span style="color:var(--gray-400)">' + currentUser.org + '</span>';
+      div.style.display = "block";
+      note.textContent = 'Нажмите, чтобы выйти из системы.';
+      note.style.color = "";
+    }
   } else {
     btn.classList.remove('logged-in');
+    btn.classList.remove('pending');
     txt.textContent = 'Войти';
     // Тултип: стандартная инструкция
     body.textContent = 'Войдите в систему, чтобы получить доступ к базе сотрудников вашей организации. После входа система автоматически подтягивает ФИО, должности и квалификацию работников при заполнении бланка наряда-допуска.';
@@ -2064,6 +2362,23 @@ function updateAuthButton() {
     note.textContent = 'Для получения учётных данных (логин и пароль) обратитесь к разработчику сайта.';
     note.style.color = '';
   }
+  // Синхронизация бургер-меню
+  const bl = document.getElementById('burgerLogin');
+  const bt = document.getElementById('burgerLoginText');
+  if (bl && bt) {
+    if (currentUser) {
+      const parts = currentUser.fio.trim().split(/\s+/);
+      const short = parts.length >= 2 ? parts[0] + ' ' + parts[1][0] + '.' : parts[0];
+      bt.textContent = currentUser.pending ? short : short + '  ×';
+      bl.classList.toggle('logged-in', !currentUser.pending);
+      bl.classList.toggle('pending', !!currentUser.pending);
+    } else {
+      bt.textContent = 'Войти';
+      bl.classList.remove('logged-in');
+      bl.classList.remove('pending');
+    }
+  }
+  _showAdminBtn();
 }
 
 async function doLogin() {
@@ -2083,36 +2398,24 @@ async function doLogin() {
   errEl.style.display = 'none';
 
   try {
-    const url = `https://docs.google.com/spreadsheets/d/${MASTER_SHEET_ID}/gviz/tq?tqx=out:csv&sheet=%D0%9F%D0%BE%D0%BB%D1%8C%D0%B7%D0%BE%D0%B2%D0%B0%D1%82%D0%B5%D0%BB%D0%B8`;
-    const resp = await fetch(url);
-    if (!resp.ok) throw new Error('net');
-    const csv = await resp.text();
-    const rows = _parseSheetCSV(csv);
-
-    // Строка 0 — заголовки, строки 1+ — данные
-    // Столбцы: 0=№, 1=ФИО, 2=Должность, 3=Организация, 4=Логин, 5=Пароль, 6=Телефон, 7=Email
-    const found = rows.slice(1).find(r =>
-      (r[4] || '').trim() === login && (r[5] || '').trim() === pwd
-    );
-
-    if (!found) {
-      errEl.textContent = 'Неверный логин или пароль';
+    const data = await _apiCall({ action: 'login', login, password: pwd });
+    if (!data.ok) {
+      if (data.error === 'locked') {
+        errEl.textContent = data.message || 'Слишком много попыток. Попробуйте через 15 минут.';
+      } else {
+        errEl.textContent = 'Неверный логин или пароль';
+      }
       errEl.style.display = 'block';
     } else {
-      currentUser = {
-        fio:   (found[1] || '').trim(),
-        dolzh: (found[2] || '').trim(),
-        org:   (found[3] || '').trim(),
-        login: login,
-      };
-      localStorage.setItem('auth_user', JSON.stringify(currentUser));
+      currentUser = data.user;
+      _saveAuth(data.token, currentUser);
       closeLoginModal();
       updateAuthButton();
       applyUserToForm();
       loadOrgPersonnel();
     }
   } catch(e) {
-    errEl.textContent = 'Ошибка подключения к таблице. Проверьте интернет.';
+    errEl.textContent = 'Ошибка подключения. Проверьте интернет.';
     errEl.style.display = 'block';
   } finally {
     submitBtn.disabled = false;
@@ -2126,11 +2429,20 @@ function toGuillemets(s) {
   return s.replace(/"([^"]*)"/g, '«$1»');
 }
 
+// Оператор оформляет наряды за других сотрудников — его ФИО/должность
+// не является руководителем работ, поэтому автоподстановка для него отключена.
+function isOperatorUser(user) {
+  return !!(user && (user.dolzh || '').trim().toLowerCase() === 'оператор');
+}
+
 function applyUserToForm() {
+  // Pending-пользователи не получают доступ к данным формы
+  const activeUser = (currentUser && !currentUser.pending) ? currentUser : null;
+  const isOperator = isOperatorUser(activeUser);
   const fields = {
-    fieldOrg:      { input: 'org',       display: 'orgDisplay',       value: currentUser ? toGuillemets(currentUser.org) : null },
-    fieldRukovFio: { input: 'rukovFio',  display: 'rukovFioDisplay',  value: currentUser ? currentUser.fio   : null },
-    fieldRukovDolzh:{ input: 'rukovDolzh', display: 'rukovDolzhDisplay', value: currentUser ? currentUser.dolzh : null },
+    fieldOrg:      { input: 'org',       display: 'orgDisplay',       value: activeUser ? toGuillemets(activeUser.org) : null },
+    fieldRukovFio: { input: 'rukovFio',  display: 'rukovFioDisplay',  value: (activeUser && !isOperator) ? activeUser.fio   : null },
+    fieldRukovDolzh:{ input: 'rukovDolzh', display: 'rukovDolzhDisplay', value: (activeUser && !isOperator) ? activeUser.dolzh : null },
   };
   for (const [fieldId, cfg] of Object.entries(fields)) {
     const field   = document.getElementById(fieldId);
@@ -2145,7 +2457,228 @@ function applyUserToForm() {
       field.classList.remove('auth-locked');
     }
   }
+  const rukovBtn = document.getElementById('rukovPickBtn');
+  if (rukovBtn) rukovBtn.style.display = isOperator ? 'flex' : 'none';
   checkButtons();
+}
+
+let _pendingCheckTimer = null;
+
+async function checkPendingApproval() {
+  if (!currentUser || !currentUser.pending) return;
+  try {
+    const data = await _apiCall({ action: 'getPendingApproval', login: currentUser.login });
+    if (data.ok && data.approved) {
+      currentUser = data.user;
+      _saveAuth(data.token, currentUser);
+      if (_pendingCheckTimer) { clearInterval(_pendingCheckTimer); _pendingCheckTimer = null; }
+      updateAuthButton();
+      applyUserToForm();
+      loadOrgPersonnel();
+      const msg = document.createElement('div');
+      msg.style.cssText = 'position:fixed;bottom:24px;right:24px;background:#28a745;color:#fff;padding:14px 20px;border-radius:10px;font-size:14px;font-weight:600;z-index:9999;box-shadow:0 4px 16px rgba(0,0,0,.2)';
+      const _nameParts = currentUser.fio.trim().split(/\s+/);
+      const _firstName = _nameParts[1] || _nameParts[0];
+      msg.textContent = '✓ Доступ одобрен! Добро пожаловать, ' + _firstName + '!';
+      document.body.appendChild(msg);
+      setTimeout(() => msg.remove(), 5000);
+    }
+  } catch(e) { /* тихо игнорируем сетевые ошибки */ }
+}
+
+function startPendingCheck() {
+  if (_pendingCheckTimer) clearInterval(_pendingCheckTimer);
+  // Проверяем каждые 5 минут пока вкладка открыта
+  _pendingCheckTimer = setInterval(checkPendingApproval, 5 * 60 * 1000);
+  // Также проверяем при возврате на вкладку
+  document.addEventListener('visibilitychange', function _vc() {
+    if (document.visibilityState === 'visible' && currentUser && currentUser.pending) {
+      checkPendingApproval();
+    } else if (!currentUser || !currentUser.pending) {
+      document.removeEventListener('visibilitychange', _vc);
+    }
+  });
+}
+
+// ── Тестовый аккаунт ─────────────────────────────────────────────────────────
+function loginAsTest() {
+  currentUser = { fio: 'Тестовый Аккаунт', dolzh: 'Тест', org: 'Тестовая организация', login: 'тест', _test: true };
+  localStorage.setItem('auth_user', JSON.stringify(currentUser));
+  closeLoginModal();
+  updateAuthButton();
+  applyUserToForm();
+}
+
+// ── Список организаций (datalist) ─────────────────────────────────────────────
+let _orgListCache = null;
+
+async function loadOrgDatalist() {
+  if (_orgListCache) { _fillOrgDatalist(_orgListCache); return; }
+  try {
+    const data = await _apiCall({ action: 'getOrgList' });
+    if (data.ok) {
+      _orgListCache = data.orgs;
+      _fillOrgDatalist(data.orgs);
+    }
+  } catch(e) {}
+}
+
+function _fillOrgDatalist(orgs) {
+  ['regOrgList', 'orgDatalist'].forEach(id => {
+    const dl = document.getElementById(id);
+    if (!dl) return;
+    dl.innerHTML = orgs.map(o => `<option value="${o.replace(/"/g,'&quot;')}">`).join('');
+  });
+}
+
+// ── Панель администратора — рассмотрение заявок ───────────────────────────────
+function _showAdminBtn() {
+  const btn = document.getElementById('adminRegBtn');
+  if (!btn) return;
+  const isAdmin = currentUser && (currentUser.login || '').toLowerCase() === 'лингидан';
+  btn.style.display = isAdmin ? 'inline-flex' : 'none';
+  if (isAdmin) _refreshAdminBadge();
+}
+
+async function _refreshAdminBadge() {
+  try {
+    const data = await _apiCall({ action: 'getAdminBadge', token: _authToken() });
+    const badge = document.getElementById('adminRegCount');
+    if (!badge) return;
+    if (data.ok && data.count > 0) {
+      badge.textContent = data.count;
+      badge.style.display = 'inline-block';
+    } else {
+      badge.style.display = 'none';
+    }
+  } catch(e) {}
+}
+
+async function openAdminRegPanel() {
+  const overlay = document.getElementById('adminRegOverlay');
+  overlay.style.display = 'flex';
+  const body = document.getElementById('adminRegBody');
+  body.innerHTML = '<div style="text-align:center;color:var(--gray-400);padding:40px 0;">Загрузка…</div>';
+
+  await loadOrgDatalist();
+
+  try {
+    const data = await _apiCall({ action: 'getAdminRegList', token: _authToken() });
+    if (!data.ok) throw new Error(data.error || 'forbidden');
+    const rows = data.rows;
+
+    if (!rows.length) {
+      body.innerHTML = '<div style="text-align:center;color:var(--gray-400);padding:40px 0;">Заявок нет</div>';
+      return;
+    }
+
+    body.innerHTML = rows.map((r, i) => `
+      <div style="border:1.5px solid var(--gray-200);border-radius:10px;padding:16px;background:var(--gray-50);">
+        <div style="font-size:12px;font-weight:700;color:var(--gray-400);letter-spacing:.5px;text-transform:uppercase;margin-bottom:10px;">Заявка #${i+1}</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <div>
+            <div style="font-size:11px;font-weight:600;color:var(--gray-700);margin-bottom:4px;">ФИО</div>
+            <input id="arFio${i}" value="${_esc(r.fio)}"
+              style="width:100%;padding:7px 10px;border:1.5px solid var(--gray-200);border-radius:6px;font-size:13px;background:white;">
+          </div>
+          <div>
+            <div style="font-size:11px;font-weight:600;color:var(--gray-700);margin-bottom:4px;">Должность</div>
+            <input id="arDolzh${i}" value="${_esc(r.dolzh)}"
+              style="width:100%;padding:7px 10px;border:1.5px solid var(--gray-200);border-radius:6px;font-size:13px;background:white;">
+          </div>
+          <div style="grid-column:span 2;">
+            <div style="font-size:11px;font-weight:600;color:var(--gray-700);margin-bottom:4px;">Организация</div>
+            <input id="arOrg${i}" value="${_esc(r.org)}" list="orgDatalist"
+              style="width:100%;padding:7px 10px;border:1.5px solid var(--gray-200);border-radius:6px;font-size:13px;background:white;">
+          </div>
+          <div>
+            <div style="font-size:11px;font-weight:600;color:var(--gray-700);margin-bottom:4px;">Логин</div>
+            <input id="arLogin${i}" value="${_esc(r.login)}"
+              style="width:100%;padding:7px 10px;border:1.5px solid var(--gray-200);border-radius:6px;font-size:13px;background:white;">
+          </div>
+          <div>
+            <div style="font-size:11px;font-weight:600;color:var(--gray-700);margin-bottom:4px;">Новый пароль <span style="font-weight:400;color:var(--gray-400)">(необяз.)</span></div>
+            <input id="arPwd${i}" placeholder="Оставить пароль пользователя"
+              style="width:100%;padding:7px 10px;border:1.5px solid var(--gray-200);border-radius:6px;font-size:13px;background:white;">
+          </div>
+          ${r.phone ? `<div><div style="font-size:11px;font-weight:600;color:var(--gray-700);margin-bottom:4px;">Телефон</div><input id="arPhone${i}" value="${_esc(r.phone)}" style="width:100%;padding:7px 10px;border:1.5px solid var(--gray-200);border-radius:6px;font-size:13px;background:white;"></div>` : ''}
+          ${r.email ? `<div><div style="font-size:11px;font-weight:600;color:var(--gray-700);margin-bottom:4px;">Email</div><input id="arEmail${i}" value="${_esc(r.email)}" style="width:100%;padding:7px 10px;border:1.5px solid var(--gray-200);border-radius:6px;font-size:13px;background:white;"></div>` : ''}
+        </div>
+        <div style="display:flex;gap:10px;margin-top:14px;">
+          <button onclick="approveRegRow(${i},'${_esc(r[4])}')"
+            style="flex:1;padding:9px;background:var(--navy);color:white;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;">
+            ✓ Одобрить
+          </button>
+          <button onclick="rejectRegRow(${i},'${_esc(r[4])}')"
+            style="padding:9px 16px;background:white;color:#dc2626;border:1.5px solid #dc2626;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;">
+            Отклонить
+          </button>
+        </div>
+        <div id="arMsg${i}" style="display:none;margin-top:8px;font-size:12px;font-weight:600;text-align:center;"></div>
+      </div>`).join('');
+  } catch(e) {
+    body.innerHTML = '<div style="text-align:center;color:#dc2626;padding:40px 0;">Ошибка загрузки. Проверьте интернет.</div>';
+  }
+}
+
+function closeAdminRegPanel() {
+  document.getElementById('adminRegOverlay').style.display = 'none';
+  _refreshAdminBadge();
+}
+
+function _esc(s) { return (s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
+
+async function approveRegRow(i, origLogin) {
+  const fio    = document.getElementById('arFio'+i)?.value.trim()   || '';
+  const dolzh  = document.getElementById('arDolzh'+i)?.value.trim() || '';
+  const org    = document.getElementById('arOrg'+i)?.value.trim()   || '';
+  const login  = document.getElementById('arLogin'+i)?.value.trim() || '';
+  const newPwd = document.getElementById('arPwd'+i)?.value.trim()   || '';
+  const phone  = document.getElementById('arPhone'+i)?.value?.trim() || '';
+  const email  = document.getElementById('arEmail'+i)?.value?.trim() || '';
+  const msgEl  = document.getElementById('arMsg'+i);
+
+  msgEl.style.color = 'var(--gray-400)';
+  msgEl.textContent = 'Обработка…';
+  msgEl.style.display = 'block';
+
+  try {
+    const result = await _apiCall({ action: 'approveReg', token: _authToken(), origLogin, fio, dolzh, org, login, newPwd, phone, email });
+    if (result.ok) {
+      msgEl.style.color = '#28a745';
+      msgEl.textContent = '✓ Одобрено! Пользователь добавлен в систему.';
+      document.getElementById('arFio'+i)?.closest('div[style*="border:1.5px"]')?.querySelectorAll('button').forEach(b => b.disabled = true);
+    } else {
+      msgEl.style.color = '#dc2626';
+      msgEl.textContent = 'Ошибка: ' + (result.error || 'неизвестно');
+    }
+  } catch(e) {
+    msgEl.style.color = '#dc2626';
+    msgEl.textContent = 'Ошибка. Проверьте интернет и попробуйте снова.';
+  }
+}
+
+async function rejectRegRow(i, origLogin) {
+  if (!confirm('Отклонить заявку от «' + origLogin + '»?')) return;
+  const msgEl = document.getElementById('arMsg'+i);
+  msgEl.style.color = 'var(--gray-400)';
+  msgEl.textContent = 'Обработка…';
+  msgEl.style.display = 'block';
+
+  try {
+    const result = await _apiCall({ action: 'rejectReg', token: _authToken(), origLogin });
+    if (result.ok) {
+      msgEl.style.color = '#dc2626';
+      msgEl.textContent = '✗ Заявка отклонена и удалена.';
+      document.getElementById('arFio'+i)?.closest('div[style*="border:1.5px"]')?.querySelectorAll('button').forEach(b => b.disabled = true);
+    } else {
+      msgEl.style.color = '#dc2626';
+      msgEl.textContent = 'Ошибка: ' + (result.error || 'неизвестно');
+    }
+  } catch(e) {
+    msgEl.style.color = '#dc2626';
+    msgEl.textContent = 'Ошибка. Проверьте интернет.';
+  }
 }
 
 function openLogoutConfirm() {
@@ -2163,6 +2696,7 @@ function closeLogoutConfirm() {
 function logout() {
   currentUser = null;
   localStorage.removeItem('auth_user');
+  localStorage.removeItem('auth_token');
   syncEnabled = false;
   employeeMap = {};
   issuersList = [];
@@ -2226,9 +2760,16 @@ function rebuildCrewPpuFilter() {
     ppus.map(p => `<option value="${p}">${p}</option>`).join('');
 }
 
+function openNoEmployeeDataModal() {
+  document.getElementById('noEmployeeDataModal').style.display = 'block';
+}
+function closeNoEmployeeDataModal() {
+  document.getElementById('noEmployeeDataModal').style.display = 'none';
+}
+
 function updateCrewPickerBtn() {
   const btn = document.getElementById('btnPickCrew');
-  if (btn) btn.style.display = allEmployeesList.length ? 'inline-flex' : 'none';
+  if (btn) btn.style.display = currentUser ? 'inline-flex' : 'none';
 }
 
 // ─── Пикер бригады ────────────────────────────────────────────────────────
@@ -2236,7 +2777,7 @@ function updateCrewPickerBtn() {
 let _crewPickerSel = new Set();
 
 function openCrewPicker() {
-  if (!allEmployeesList.length) return;
+  if (!allEmployeesList.length) { openNoEmployeeDataModal(); return; }
   _crewPickerSel.clear();
   document.getElementById('crewSearch').value = '';
   renderCrewList();
@@ -2451,7 +2992,8 @@ function addCrewSelected() {
 }
 
 function openIssuerPicker() {
-  if (!issuersList.length) return;
+  if (!currentUser) { openLoginModal(); return; }
+  if (!issuersList.length) { openNoEmployeeDataModal(); return; }
   renderIssuerList();
   document.getElementById('issuerPickerOverlay').classList.add('open');
 }
@@ -2570,18 +3112,182 @@ document.addEventListener('click', e => {
   if (!e.target.closest('.issuer-wrap')) closeIssuerAc();
 });
 
+// ─── Пикер / автодополнение руководителя работ (для аккаунтов-Операторов) ──
+
+function rukovFavKey() {
+  return 'rukov_favs_' + (currentUser ? currentUser.org : '_');
+}
+function rukovFavs() {
+  try { return JSON.parse(localStorage.getItem(rukovFavKey()) || '[]'); } catch { return []; }
+}
+function rukovFavToggle(fio) {
+  let favs = rukovFavs();
+  const idx = favs.indexOf(fio);
+  if (idx >= 0) favs.splice(idx, 1); else favs.push(fio);
+  localStorage.setItem(rukovFavKey(), JSON.stringify(favs));
+}
+
+function rebuildRukovPpuFilter() {
+  const sel = document.getElementById('rukovPpuFilter');
+  if (!sel) return;
+  const ppus = [...new Set(receiversList.map(p => p.ppu).filter(Boolean))];
+  ppus.sort(_ppuSort);
+  sel.innerHTML = '<option value="">Все участки</option>' +
+    ppus.map(p => `<option value="${p}">${p}</option>`).join('');
+}
+
+function openRukovPicker() {
+  if (!currentUser) { openLoginModal(); return; }
+  if (!receiversList.length) { openNoEmployeeDataModal(); return; }
+  renderRukovList();
+  document.getElementById('rukovPickerOverlay').classList.add('open');
+}
+function closeRukovPicker() {
+  document.getElementById('rukovPickerOverlay').classList.remove('open');
+}
+function rukovPickerOverlayClick(e) {
+  if (e.target === document.getElementById('rukovPickerOverlay')) closeRukovPicker();
+}
+
+function renderRukovList() {
+  const list = document.getElementById('rukovPickerList');
+  const ppuF = document.getElementById('rukovPpuFilter').value;
+  const favs = rukovFavs();
+
+  let items = receiversList.filter(p => !ppuF || p.ppu === ppuF);
+  const favItems   = items.filter(p => favs.includes(p.fio));
+  const otherItems = items.filter(p => !favs.includes(p.fio));
+
+  let html = '';
+  if (favItems.length) {
+    html += `<div class="ipm-section-label">⭐ Избранные</div>`;
+    favItems.forEach(p => { html += rukovItemHtml(p, true); });
+  }
+  if (otherItems.length) {
+    if (favItems.length) html += `<div class="ipm-section-label">Все</div>`;
+    otherItems.forEach(p => { html += rukovItemHtml(p, false); });
+  }
+  if (!items.length) html = `<div class="ipm-empty">Нет сотрудников, доступных для выбора</div>`;
+  list.innerHTML = html;
+}
+
+function rukovItemHtml(p, isFav) {
+  const fioE   = p.fio.replace(/"/g, '&quot;');
+  const dolzhE = (p.dolzh || '').replace(/"/g, '&quot;');
+  return `<div class="ipm-item" onclick="selectRukov('${fioE}','${dolzhE}')">
+    <button class="ipm-star ${isFav ? 'on' : ''}" title="Избранное"
+      onclick="event.stopPropagation();toggleRukovFav('${fioE}',this)">★</button>
+    <div class="ipm-info">
+      <div class="ipm-fio">${p.fio}</div>
+      ${p.dolzh ? `<div class="ipm-dolzh">${p.dolzh}</div>` : ''}
+      ${p.ppu   ? `<div class="ipm-ppu">${p.ppu}</div>` : ''}
+    </div>
+  </div>`;
+}
+
+function toggleRukovFav(fio, btn) {
+  rukovFavToggle(fio);
+  renderRukovList();
+}
+
+function selectRukov(fio, dolzh) {
+  document.getElementById('rukovFio').value   = fio;
+  document.getElementById('rukovDolzh').value = dolzh;
+  checkButtons();
+  closeRukovPicker();
+  closeRukovAc();
+}
+
+// ── Автодополнение ──────────────────────────────────────────────────────
+let _rukovAcIdx = -1;
+
+function rukovOnInput() {
+  checkButtons();
+  const q = document.getElementById('rukovFio').value.trim().toLowerCase();
+  if (!q || !receiversList.length) { closeRukovAc(); return; }
+
+  const matches = receiversList
+    .filter(p => p.fio.toLowerCase().includes(q))
+    .slice(0, 12);
+
+  if (!matches.length) { closeRukovAc(); return; }
+
+  _rukovAcIdx = -1;
+  const el = document.getElementById('rukovAcList');
+  el.innerHTML = matches.map((p, i) =>
+    `<div class="issuer-ac-item" data-i="${i}"
+      onmousedown="selectRukov('${p.fio.replace(/'/g,"\\'")}','${(p.dolzh||'').replace(/'/g,"\\'")}')">
+      <span class="issuer-ac-fio">${p.fio}</span>
+      ${p.dolzh ? `<span class="issuer-ac-dolzh">${p.dolzh}</span>` : ''}
+    </div>`
+  ).join('');
+  el.classList.add('open');
+}
+
+function rukovKeyDown(e) {
+  const el = document.getElementById('rukovAcList');
+  if (!el.classList.contains('open')) return;
+  const items = el.querySelectorAll('.issuer-ac-item');
+  if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    _rukovAcIdx = Math.min(_rukovAcIdx + 1, items.length - 1);
+    items.forEach((it, i) => it.classList.toggle('active', i === _rukovAcIdx));
+  } else if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    _rukovAcIdx = Math.max(_rukovAcIdx - 1, 0);
+    items.forEach((it, i) => it.classList.toggle('active', i === _rukovAcIdx));
+  } else if (e.key === 'Enter' || e.key === 'Tab') {
+    if (_rukovAcIdx >= 0 && items[_rukovAcIdx]) {
+      e.preventDefault();
+      items[_rukovAcIdx].dispatchEvent(new MouseEvent('mousedown'));
+    } else {
+      closeRukovAc();
+    }
+  } else if (e.key === 'Escape') {
+    closeRukovAc();
+  }
+}
+
+function closeRukovAc() {
+  document.getElementById('rukovAcList').classList.remove('open');
+  _rukovAcIdx = -1;
+}
+
+document.addEventListener('click', e => {
+  if (!e.target.closest('.rukov-wrap')) closeRukovAc();
+});
+
+// Сбрасывает базу сотрудников/оргданные в пустое состояние — вызывается,
+// когда лист организации не найден или пришли нераспознаваемые данные,
+// чтобы пикеры показывали «База сотрудников недоступна», а не чужие/старые данные.
+function _resetOrgPersonnelData() {
+  employeeMap = {};
+  issuersList = [];
+  allEmployeesList = [];
+  receiversList = [];
+  orgDangers = [];
+  orgStaticData = { p3: null, p4rows: [], p5rows: [] };
+  orgRooms = {};
+  orgWorkTypes = [];
+  orgApplicationTypes = [];
+  rebuildIssuerPpuFilter();
+  rebuildCrewPpuFilter();
+  rebuildRukovPpuFilter();
+  updateCrewPickerBtn();
+  renderCustomCheckboxes();
+}
+
 function loadOrgPersonnel() {
   if (!currentUser) return;
   const org = currentUser.org;
+  const _ssKey = 'session_personnel_' + org;
 
-  const sheetUrl = `https://docs.google.com/spreadsheets/d/${MASTER_SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(org)}`;
-  fetch(sheetUrl)
-    .then(r => { if (!r.ok) throw new Error(); return r.text(); })
-    .then(csv => {
-      const rows = _parseSheetCSV(csv);
-      if (rows.length < 2) return;
-      const hdrs = rows[0].map(h => (h || '').toLowerCase());
+  const _doLoad = data => {
+      const hdrs = (data.headers || []).map(h => (h || '').toLowerCase());
+      const rows = data.rows || [];
       const iFIO   = hdrs.findIndex(h => h.includes('фио') || h.includes('ф.и.о'));
+      // Если нет строк данных или нет колонки ФИО — это не лист организации
+      if (rows.length < 1 || iFIO < 0) { _resetOrgPersonnelData(); return; }
       const iDolzh = hdrs.findIndex(h => h.includes('должн'));
       const iRazr  = hdrs.findIndex(h => h.includes('разряд') || h.includes('профессия'));
       const iGrEB  = hdrs.findIndex(h => h.includes('группа') && (h.includes('эб') || h.includes('эл')));
@@ -2592,7 +3298,15 @@ function loadOrgPersonnel() {
       employeeMap = {};
       issuersList = [];
       allEmployeesList = [];
-      for (let i = 1; i < rows.length; i++) {
+      receiversList = [];
+      // У Операторов свой маркер выдающего наряд в столбце H — "Выдает" (а не
+      // "да", которым отмечаются выдающие для обычных аккаунтов). В ячейке
+      // может быть указано сразу несколько маркеров через запятую или пробел
+      // (например, "Выдает, Получает" — сотрудник и выдаёт, и может быть
+      // выбран руководителем работ), поэтому разбираем ячейку на токены.
+      const _isOperatorLoad = isOperatorUser(currentUser);
+      const _issuerMarker = _isOperatorLoad ? 'выдает' : 'да';
+      for (let i = 0; i < rows.length; i++) {
         const r = rows[i];
         const fio = ((iFIO >= 0 ? r[iFIO] : r[1]) || '').trim();
         if (!fio) continue;
@@ -2600,16 +3314,19 @@ function loadOrgPersonnel() {
         const razr     = ((iRazr  >= 0 ? r[iRazr]  : r[3]) || '').trim();
         const grEB     = ((iGrEB  >= 0 ? r[iGrEB]  : r[4]) || '').trim();
         const ppu      = ((iPPU   >= 0 ? r[iPPU]   : r[6]) || '').trim();
-        const canIssue = ((iIssue >= 0 ? r[iIssue] : r[7]) || '').trim().toLowerCase();
+        const canIssueTokens = ((iIssue >= 0 ? r[iIssue] : r[7]) || '').trim().toLowerCase().split(/[,\s]+/).filter(Boolean);
         employeeMap[fio.toLowerCase().replace(/\s+/g, ' ')] = { dolzh, razr, grEB };
         const grVys = ((iGrVys >= 0 ? r[iGrVys] : '') || '').trim() || '2';
         allEmployeesList.push({ fio, dolzh, razr, grEB, grVys, ppu });
-        if (canIssue === 'да') issuersList.push({ fio, dolzh, ppu });
+        if (canIssueTokens.includes(_issuerMarker)) issuersList.push({ fio, dolzh, ppu });
+        // "Получает" среди токенов той же колонки — сотрудник может быть выбран
+        // Оператором как руководитель работ (см. rukovPicker / receiversList).
+        if (canIssueTokens.includes('получает')) receiversList.push({ fio, dolzh, ppu });
       }
       orgDangers = [];
       if (iDName >= 0) {
         const seenNames = new Set();
-        for (let i = 1; i < rows.length; i++) {
+        for (let i = 0; i < rows.length; i++) {
           const r = rows[i];
           const name = (r[iDName] || '').trim();
           if (!name || seenNames.has(name)) continue;
@@ -2629,7 +3346,7 @@ function loadOrgPersonnel() {
       const iP5St = hdrs.findIndex(h => h.includes('неизменн') && (h.includes('п.5') || h.includes('п5') || h.endsWith('5')));
       orgStaticData = { p3: null, p4rows: [], p5rows: [] };
       if (iP3St >= 0 || iP4St >= 0 || iP5St >= 0) {
-        for (let i = 1; i < rows.length; i++) {
+        for (let i = 0; i < rows.length; i++) {
           const r = rows[i];
           const p3val  = (iP3St >= 0 ? r[iP3St] : '').trim();
           const p4val  = (iP4St >= 0 ? r[iP4St] : '').trim();
@@ -2637,6 +3354,40 @@ function loadOrgPersonnel() {
           if (p3val && !orgStaticData.p3) orgStaticData.p3 = p3val;
           if (p4val) orgStaticData.p4rows.push(p4val);
           if (p5val) orgStaticData.p5rows.push(p5val);
+        }
+      }
+      // Место выполнения работ и вид работ из таблицы орг.
+      const iZdanie  = hdrs.findIndex(h => h.includes('здани'));
+      const iOtmetka = hdrs.findIndex(h => h.includes('отметк'));
+      const iPomesh  = hdrs.findIndex(h => h.includes('помещени'));
+      const iVidRab  = hdrs.findIndex(h => h.includes('вид') && h.includes('работ'));
+      orgRooms = {};
+      orgWorkTypes = [];
+      orgApplicationTypes = [];
+      const iApply = hdrs.findIndex(h => h.includes('применени'));
+      const _seenRooms = new Set();
+      const _seenVid   = new Set();
+      const _seenApp   = new Set();
+      for (let i = 0; i < rows.length; i++) {
+        const r = rows[i];
+        if (iZdanie >= 0 && iPomesh >= 0) {
+          const bld   = (r[iZdanie]  || '').trim();
+          const floor = iOtmetka >= 0 ? (r[iOtmetka] || '').trim() : '';
+          const room  = (r[iPomesh]  || '').trim();
+          if (bld && room) {
+            if (!orgRooms[bld]) orgRooms[bld] = {};
+            if (!orgRooms[bld][floor]) orgRooms[bld][floor] = [];
+            const key = bld + '|' + floor + '|' + room;
+            if (!_seenRooms.has(key)) { _seenRooms.add(key); orgRooms[bld][floor].push(room); }
+          }
+        }
+        if (iVidRab >= 0) {
+          const vr = (r[iVidRab] || '').trim();
+          if (vr && !_seenVid.has(vr)) { _seenVid.add(vr); orgWorkTypes.push(vr); }
+        }
+        if (iApply >= 0) {
+          const ap = (r[iApply] || '').trim();
+          if (ap && !_seenApp.has(ap)) { _seenApp.add(ap); orgApplicationTypes.push(ap); }
         }
       }
       // Определить участок текущего пользователя
@@ -2647,8 +3398,10 @@ function loadOrgPersonnel() {
 
       issuersList.sort((a, b) => a.fio.localeCompare(b.fio, 'ru'));
       allEmployeesList.sort((a, b) => a.fio.localeCompare(b.fio, 'ru'));
+      receiversList.sort((a, b) => a.fio.localeCompare(b.fio, 'ru'));
       rebuildIssuerPpuFilter();
       rebuildCrewPpuFilter();
+      rebuildRukovPpuFilter();
       updateCrewPickerBtn();
       renderCustomCheckboxes();
       // Восстановить состояния чекбоксов из orgDangers после асинхронной загрузки Sheets
@@ -2663,8 +3416,23 @@ function loadOrgPersonnel() {
       } catch(e) {}
       syncEnabled = true;
       syncAllRows();
+  };
+
+  const _cached = sessionStorage.getItem(_ssKey);
+  if (_cached) {
+    try { _doLoad(JSON.parse(_cached)); return; } catch(e) {}
+  }
+
+  _apiCall({ action: 'getOrgPersonnel', token: _authToken() })
+    .then(data => {
+      if (!data.ok || !data.rows || data.rows.length < 1) { _resetOrgPersonnelData(); return; }
+      try { sessionStorage.setItem(_ssKey, JSON.stringify(data)); } catch(e) {}
+      _doLoad(data);
     })
-    .catch(() => console.warn('Не удалось загрузить сотрудников организации:', org));
+    .catch(() => {
+      console.warn('Не удалось загрузить сотрудников организации:', org);
+      _resetOrgPersonnelData();
+    });
 }
 
 function syncAllRows() {
@@ -2924,7 +3692,7 @@ async function buildNaryadDocument(data) {
       ] }),
       new TableRow({ children: [
         cell('2. На выполнение работ на Курской АЭС-2:', { width: colLabel, bold: true, noBorder: true }),
-        cell([data.vidRabot, data.mesto].filter(Boolean).join(', '), { width: colValue, ulBorder: true })
+        cell([data.vidRabot, data.mesto].filter(Boolean).join('\n'), { width: colValue, ulBorder: true })
       ] }),
       new TableRow({ children: [
         cell('', { width: colLabel, noBorder: true }),
@@ -3073,8 +3841,8 @@ async function buildNaryadDocument(data) {
 
         // §3
         p('3. Вредные и опасные производственные факторы, которые действуют или могут возникнуть независимо от выполняемой работы в местах ее производства:', { bold: true }),
-        ...(data.activeFactors.filter(f => f.desc).map(f => p(f.desc))),
         ...(_staticD.p3 ? [p(_staticD.p3)] : []),
+        ...(data.activeFactors.filter(f => f.desc).map(f => p(f.desc))),
         p('', { spacing: { after: 80 } }),
 
         // §4
@@ -3206,6 +3974,23 @@ async function buildPPRVDocument(data) {
   function subHeaderRow(text) {
     return new TableRow({ children: [ cell(text, { width: CONTENT_W, span: 2, bold: true }) ] });
   }
+  function infoRowWithSig(label, value, sigDolzh) {
+    const sigLine = new Paragraph({
+      spacing: { before: 120, after: 20 },
+      children: [
+        new TextRun({ text: 'Подпись ', font: FONT, size: 22 }),
+        new TextRun({ text: '______________________________', font: FONT, size: 22 }),
+      ]
+    });
+    const valueParas = [
+      p([sigDolzh, value].filter(Boolean).join(' ') || '', { spacing: { after: 20 } }),
+      sigLine
+    ];
+    return new TableRow({ children: [
+      cell(label, { width: colLabel, bold: true }),
+      cell(valueParas, { width: colValue })
+    ] });
+  }
   function rescueRow(situation, response) {
     return new TableRow({ children: [
       cell(situation, { width: colLabel }),
@@ -3214,6 +3999,7 @@ async function buildPPRVDocument(data) {
   }
 
   const execLead = (data.executors[0] && data.executors[0].fio) || '';
+  const execLeadDolzh = (data.executors[0] && data.executors[0].dolzh) || '';
   const hasWelder = data.executors.some(e => /электрогазосварщик|электросварщик/i.test(e.dolzh || ''));
   const privyaz = hasWelder
     ? 'Страховочная привязь «Safe-Tec-St-5», Страховочная привязь «Safe-Tec-St-5 Огнеупорная»'
@@ -3261,9 +4047,9 @@ async function buildPPRVDocument(data) {
       infoRow('Применение технических средств безопасности и первичных средств пожаротушения:', '2 огнетушителя ОП-5, огнеупорное полотно (установленных на рабочем месте)'),
       infoRow('Санитарно-бытовое обслуживание работников:', 'Аптечка первой помощи находится на рабочем месте'),
       infoRow('Дополнительные мероприятия, выполняемые при совмещенных работах, при работах в условиях действующего производства:', 'отсутствуют'),
-      infoRow('Лицо, выдающее наряд-допуск:', data.naradVydal),
-      infoRow('Руководитель работ:', data.rukov),
-      infoRow('Исполнитель работ:', execLead)
+      infoRowWithSig('Лицо, выдающее наряд-допуск:', [data.naradVydalDolzh, toInitials(data.naradVydalFio)].filter(Boolean).join(' ')),
+      infoRowWithSig('Руководитель работ:', [data.rukovDolzh, toInitials(data.rukovFio)].filter(Boolean).join(' ')),
+      infoRowWithSig('Исполнитель работ:', toInitials(execLead), execLeadDolzh)
     ]
   });
 
@@ -3361,7 +4147,7 @@ async function buildPPRVDocument(data) {
 }
 
 // ─── Проверка актуальности версии ─────────────────────────────────────────
-const CURRENT_VERSION = 'v2.64';
+const CURRENT_VERSION = 'v3.23';
 const VERSION_CHECK_TTL = 5 * 60 * 1000; // 5 минут
 let _versionCheckTime = null;
 let _versionCheckPassed = false;
@@ -3372,23 +4158,65 @@ function _parseVer(s) {
   return m ? parseInt(m[1]) * 1000 + parseInt(m[2]) : 0;
 }
 
+let _versionBannerShown = false;
+
+function showUpdateBanner(remoteVersion, autoReloadMs) {
+  if (_versionBannerShown) return;
+  _versionBannerShown = true;
+  const bar = document.createElement('div');
+  bar.id = 'updateBanner';
+  bar.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:99999;background:var(--accent);color:#fff;padding:10px 16px;display:flex;align-items:center;justify-content:center;gap:14px;font-size:13px;font-weight:600;box-shadow:0 2px 8px rgba(0,0,0,.15)';
+  const msg = autoReloadMs
+    ? `Версия устарела — обновляем страницу до ${remoteVersion}...`
+    : `Доступна новая версия ${remoteVersion} — обновите страницу, чтобы получить последние исправления`;
+  bar.innerHTML = `<span>${msg}</span>` + (autoReloadMs ? '' :
+    `<button id="updateBannerBtn" style="background:rgba(255,255,255,.22);border:none;color:white;border-radius:6px;padding:5px 14px;cursor:pointer;font-size:13px;font-weight:700">Обновить</button>`);
+  document.body.appendChild(bar);
+  if (autoReloadMs) {
+    setTimeout(() => location.reload(true), autoReloadMs);
+  } else {
+    document.getElementById('updateBannerBtn').onclick = () => location.reload(true);
+  }
+}
+
+async function _fetchRemoteVersion() {
+  const _ctrl = new AbortController();
+  const _vt = setTimeout(() => _ctrl.abort(), 3000);
+  try {
+    const res = await fetch('https://lingidan.github.io/konstruktor/', { cache: 'no-store', signal: _ctrl.signal });
+    const html = await res.text();
+    const match = html.match(/>(v\d+\.\d+)<\/div>/);
+    return match ? match[1] : null;
+  } finally {
+    clearTimeout(_vt);
+  }
+}
+
+// Фоновая проверка версии — не блокирует работу, просто показывает баннер
+async function checkVersionBackground() {
+  try {
+    const remoteVersion = await _fetchRemoteVersion();
+    if (remoteVersion && _parseVer(remoteVersion) > _parseVer(CURRENT_VERSION)) {
+      showUpdateBanner(remoteVersion);
+    }
+  } catch (e) {
+    // Тихо игнорируем сетевые ошибки
+  }
+}
+setTimeout(checkVersionBackground, 2000);
+setInterval(checkVersionBackground, 10 * 60 * 1000);
+
 async function ensureActualVersion() {
   const now = Date.now();
   if (_versionCheckPassed && _versionCheckTime && (now - _versionCheckTime) < VERSION_CHECK_TTL) {
     return true;
   }
   try {
-    const _ctrl = new AbortController();
-    const _vt = setTimeout(() => _ctrl.abort(), 3000);
-    const res = await fetch('https://lingidan.github.io/konstruktor/', { cache: 'no-store', signal: _ctrl.signal });
-    clearTimeout(_vt);
-    const html = await res.text();
-    const match = html.match(/>(v\d+\.\d+)<\/div>/);
-    const remoteVersion = match ? match[1] : null;
+    const remoteVersion = await _fetchRemoteVersion();
     // Перезагружаем ТОЛЬКО если на сервере версия НОВЕЕ текущей
     if (remoteVersion && _parseVer(remoteVersion) > _parseVer(CURRENT_VERSION)) {
       sessionStorage.setItem('pendingDownload', _pendingDownload || '');
-      location.reload(true);
+      showUpdateBanner(remoteVersion, 1200);
       return false;
     }
     _versionCheckPassed = true;
@@ -3398,6 +4226,15 @@ async function ensureActualVersion() {
     // При ошибке сети не блокируем — пускаем дальше
     return true;
   }
+}
+
+function _refreshPersonnelCache() {
+  for (const key of Object.keys(sessionStorage)) {
+    if (key.startsWith('session_personnel_') || key === 'session_rooms') {
+      sessionStorage.removeItem(key);
+    }
+  }
+  if (currentUser) loadOrgPersonnel();
 }
 
 function downloadBlob(blob, filename) {
@@ -3410,12 +4247,14 @@ function downloadBlob(blob, filename) {
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
   trackDocGenerated();
+  const hint = document.getElementById('dlShareHint');
+  if (hint) hint.classList.add('visible');
+  _refreshPersonnelCache();
 }
 
 function trackDocGenerated() {
-  if (!currentUser || !currentUser.login) return;
-  const params = new URLSearchParams({ action: 'trackDocs', login: currentUser.login, count: 1 });
-  fetch(REG_SCRIPT_URL + '?' + params.toString()).catch(() => {});
+  const login = (currentUser && currentUser.login) ? currentUser.login : 'anonymous';
+  _apiCall({ action: 'trackDocs', login }).catch(() => {});
 }
 
 async function downloadNaryad(btn) {
@@ -3734,12 +4573,15 @@ const CUSTOM_KEY   = 'narad_custom_v1';
 let customFactors   = []; // [{id, name, p3, p4, p5}]
 let orgDangers      = []; // [{id, name, p3, p4, p5}] — из колонки «Название опасности» в таблице орг.
 let orgStaticData   = { p3: null, p4rows: [], p5rows: [] }; // неизменные мероприятия организации из Sheets
+let orgRooms        = {}; // {здание: {отметка: [помещения]}} — из колонок Здание/Отметка/Помещение
+let orgWorkTypes       = []; // [вид работ] — из колонки «Вид работ»
+let orgApplicationTypes = []; // [с применением] — из колонки «С применением»
 
 // ─── Шаблонные данные (fallback для неавторизованных) ─────────────────────
 const TEMPLATE_FACTORS = [
   { id: 'tpl_svet',    name: 'Недостаточное освещение',
-    p3: '- Недостаточное освящение',
-    p4: 'Обеспечить установку временного освящения',
+    p3: '- Недостаточное освещение',
+    p4: 'Обеспечить установку временного освещения',
     p5: 'Контролировать работу временного освещения' },
   { id: 'tpl_elinstr', name: 'Электроинструмент',
     p3: '- При выполнении работ с электроинструментом: возможны травмы рук из-за заклинивания или выброса осколков, перегрев и возгорание инструмента, спотыкание о кабель.',
@@ -3794,9 +4636,56 @@ const TEMPLATE_STATIC_DATA = {
 };
 
 function applyTemplateData() {
-  orgDangers    = TEMPLATE_FACTORS.map(f => ({ ...f }));
-  orgStaticData = { p3: TEMPLATE_STATIC_DATA.p3, p4rows: [...TEMPLATE_STATIC_DATA.p4rows], p5rows: [...TEMPLATE_STATIC_DATA.p5rows] };
-  renderCustomCheckboxes();
+  _apiCall({ action: 'getUnregisteredTemplate' })
+    .then(data => {
+      if (!data.ok || !data.rows || data.rows.length < 1) throw new Error('empty');
+      const hdrs = data.headers.map(h => (h || '').toLowerCase());
+      const rows = data.rows;
+      const iName = hdrs.findIndex(h => h.includes('назван') || h.includes('опасн'));
+      if (iName >= 0) {
+        const seenNames = new Set();
+        orgDangers = [];
+        for (let i = 0; i < rows.length; i++) {
+          const r = rows[i];
+          const name = (r[iName] || '').trim();
+          if (!name || seenNames.has(name)) continue;
+          seenNames.add(name);
+          orgDangers.push({
+            id:  'anonf_' + _simpleHash(name),
+            name,
+            p3:  (r[iName + 1] || '').trim() || null,
+            p4:  (r[iName + 2] || '').trim() || null,
+            p5:  (r[iName + 3] || '').trim() || null,
+          });
+        }
+      } else {
+        orgDangers = TEMPLATE_FACTORS.map(f => ({ ...f }));
+      }
+      const iP3St = hdrs.findIndex(h => h.includes('неизменн') && (h.includes('п.3') || h.includes('п3') || h.endsWith('3')));
+      const iP4St = hdrs.findIndex(h => h.includes('неизменн') && (h.includes('п.4') || h.includes('п4') || h.endsWith('4')));
+      const iP5St = hdrs.findIndex(h => h.includes('неизменн') && (h.includes('п.5') || h.includes('п5') || h.endsWith('5')));
+      orgStaticData = { p3: null, p4rows: [], p5rows: [] };
+      if (iP3St >= 0 || iP4St >= 0 || iP5St >= 0) {
+        for (let i = 0; i < rows.length; i++) {
+          const r = rows[i];
+          const p3val = (iP3St >= 0 ? r[iP3St] : '').trim();
+          const p4val = (iP4St >= 0 ? r[iP4St] : '').trim();
+          const p5val = (iP5St >= 0 ? r[iP5St] : '').trim();
+          if (p3val && !orgStaticData.p3) orgStaticData.p3 = p3val;
+          if (p4val) orgStaticData.p4rows.push(p4val);
+          if (p5val) orgStaticData.p5rows.push(p5val);
+        }
+      }
+      if (!orgStaticData.p3 && !orgStaticData.p4rows.length) {
+        orgStaticData = { p3: TEMPLATE_STATIC_DATA.p3, p4rows: [...TEMPLATE_STATIC_DATA.p4rows], p5rows: [...TEMPLATE_STATIC_DATA.p5rows] };
+      }
+      renderCustomCheckboxes();
+    })
+    .catch(() => {
+      orgDangers    = TEMPLATE_FACTORS.map(f => ({ ...f }));
+      orgStaticData = { p3: TEMPLATE_STATIC_DATA.p3, p4rows: [...TEMPLATE_STATIC_DATA.p4rows], p5rows: [...TEMPLATE_STATIC_DATA.p5rows] };
+      renderCustomCheckboxes();
+    });
 }
 
 function _simpleHash(s) {
@@ -4118,6 +5007,129 @@ function saveFormData() {
   try { localStorage.setItem(_sk, JSON.stringify(snap)); } catch(e) {}
 }
 
+// ─── История отмены/возврата ──────────────────────────────────────────────────
+const MAX_HISTORY = 50;
+let _undoStack = [];
+let _redoStack = [];
+let _preEditSnap = null;
+
+function _formSnapshot() {
+  const cbStates = {};
+  orgDangers.forEach(f => { const el = document.getElementById(f.id); if (el) cbStates[f.id] = el.checked; });
+  customFactors.forEach(f => { const el = document.getElementById(f.id); if (el) cbStates[f.id] = el.checked; });
+  const execRows = [];
+  document.querySelectorAll('#execBody tr').forEach(tr => {
+    const cells = tr.querySelectorAll('.cell-edit');
+    execRows.push([...cells].map(c => c.textContent.trim()));
+  });
+  const g = id => { const el = document.getElementById(id); return el ? el.value : ''; };
+  return {
+    org: g('org'), nomer: g('nomer'), dateStart: g('dateStart'),
+    vidOgn: g('vidOgn'), nomerOgn: g('nomerOgn'), ppr: g('ppr'),
+    naradVydalDolzh: g('naradVydalDolzh'), naradVydalFio: g('naradVydalFio'),
+    rukovDolzh: g('rukovDolzh'), rukovFio: g('rukovFio'),
+    utvPprv: g('utvPprv'), mesto: g('mesto'), vidRabot: g('vidRabot'),
+    sec6Rows: g('sec6Rows'), sec10Rows: g('sec10Rows'),
+    cbStates, execRows
+  };
+}
+
+function _applySnapshot(snap) {
+  if (!snap) return;
+  const set = (id, val) => { if (val == null) return; const el = document.getElementById(id); if (el) el.value = val; };
+  set('org', snap.org); set('nomer', snap.nomer); set('dateStart', snap.dateStart);
+  set('vidOgn', snap.vidOgn); set('nomerOgn', snap.nomerOgn); set('ppr', snap.ppr);
+  set('naradVydalDolzh', snap.naradVydalDolzh); set('naradVydalFio', snap.naradVydalFio);
+  updateNaradVydal();
+  set('rukovDolzh', snap.rukovDolzh); set('rukovFio', snap.rukovFio);
+  set('utvPprv', snap.utvPprv); set('mesto', snap.mesto); set('vidRabot', snap.vidRabot);
+  set('sec6Rows', snap.sec6Rows); set('sec10Rows', snap.sec10Rows);
+  if (snap.dateStart) setEndDate();
+  const sr6 = document.getElementById('sec6RowsValue');
+  if (sr6 && snap.sec6Rows) sr6.textContent = snap.sec6Rows === 'default' ? 'По умолчанию' : snap.sec6Rows;
+  const sr10 = document.getElementById('sec10RowsValue');
+  if (sr10 && snap.sec10Rows) sr10.textContent = snap.sec10Rows;
+  if (snap.cbStates) {
+    Object.entries(snap.cbStates).forEach(([id, checked]) => {
+      const el = document.getElementById(id); if (el) el.checked = checked;
+    });
+  }
+  if (snap.execRows) {
+    document.getElementById('execBody').innerHTML = '';
+    rowCount = 0;
+    snap.execRows.forEach(row => {
+      addRow();
+      const tr = document.getElementById('execBody').lastElementChild;
+      const cells = tr.querySelectorAll('.cell-edit');
+      row.forEach((val, i) => { if (cells[i]) cells[i].textContent = val; });
+    });
+  }
+  checkButtons();
+}
+
+function _capturePreEdit() {
+  _preEditSnap = _formSnapshot();
+}
+
+let _undoTimer = null;
+function _scheduleHistoryPush() {
+  clearTimeout(_undoTimer);
+  _undoTimer = setTimeout(() => {
+    if (!_preEditSnap) return;
+    const nowStr = JSON.stringify(_formSnapshot());
+    if (nowStr === JSON.stringify(_preEditSnap)) return;
+    _undoStack.push(_preEditSnap);
+    if (_undoStack.length > MAX_HISTORY) _undoStack.shift();
+    _redoStack = [];
+    _preEditSnap = _formSnapshot();
+    _updateUndoRedoBtns();
+  }, 800);
+}
+
+function undoAction() {
+  if (!_undoStack.length) return;
+  _redoStack.push(_formSnapshot());
+  _applySnapshot(_undoStack.pop());
+  saveFormData();
+  _preEditSnap = _formSnapshot();
+  _updateUndoRedoBtns();
+}
+
+function redoAction() {
+  if (!_redoStack.length) return;
+  _undoStack.push(_formSnapshot());
+  _applySnapshot(_redoStack.pop());
+  saveFormData();
+  _preEditSnap = _formSnapshot();
+  _updateUndoRedoBtns();
+}
+
+function _updateUndoRedoBtns() {
+  const canUndo = !!_undoStack.length;
+  const canRedo = !!_redoStack.length;
+  ['btnUndo','btnUndoBurger'].forEach(id => { const el = document.getElementById(id); if (el) el.disabled = !canUndo; });
+  ['btnRedo','btnRedoBurger'].forEach(id => { const el = document.getElementById(id); if (el) el.disabled = !canRedo; });
+}
+
+// ─── Бургер-меню ─────────────────────────────────────────────────────────────
+function toggleBurger() {
+  const menu = document.getElementById('burgerMenu');
+  const btn  = document.getElementById('burgerBtn');
+  const open = menu.classList.toggle('open');
+  btn.classList.toggle('open', open);
+}
+function closeBurger() {
+  document.getElementById('burgerMenu').classList.remove('open');
+  document.getElementById('burgerBtn').classList.remove('open');
+}
+document.addEventListener('click', e => {
+  const menu = document.getElementById('burgerMenu');
+  if (!menu.classList.contains('open')) return;
+  if (!menu.contains(e.target) && e.target.id !== 'burgerBtn' && !document.getElementById('burgerBtn').contains(e.target)) {
+    closeBurger();
+  }
+});
+
 function loadFormData() {
   let snap;
   try {
@@ -4221,6 +5233,7 @@ async function downloadKarta(btn) {
     a.download = 'Карта ОПФ к наряду №' + (data.nomer || '____') + '.docx';
     a.click();
     URL.revokeObjectURL(a.href);
+    _refreshPersonnelCache();
   } catch(e) {
     alert('Ошибка: ' + e.message);
   } finally {
@@ -4333,9 +5346,12 @@ async function buildOgnevoyDocument(data) {
 
   const dateStr = formatRuDate(data.dateStart);
   const dateEndStr = formatRuDate(data.dateEnd);
+  const dateDMY = (() => { if (!data.dateStart) return ''; const d = new Date(data.dateStart); return [String(d.getDate()).padStart(2,'0'), String(d.getMonth()+1).padStart(2,'0'), d.getFullYear()].join('.'); })();
   const nomerOgn = data.nomerOgn || '____';
   const rukov = data.rukov || '____________________';
   const naradVydal = data.naradVydal || '____________________';
+  const naradVydalDolzh = data.naradVydalDolzh || '';
+  const naradVydalShortFio = toInitials(data.naradVydalFio || '');
   const org = data.org || '____________________';
   const sp40 = { after: 40, line: 200, lineRule: 'auto' };
 
@@ -4377,7 +5393,7 @@ async function buildOgnevoyDocument(data) {
         cell(ex.fio || '',   { width: W4[1] }),
         cell(ex.dolzh || '', { width: W4[2] }),
         cell('', { width: W4[3] }),
-        cell('', { width: W4[4] }),
+        cell(dateDMY, { width: W4[4], align: AlignmentType.CENTER }),
         cell('', { width: W4[5] }),
       ],
     })));
@@ -4474,7 +5490,14 @@ async function buildOgnevoyDocument(data) {
         // УТВЕРЖДАЮ
         p('УТВЕРЖДАЮ', { bold: true, size: 22, align: AlignmentType.RIGHT }),
         p(org, { align: AlignmentType.RIGHT }),
-        p('_________________', { align: AlignmentType.RIGHT }),
+        new Paragraph({
+          alignment: AlignmentType.RIGHT,
+          spacing: { after: 0, line: 200, lineRule: 'auto' },
+          children: [
+            run('_____________  '),
+            run([naradVydalDolzh, naradVydalShortFio].filter(Boolean).join('  ') || '____________________'),
+          ],
+        }),
         p(dateStr, { align: AlignmentType.RIGHT }),
         hint('руководитель или лицо, ответственное за пожарную безопасность, должность, ф.и.о.', { align: AlignmentType.RIGHT }),
 
@@ -4493,7 +5516,9 @@ async function buildOgnevoyDocument(data) {
 
         // П.3
         sectionTitle('3', 'Место проведения работ:'),
-        p(data.mesto || '', { spacing: sp40, borderBottom: true }),
+        ...(data.mesto || '').split('\n').map((line, i, arr) =>
+          p(line, i < arr.length - 1 ? { spacing: sp40 } : { spacing: sp40, borderBottom: true })
+        ),
         hint('отделение, участок, здание, отметка, помещение'),
 
         // П.4
@@ -4580,6 +5605,383 @@ async function buildOgnevoyDocument(data) {
 
 // ─── История обновлений ───────────────────────────────────────────────────
 const CHANGELOG = [
+  {
+    version: 'v3.23', date: '03.07.2026',
+    changes: [
+      'Прямые обращения к Google Таблице из браузера заменены на серверный backend (Google Apps Script) — таблица стала полностью приватной',
+      'Пароли хранятся в хешированном виде (SHA-256), при входе выполняется автоматическая миграция старых паролей',
+      'Добавлена защита от перебора паролей: блокировка аккаунта на 15 минут после 5 неверных попыток',
+    ]
+  },
+  {
+    version: 'v3.22', date: '02.07.2026',
+    changes: [
+      'Для аккаунтов-Операторов список выдающих наряд теперь берётся по отдельной отметке «Выдает» в базе сотрудников (вместо «да»)',
+      'Один сотрудник теперь может быть отмечен сразу несколькими ролями в одной ячейке (например, «Выдает, Получает»)',
+    ]
+  },
+  {
+    version: 'v3.21', date: '02.07.2026',
+    changes: [
+      'При регистрации добавлен выбор: делать наряды на себя или оформлять их за других сотрудников (роль «Оператор»)',
+      'Для аккаунтов-Операторов ФИО и должность руководителя работ теперь выбираются из списка сотрудников, а не подставляются автоматически',
+    ]
+  },
+  {
+    version: 'v3.20', date: '02.07.2026',
+    changes: [
+      'Исправлен критический баг: если у организации нет своего листа в базе, пикер исполнителей (Блок 3) больше не показывает чужие/старые данные — теперь корректно выводится сообщение «База сотрудников недоступна»',
+    ]
+  },
+  {
+    version: 'v3.19', date: '02.07.2026',
+    changes: [
+      'Проверка обновлений теперь работает в фоне: при выходе новой версии показывается уведомление с кнопкой «Обновить», без внезапной перезагрузки страницы',
+    ]
+  },
+  {
+    version: 'v3.18', date: '02.07.2026',
+    changes: [
+      'Поле «Вид работ» теперь растягивается по высоте, как поле «Место выполнения работ»',
+    ]
+  },
+  {
+    version: 'v3.17', date: '02.07.2026',
+    changes: [
+      'Инструкция: пикер помещений — исправлён на список с чекбоксами (не схема), исправлено имя разработчика',
+    ]
+  },
+  {
+    version: 'v3.16', date: '02.07.2026',
+    changes: [
+      'Инструкция: слайд «Блок 1» переработан — правильный порядок полей, кнопки «Из списка» и «Выбрать помещения» на своих местах',
+    ]
+  },
+  {
+    version: 'v3.15', date: '02.07.2026',
+    changes: [
+      'Исправлены темы: фон слайдов инструкции и блок тестового аккаунта теперь адаптируются к выбранной теме',
+      'Тёмная тема: исправлен цвет выбранной комнаты и активного статуса синхронизации',
+    ]
+  },
+  {
+    version: 'v3.14', date: '02.07.2026',
+    changes: [
+      'Инструкция: про избранное ★ в пикере бригады, про автодополнение поля «Лицо, выдавшее наряд»',
+    ]
+  },
+  {
+    version: 'v3.13', date: '02.07.2026',
+    changes: [
+      'В инструкции: добавлен слайд про пикер помещений, обновлён слайд авторизации — описана регистрация и кнопка «Тестовый аккаунт»',
+    ]
+  },
+  {
+    version: 'v3.12', date: '02.07.2026',
+    changes: [
+      'Обновлена инструкция: описан пикер «Вид работ» с вкладками и избранным, исправлено название поля «Место выполнения работ»',
+    ]
+  },
+  {
+    version: 'v3.11', date: '02.07.2026',
+    changes: [
+      'Значения «С применением» вставляются без изменения регистра — аббревиатуры (УШМ, рЭДС) сохраняются как есть',
+    ]
+  },
+  {
+    version: 'v3.10', date: '02.07.2026',
+    changes: [
+      '«С применением» объединено с «Вид работ» в одно поле: виды через запятую, первый с заглавной, далее «с применением» и факторы строчными',
+    ]
+  },
+  {
+    version: 'v3.09', date: '02.07.2026',
+    changes: [
+      'Избранное в пикере «Вид работ» и «С применением»: звёздочка у каждого пункта, избранные закреплены вверху',
+    ]
+  },
+  {
+    version: 'v3.08', date: '02.07.2026',
+    changes: [
+      'Добавлено поле «С применением» рядом с «Вид работ» — данные из столбца T листа организации',
+      'Пикер «Из списка» теперь переключается между вкладками «Вид работ» и «С применением»',
+    ]
+  },
+  {
+    version: 'v3.07', date: '02.07.2026',
+    changes: [
+      'Панель «Рассмотреть заявки» для администратора: просмотр, редактирование и одобрение заявок на регистрацию',
+      'Выпадающий список организаций в форме регистрации и в панели администратора',
+      'Кнопка «Тестовый аккаунт» в форме входа',
+    ]
+  },
+  {
+    version: 'v3.06', date: '01.07.2026',
+    changes: [
+      'Исправлен пикер «Вид работ»: чекбоксы теперь работают, счётчик обновляется, виды разделяются запятой',
+    ]
+  },
+  {
+    version: 'v3.05', date: '01.07.2026',
+    changes: [
+      'Уведомление об одобрении показывает имя вместо фамилии',
+      'Данные организации обновляются автоматически при каждой загрузке страницы',
+    ]
+  },
+  {
+    version: 'v3.04', date: '01.07.2026',
+    changes: [
+      'Проверка занятости логина и дублей заявок перед регистрацией',
+    ]
+  },
+  {
+    version: 'v3.03', date: '01.07.2026',
+    changes: [
+      'Исправлена регистрация: форма больше не показывает ошибку когда заявка успешно отправлена',
+    ]
+  },
+  {
+    version: 'v3.02', date: '01.07.2026',
+    changes: [
+      'Пикер «Вид работ» переработан: мультиселект с чекбоксами, разграничение пунктов, кнопки «Применить» и «Сбросить»',
+    ]
+  },
+  {
+    version: 'v3.01', date: '01.07.2026',
+    changes: [
+      'После регистрации пользователь сразу отображается в шапке со статусом «На рассмотрении»',
+      'Доступ к базе открывается автоматически после одобрения заявки администратором',
+    ]
+  },
+  {
+    version: 'v3.00', date: '01.07.2026',
+    changes: [
+      'Кнопка «Из списка» для выдавшего наряд перенесена в поле Должность — выровнена по высоте с инпутом',
+    ]
+  },
+  {
+    version: 'v2.99', date: '01.07.2026',
+    changes: [
+      'Кнопка «Из списка» для выдающего наряд перенесена в крайнее правое положение строки',
+    ]
+  },
+  {
+    version: 'v2.98', date: '01.07.2026',
+    changes: [
+      'ФИО и Должность лица, выдавшего наряд, снова в одну строку — кнопка «Из списка» у правого края ФИО',
+    ]
+  },
+  {
+    version: 'v2.97', date: '01.07.2026',
+    changes: [
+      'Поля «ФИО» и «Должность» лица, выдавшего наряд, теперь на всю ширину — кнопка «Из списка» у правого края',
+    ]
+  },
+  {
+    version: 'v2.96', date: '01.07.2026',
+    changes: [
+      'Кнопка выбора лица, выдавшего наряд, переоформлена в стиле остальных кнопок',
+    ]
+  },
+  {
+    version: 'v2.95', date: '01.07.2026',
+    changes: [
+      'Добавлен пикер «Из списка» для поля «Вид работ» — данные берутся из столбца S листа организации',
+    ]
+  },
+  {
+    version: 'v2.94', date: '01.07.2026',
+    changes: [
+      'Исправлен пикер помещений — этажи и помещения теперь отображаются корректно',
+    ]
+  },
+  {
+    version: 'v2.93', date: '01.07.2026',
+    changes: [
+      'Упрощён парсинг таблиц организаций — одна строка заголовков вместо многострочной шапки',
+    ]
+  },
+  {
+    version: 'v2.92', date: '01.07.2026',
+    changes: [
+      'Исправлен пикер помещений — теперь всегда берёт актуальные данные, не зависает на пустом состоянии',
+    ]
+  },
+  {
+    version: 'v2.91', date: '01.07.2026',
+    changes: [
+      'Список помещений теперь берётся только из листа организации, фоллбэк на удалённый лист «Место и работа» убран',
+    ]
+  },
+  {
+    version: 'v2.90', date: '01.07.2026',
+    changes: [
+      'Автопоиск строки заголовков работает и для листа «Без регистрации» — многострочная шапка не ломает парсинг',
+    ]
+  },
+  {
+    version: 'v2.89', date: '01.07.2026',
+    changes: [
+      'Исправлено чтение заголовков таблицы — строка с названиями колонок теперь ищется автоматически, многострочная шапка не ломает парсинг',
+    ]
+  },
+  {
+    version: 'v2.88', date: '01.07.2026',
+    changes: [
+      'Список помещений и вид работ теперь берётся из колонок основного листа организации (Здание / Отметка / Помещение / Вид работ)',
+    ]
+  },
+  {
+    version: 'v2.87', date: '01.07.2026',
+    changes: [
+      'Удалена схема площадки Курской АЭС-2 (кнопка, модальное окно, стили и JS)',
+    ]
+  },
+  {
+    version: 'v2.86', date: '30.06.2026',
+    changes: [
+      'Исправлена опечатка «освящение» → «освещение» в шаблоне фактора освещения',
+      'Форма регистрации теперь корректно показывает ошибку при сбое отправки',
+      'Исправлен расчёт даты окончания наряда — больше не зависит от часового пояса',
+      'Данные формы сохраняются при закрытии вкладки браузера',
+    ]
+  },
+  {
+    version: 'v2.85', date: '30.06.2026',
+    changes: [
+      'Баннер «Нравится сайт?» появляется после скачивания и пропадает только при перезагрузке страницы',
+    ]
+  },
+  {
+    version: 'v2.84', date: '30.06.2026',
+    changes: [
+      'База сотрудников и помещений обновляется при каждом F5 и после скачивания любого документа',
+    ]
+  },
+  {
+    version: 'v2.83', date: '30.06.2026',
+    changes: [
+      'Пикер помещений: в поле «Место выполнения работ» отметка теперь пишется перед помещениями, каждая отметка — с новой строки',
+    ]
+  },
+  {
+    version: 'v2.82', date: '30.06.2026',
+    changes: [
+      'База сотрудников и список помещений кешируются на время сессии — при F5 не перезагружаются из сети',
+    ]
+  },
+  {
+    version: 'v2.81', date: '30.06.2026',
+    changes: [
+      'В огневом наряде: подпись в блоке «УТВЕРЖДАЮ» оформлена строчкой слева от должности и ФИО',
+      'Дата в таблице исполнителей огневого наряда в формате дд.мм.гггг',
+    ]
+  },
+  {
+    version: 'v2.80', date: '30.06.2026',
+    changes: [
+      'В огневом наряде: в блоке «УТВЕРЖДАЮ» добавлены должность и фамилия с инициалами выдающего наряд',
+      'В таблице состава исполнителей огневого наряда автоматически проставляется дата выдачи',
+    ]
+  },
+  {
+    version: 'v2.79', date: '30.06.2026',
+    changes: [
+      'После скачивания документа появляется подсказка «Нравится сайт? Расскажи коллегам!», исчезающая при редактировании бланка',
+      'Журнал обновлений теперь показывает не более 15 последних версий',
+    ]
+  },
+  {
+    version: 'v2.78', date: '30.06.2026',
+    changes: [
+      'В п. 3 документа неизменяемые факторы теперь идут перед изменяемыми (из чекбоксов)',
+    ]
+  },
+  {
+    version: 'v2.77', date: '30.06.2026',
+    changes: [
+      'Кнопка ▾ у поля «Лицо, выдавшее наряд» теперь открывает окно входа для неавторизованных',
+      'Если база сотрудников не загружена — кнопки «Выдающий наряд» и «Из базы» показывают окно с контактом разработчика',
+    ]
+  },
+  {
+    version: 'v2.76', date: '30.06.2026',
+    changes: [
+      'Список помещений в пикере загружается из основной таблицы Google Sheets (лист «Место и работа»)',
+    ]
+  },
+  {
+    version: 'v2.75', date: '30.06.2026',
+    changes: [
+      'Пикер помещений переработан: вместо плана здания — всплывающий список с фильтрами по зданию и отметке и поиском',
+      'План здания временно скрыт (правовой статус публикации уточняется)',
+    ]
+  },
+  {
+    version: 'v2.74', date: '30.06.2026',
+    changes: [
+      'Кнопки «Отменить» и «Вернуть» в шапке (Ctrl+Z / Ctrl+Y)',
+    ]
+  },
+  {
+    version: 'v2.73', date: '30.06.2026',
+    changes: [
+      'В пикере помещений схему можно перетаскивать мышью (зажать и двигать по пустому месту)',
+      'Схема не уходит за левый край экрана',
+    ]
+  },
+  {
+    version: 'v2.72', date: '30.06.2026',
+    changes: [
+      'В наряде-допуске каждая отметка помещений выводится с новой строки (как в предварительном просмотре)',
+    ]
+  },
+  {
+    version: 'v2.71', date: '30.06.2026',
+    changes: [
+      'В ППРв под строками выдающего наряд, руководителя и исполнителя добавлена строка для подписи (Должность / ФИО / Подпись)',
+      'Для исполнителя работ в ППРв автоматически подставляется его должность',
+    ]
+  },
+  {
+    version: 'v2.70', date: '30.06.2026',
+    changes: [
+      'Для пользователей без регистрации факторы опасностей и мероприятия п.3/4/5 загружаются из листа «Без регистрации» Google Sheets',
+    ]
+  },
+  {
+    version: 'v2.69', date: '30.06.2026',
+    changes: [
+      'Счётчик нарядов для анонимных пользователей (Без регистрации) теперь работает',
+    ]
+  },
+  {
+    version: 'v2.68', date: '29.06.2026',
+    changes: [
+      'Выбор помещений доступен только авторизованным пользователям',
+    ]
+  },
+  {
+    version: 'v2.67', date: '29.06.2026',
+    changes: [
+      'Планы автоматически обрезаются по границам помещений — лишнее поле убрано',
+      'Левый список помещений стал компактнее',
+    ]
+  },
+  {
+    version: 'v2.66', date: '29.06.2026',
+    changes: [
+      'Левый список помещений по алфавиту с поиском — клик выбирает и прокручивает план',
+      'Исправлено наложение меток близко расположенных помещений на плане',
+    ]
+  },
+  {
+    version: 'v2.65', date: '29.06.2026',
+    changes: [
+      'Метки помещений на плане теперь непрозрачные — текст больше не наслаивается',
+      'Масштабирование плана: Ctrl+колесо мыши или кнопки +/− в шапке пикера',
+    ]
+  },
   {
     version: 'v2.64', date: '29.06.2026',
     changes: [
@@ -4793,7 +6195,7 @@ function toggleChangelog() {
 
 function renderChangelog() {
   const list = document.getElementById('changelogList');
-  list.innerHTML = CHANGELOG.map(entry => `
+  list.innerHTML = CHANGELOG.slice(0, 15).map(entry => `
     <div class="cl-entry">
       <div class="cl-ver-row">
         <span class="cl-ver">${entry.version}</span>
@@ -4964,60 +6366,74 @@ const GUIDE_SLIDES = [
   {
     icon: '📋',
     title: 'Блок 1 — Реквизиты',
-    text: `<p>Заполните основные сведения о наряде. Поля со <strong style="color:#e53e3e">звёздочкой *</strong> — обязательные.</p>
-<p>Для появления кнопок скачивания нужны все шесть:<br>
-<strong>Дата выдачи *</strong><br>
-<strong>Вид работ *</strong><br>
-<strong>Место производства работ *</strong><br>
-<strong>ФИО руководителя работ *</strong><br>
-<strong>Должность руководителя *</strong><br>
-<strong>ФИО лица, выдавшего наряд *</strong></p>
-<p><strong>Руководитель</strong> — тот, кто непосредственно ведёт бригаду на объекте.<br>
-<strong>Лицо, выдавшее наряд</strong> — инженер или специалист ОТ, кто оформляет документ.</p>
+    text: `<p>Заполните основные сведения о наряде. Поля со <strong style="color:#e53e3e">звёздочкой *</strong> — обязательные для появления Блока 4.</p>
+<p><strong>Дата выдачи *</strong> · <strong>ФИО руководителя работ *</strong> · <strong>Должность руководителя *</strong><br>
+<strong>ФИО лица, выдавшего наряд *</strong> · <strong>Вид работ *</strong> · <strong>Место выполнения работ *</strong></p>
+<p><strong>ФИО лица, выдавшего наряд</strong> — начните вводить фамилию, появится список сотрудников (автодополнение).<br>
+<strong>Должность лица, выдавшего наряд</strong> — кнопка <strong>«Из списка»</strong> открывает пикер с выбором.<br>
+<strong>Вид работ</strong> — кнопка <strong>«Из списка»</strong> открывает пикер с двумя вкладками: «Вид работ» и «С применением». Отмечайте ★ — закрепятся вверху.<br>
+<strong>Место выполнения работ</strong> — кнопка <strong>«Выбрать помещения»</strong> открывает интерактивный план.</p>
 <div class="guide-tip">Пока не заполнены все шесть полей — кнопки скачивания в Блоке 4 не появятся.</div>`,
     visual: `<svg viewBox="0 0 520 330" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI,system-ui,sans-serif">
   <rect width="520" height="330" fill="#e4eaf3" rx="8"/>
-  <rect x="20" y="14" width="480" height="300" rx="10" fill="white" filter="url(#sh)"/>
-  <defs><filter id="sh"><feDropShadow dx="0" dy="2" stdDeviation="6" flood-color="rgba(26,58,92,.12)"/></filter></defs>
-  <rect x="20" y="14" width="480" height="28" rx="10" fill="#1a3a5c"/>
-  <rect x="20" y="32" width="480" height="10" fill="#1a3a5c"/>
-  <rect x="30" y="19" width="28" height="14" rx="7" fill="rgba(255,255,255,.18)"/>
-  <text x="44" y="29" fill="white" font-size="6" text-anchor="middle" font-weight="700">БЛОК 1</text>
-  <text x="70" y="29" fill="white" font-size="9" font-weight="600">Реквизиты и общие сведения</text>
-  <text x="30" y="64" fill="#8fa6be" font-size="8">Организация</text>
-  <rect x="30" y="68" width="460" height="22" rx="5" fill="#eef2f7"/>
-  <text x="42" y="83" fill="#1e2d3d" font-size="9">ООО «ЮЭМ»</text>
-  <text x="30" y="108" fill="#8fa6be" font-size="8">Номер наряда</text>
-  <rect x="30" y="112" width="140" height="22" rx="5" fill="#eef2f7"/>
-  <text x="42" y="127" fill="#1e2d3d" font-size="9">НД-124</text>
-  <text x="198" y="108" fill="#8fa6be" font-size="8">Дата выдачи <tspan fill="#e53e3e" font-weight="700">*</tspan></text>
-  <rect x="198" y="112" width="140" height="22" rx="5" fill="#eef2f7" stroke="#2e7abf" stroke-width="1.5"/>
-  <text x="210" y="127" fill="#1e2d3d" font-size="9">29.06.2026</text>
-  <text x="362" y="108" fill="#8fa6be" font-size="8">Вид работ <tspan fill="#e53e3e" font-weight="700">*</tspan></text>
-  <rect x="362" y="112" width="128" height="22" rx="5" fill="#fff3cd" stroke="#f6ad55" stroke-width="1.5"/>
-  <text x="374" y="127" fill="#8fa6be" font-size="8">не заполнено</text>
-  <circle cx="489" cy="108" r="5" fill="#f6ad55"/>
-  <text x="489" y="112" fill="white" font-size="7" text-anchor="middle" font-weight="700">!</text>
-  <text x="30" y="154" fill="#8fa6be" font-size="8">Место производства работ <tspan fill="#e53e3e" font-weight="700">*</tspan></text>
-  <rect x="30" y="158" width="460" height="22" rx="5" fill="#eef2f7"/>
-  <text x="42" y="173" fill="#1e2d3d" font-size="9">Кровля корпуса №3, ул. Ленина д. 12</text>
-  <text x="30" y="202" fill="#8fa6be" font-size="8">Руководитель работ (ФИО) <tspan fill="#e53e3e" font-weight="700">*</tspan></text>
-  <rect x="30" y="206" width="222" height="22" rx="5" fill="#eef2f7"/>
-  <text x="42" y="221" fill="#1e2d3d" font-size="9">Петров Пётр Петрович</text>
-  <text x="268" y="202" fill="#8fa6be" font-size="8">Должность руководителя <tspan fill="#e53e3e" font-weight="700">*</tspan></text>
-  <rect x="268" y="206" width="222" height="22" rx="5" fill="#eef2f7"/>
-  <text x="280" y="221" fill="#1e2d3d" font-size="9">Мастер строительных работ</text>
-  <text x="30" y="250" fill="#8fa6be" font-size="8">Лицо, выдавшее наряд (ФИО) <tspan fill="#e53e3e" font-weight="700">*</tspan></text>
-  <rect x="30" y="254" width="296" height="22" rx="5" fill="#fff3cd" stroke="#f6ad55" stroke-width="1.5"/>
-  <text x="42" y="269" fill="#8fa6be" font-size="8">не заполнено</text>
-  <circle cx="326" cy="254" r="5" fill="#f6ad55"/>
-  <text x="326" y="258" fill="white" font-size="7" text-anchor="middle" font-weight="700">!</text>
-  <text x="342" y="250" fill="#8fa6be" font-size="8">Должность</text>
-  <rect x="342" y="254" width="148" height="22" rx="5" fill="#eef2f7"/>
-  <text x="354" y="269" fill="#1e2d3d" font-size="8">Инженер по ОТ</text>
-  <rect x="30" y="285" width="460" height="22" rx="6" fill="#f0fdf4" stroke="#22c55e" stroke-width="1"/>
-  <text x="260" y="295" fill="#166534" font-size="6.5" text-anchor="middle" font-weight="600">После авторизации: Организация, ФИО и Должность руководителя заполнятся и заблокируются автоматически</text>
-  <text x="260" y="304" fill="#166534" font-size="6.5" text-anchor="middle">Поле «Лицо, выдавшее наряд» получит список выбора из базы сотрудников</text>
+  <rect x="10" y="8" width="500" height="316" rx="10" fill="white"/>
+  <defs><filter id="sh1"><feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="rgba(26,58,92,.10)"/></filter></defs>
+  <rect x="10" y="8" width="500" height="26" rx="10" fill="#1a3a5c"/>
+  <rect x="10" y="24" width="500" height="10" fill="#1a3a5c"/>
+  <rect x="18" y="12" width="26" height="14" rx="7" fill="rgba(255,255,255,.18)"/>
+  <text x="31" y="22" fill="white" font-size="5.5" text-anchor="middle" font-weight="700">БЛОК 1</text>
+  <text x="54" y="22" fill="white" font-size="8.5" font-weight="600">Реквизиты и общие сведения</text>
+  <!-- Организация -->
+  <text x="20" y="48" fill="#8fa6be" font-size="7">ОРГАНИЗАЦИЯ</text>
+  <rect x="20" y="52" width="480" height="18" rx="4" fill="#eef2f7"/>
+  <text x="30" y="65" fill="#1e2d3d" font-size="8.5">ООО «ЮЭМ»</text>
+  <!-- Номер + Дата -->
+  <text x="20" y="82" fill="#8fa6be" font-size="7">НОМЕР НАРЯДА</text>
+  <rect x="20" y="86" width="228" height="18" rx="4" fill="#eef2f7"/>
+  <text x="30" y="99" fill="#1e2d3d" font-size="8.5">НД-124</text>
+  <text x="256" y="82" fill="#8fa6be" font-size="7">ДАТА ВЫДАЧИ <tspan fill="#e53e3e" font-weight="700">*</tspan></text>
+  <rect x="256" y="86" width="244" height="18" rx="4" fill="#eef2f7" stroke="#2e7abf" stroke-width="1.5"/>
+  <text x="266" y="99" fill="#1e2d3d" font-size="8.5">02.07.2026</text>
+  <!-- Огневой наряд - серый -->
+  <text x="20" y="116" fill="#b0bec5" font-size="7">НОМЕР ОГНЕВОГО НАРЯДА <tspan font-style="italic">(только для огневых работ)</tspan></text>
+  <rect x="20" y="120" width="480" height="14" rx="4" fill="#f7f9fc" stroke="#e8ecf0" stroke-width="1"/>
+  <!-- ФИО рук + Должность рук -->
+  <text x="20" y="146" fill="#8fa6be" font-size="7">ФИО РУКОВОДИТЕЛЯ РАБОТ <tspan fill="#e53e3e" font-weight="700">*</tspan></text>
+  <rect x="20" y="150" width="228" height="18" rx="4" fill="#eef2f7" stroke="#2e7abf" stroke-width="1.5"/>
+  <text x="30" y="163" fill="#1e2d3d" font-size="8">Петров Пётр Петрович</text>
+  <text x="256" y="146" fill="#8fa6be" font-size="7">ДОЛЖНОСТЬ РУКОВОДИТЕЛЯ <tspan fill="#e53e3e" font-weight="700">*</tspan></text>
+  <rect x="256" y="150" width="244" height="18" rx="4" fill="#eef2f7" stroke="#2e7abf" stroke-width="1.5"/>
+  <text x="266" y="163" fill="#1e2d3d" font-size="8">Мастер строительных работ</text>
+  <!-- ФИО лица + autocomplete + Должность + кнопка -->
+  <text x="20" y="180" fill="#8fa6be" font-size="7">ФИО ЛИЦА, ВЫДАВШЕГО НАРЯД <tspan fill="#e53e3e" font-weight="700">*</tspan></text>
+  <rect x="20" y="184" width="228" height="18" rx="4" fill="#fff3cd" stroke="#f6ad55" stroke-width="1.5"/>
+  <text x="30" y="197" fill="#8fa6be" font-size="7.5">Иванов…</text>
+  <!-- autocomplete dropdown hint -->
+  <rect x="20" y="202" width="228" height="14" rx="3" fill="white" stroke="#d8e2ee" stroke-width="1"/>
+  <text x="28" y="212" fill="#2e7abf" font-size="6.5">↩ Иванов Иван Иванович</text>
+  <text x="20" y="176" fill="#2e7abf" font-size="6" font-style="italic">автодополнение при вводе</text>
+  <text x="256" y="180" fill="#8fa6be" font-size="7">ДОЛЖНОСТЬ ЛИЦА, ВЫДАВШЕГО НАРЯД <tspan fill="#e53e3e" font-weight="700">*</tspan></text>
+  <rect x="256" y="184" width="172" height="18" rx="4" fill="#eef2f7"/>
+  <text x="266" y="197" fill="#1e2d3d" font-size="8">Инженер по ОТ</text>
+  <rect x="432" y="184" width="68" height="18" rx="4" fill="#2e7abf"/>
+  <text x="466" y="197" fill="white" font-size="7" text-anchor="middle" font-weight="600">≡ Из списка</text>
+  <!-- Вид работ + кнопка -->
+  <text x="20" y="228" fill="#8fa6be" font-size="7">ВИД РАБОТ <tspan fill="#e53e3e" font-weight="700">*</tspan></text>
+  <rect x="20" y="232" width="408" height="18" rx="4" fill="#fff3cd" stroke="#f6ad55" stroke-width="1.5"/>
+  <circle cx="428" cy="237" r="5" fill="#f6ad55"/>
+  <text x="428" y="241" fill="white" font-size="7" text-anchor="middle" font-weight="700">!</text>
+  <rect x="436" y="232" width="64" height="18" rx="4" fill="#2e7abf"/>
+  <text x="468" y="245" fill="white" font-size="7" text-anchor="middle" font-weight="600">≡ Из списка</text>
+  <!-- Место выполнения работ -->
+  <text x="20" y="262" fill="#8fa6be" font-size="7">МЕСТО ВЫПОЛНЕНИЯ РАБОТ <tspan fill="#e53e3e" font-weight="700">*</tspan></text>
+  <rect x="20" y="266" width="386" height="30" rx="4" fill="#eef2f7" stroke="#2e7abf" stroke-width="1.5"/>
+  <text x="30" y="281" fill="#1e2d3d" font-size="8">Кровля корпуса №3, ось А-Д/1-4</text>
+  <rect x="410" y="266" width="90" height="30" rx="4" fill="#2e7abf"/>
+  <text x="455" y="278" fill="white" font-size="6.5" text-anchor="middle" font-weight="600">⊞ Выбрать</text>
+  <text x="455" y="290" fill="white" font-size="6.5" text-anchor="middle" font-weight="600">помещения</text>
+  <!-- Footer -->
+  <rect x="10" y="302" width="500" height="20" rx="5" fill="#f0fdf4" stroke="#22c55e" stroke-width="1"/>
+  <text x="260" y="315" fill="#166534" font-size="6.5" text-anchor="middle">После входа: Организация, ФИО и Должность руководителя заполнятся автоматически</text>
 </svg>`
   },
   {
@@ -5081,6 +6497,7 @@ const GUIDE_SLIDES = [
 • <strong>«🔄 Синхронизация»</strong> — кнопка до входа, открывает форму авторизации<br>
 • <strong>«👥 Из базы»</strong> — выбор из базы сотрудников (только после входа)</p>
 <p>После выбора «Из базы» ФИО, должность, разряд, группа ЭБ и группа высотных работ <strong>заполняются автоматически</strong>.</p>
+<p>В пикере «Из базы» есть <strong>поиск</strong> и <strong>избранное</strong>: нажмите звёздочку ★ рядом с сотрудником — он закрепится вверху списка. Удобно для постоянного состава бригады.</p>
 <p>Кнопка <strong>«А→Я»</strong> сортирует бригаду по алфавиту. Строка 1 — бригадир, она не сортируется.</p>
 <div class="guide-tip">«Синхронизация» и «Из базы» — это одна логика: первая зовёт войти, вторая работает после входа.</div>`,
     visual: `<svg viewBox="0 0 520 330" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI,system-ui,sans-serif">
@@ -5199,7 +6616,7 @@ const GUIDE_SLIDES = [
 <p>Проверьте каждое:<br>
 ✓ Дата выдачи<br>
 ✓ Вид работ<br>
-✓ Место производства работ<br>
+✓ Место выполнения работ<br>
 ✓ ФИО руководителя работ<br>
 ✓ Должность руководителя<br>
 ✓ ФИО лица, выдавшего наряд</p>
@@ -5220,7 +6637,7 @@ const GUIDE_SLIDES = [
   <rect x="20" y="118" width="234" height="36" rx="8" fill="white" stroke="#22c55e" stroke-width="1.5"/>
   <circle cx="42" cy="136" r="10" fill="#22c55e"/>
   <text x="42" y="140" fill="white" font-size="9" text-anchor="middle" font-weight="700">✓</text>
-  <text x="58" y="132" fill="#166534" font-size="9" font-weight="600">Место производства работ *</text>
+  <text x="58" y="132" fill="#166534" font-size="9" font-weight="600">Место выполнения работ *</text>
   <text x="58" y="145" fill="#22c55e" font-size="7.5">Кровля корпуса №3 — заполнено</text>
   <rect x="262" y="34" width="238" height="36" rx="8" fill="white" stroke="#22c55e" stroke-width="1.5"/>
   <circle cx="284" cy="52" r="10" fill="#22c55e"/>
@@ -5251,14 +6668,14 @@ const GUIDE_SLIDES = [
   {
     icon: '🔐',
     title: 'Авторизация',
-    text: `<p>Нажмите кнопку <strong>«👤 Войти»</strong> в правой панели, введите логин и пароль.</p>
+    text: `<p>Нажмите кнопку <strong>«👤 Войти»</strong> в правой панели. В окне две вкладки: <strong>«Войти»</strong> и <strong>«Регистрация»</strong>.</p>
+<p><strong>Уже есть аккаунт</strong> — введите логин и пароль. Или нажмите кнопку <strong>«Тестовый аккаунт»</strong> внизу формы — войдёт само, без ввода.</p>
+<p><strong>Нет аккаунта</strong> — перейдите на вкладку <strong>«Регистрация»</strong>, заполните ФИО, должность, организацию, придумайте логин и пароль, нажмите «Отправить заявку». После одобрения администратором аккаунт активируется автоматически — просто войдите с теми же данными.</p>
 <p><strong>Что происходит после входа:</strong><br>
-✓ Поля <em>Организация, ФИО руководителя, Должность</em> — заполняются и <strong>блокируются</strong> (данные из вашего профиля)<br>
-✓ Поле <em>«Лицо, выдавшее наряд»</em> — получает выпадающий список сотрудников, у которых есть право выдавать наряды<br>
-✓ В Блоке 3 появляется кнопка <strong>«👥 Из базы»</strong> — вся бригада с должностями и группами ЭБ добавляется за несколько кликов<br>
+✓ Организация, ФИО и должность руководителя — заполняются и <strong>блокируются</strong><br>
+✓ «Лицо, выдавшее наряд» — получает список сотрудников с правом выдачи нарядов<br>
+✓ В Блоке 3 появляется кнопка <strong>«👥 Из базы»</strong> — бригада добавляется за несколько кликов<br>
 ✓ Кнопка «Войти» меняется на ваши инициалы</p>
-<p>Для получения личного аккаунта: <strong>lingidanm@gmail.com</strong></p>
-<div class="guide-tip">Все данные обрабатываются только в вашем браузере — на сервер ничего не отправляется.</div>
 <div class="guide-creds">
   <div class="cred-label">Тестовый доступ — попробуй прямо сейчас</div>
   <div class="cred-row"><span class="cred-key">Логин:</span><span class="cred-val">тест</span></div>
@@ -5266,31 +6683,107 @@ const GUIDE_SLIDES = [
 </div>`,
     visual: `<svg viewBox="0 0 520 330" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI,system-ui,sans-serif">
   <rect width="520" height="330" fill="#e4eaf3" rx="8"/>
-  <rect x="14" y="14" width="200" height="80" rx="8" fill="#1a3a5c" opacity=".25"/>
-  <text x="24" y="34" fill="#3d5168" font-size="7.5" font-weight="600">Правая панель (всегда видна)</text>
-  <rect x="24" y="40" width="180" height="20" rx="10" fill="#1a3a5c"/>
-  <text x="114" y="54" fill="white" font-size="8" text-anchor="middle" font-weight="700">👤 Войти</text>
-  <rect x="24" y="64" width="180" height="20" rx="10" fill="#1a3a5c" opacity=".5"/>
-  <text x="114" y="77" fill="rgba(255,255,255,.6)" font-size="7.5" text-anchor="middle">ℹ Инструкция</text>
-  <line x1="114" y1="96" x2="114" y2="116" stroke="#2e7abf" stroke-width="2" stroke-dasharray="4,3"/>
-  <polygon points="108,116 114,124 120,116" fill="#2e7abf"/>
-  <rect x="30" y="128" width="480" height="168" rx="10" fill="white" stroke="#2e7abf" stroke-width="2"/>
-  <rect x="30" y="128" width="480" height="26" rx="10" fill="#1a3a5c"/>
-  <rect x="30" y="142" width="480" height="12" fill="#1a3a5c"/>
-  <text x="270" y="145" fill="white" font-size="10" text-anchor="middle" font-weight="700">Авторизация</text>
-  <text x="60" y="178" fill="#8fa6be" font-size="8">Логин</text>
-  <rect x="60" y="182" width="420" height="26" rx="6" fill="#eef2f7"/>
-  <text x="74" y="200" fill="#1e2d3d" font-size="10">тест</text>
-  <text x="60" y="222" fill="#8fa6be" font-size="8">Пароль</text>
-  <rect x="60" y="226" width="420" height="26" rx="6" fill="#eef2f7"/>
-  <text x="74" y="244" fill="#1e2d3d" font-size="10">••••</text>
-  <rect x="60" y="264" width="420" height="26" rx="13" fill="#2e7abf"/>
-  <text x="270" y="281" fill="white" font-size="10" text-anchor="middle" font-weight="700">Войти</text>
-  <rect x="14" y="110" width="20" height="20" rx="10" fill="#22c55e"/>
-  <text x="24" y="124" fill="white" font-size="10" text-anchor="middle" font-weight="700">1</text>
-  <rect x="20" y="296" width="480" height="26" rx="8" fill="#f0fdf4" stroke="#22c55e" stroke-width="1.5"/>
-  <text x="260" y="307" fill="#166534" font-size="7.5" text-anchor="middle" font-weight="700">✓ После входа:</text>
-  <text x="260" y="317" fill="#166534" font-size="7" text-anchor="middle">Ваши данные подставятся в бланк автоматически • В Блоке 3 появится кнопка «Из базы»</text>
+  <!-- Заголовок модала -->
+  <rect x="20" y="10" width="480" height="310" rx="12" fill="white" stroke="#2e7abf" stroke-width="1.5"/>
+  <rect x="20" y="10" width="480" height="30" rx="12" fill="#1a3a5c"/>
+  <rect x="20" y="28" width="480" height="12" fill="#1a3a5c"/>
+  <text x="260" y="30" fill="white" font-size="10" text-anchor="middle" font-weight="700">Авторизация</text>
+  <!-- Вкладки -->
+  <rect x="30" y="46" width="222" height="22" rx="11" fill="#2e7abf"/>
+  <text x="141" y="61" fill="white" font-size="9" text-anchor="middle" font-weight="700">Войти</text>
+  <rect x="258" y="46" width="232" height="22" rx="11" fill="#eef2f7"/>
+  <text x="374" y="61" fill="#8fa6be" font-size="9" text-anchor="middle" font-weight="600">Регистрация</text>
+  <!-- Форма входа -->
+  <text x="40" y="88" fill="#8fa6be" font-size="8">Логин</text>
+  <rect x="40" y="92" width="440" height="24" rx="5" fill="#eef2f7"/>
+  <text x="54" y="108" fill="#1e2d3d" font-size="9">мой_логин</text>
+  <text x="40" y="128" fill="#8fa6be" font-size="8">Пароль</text>
+  <rect x="40" y="132" width="440" height="24" rx="5" fill="#eef2f7"/>
+  <text x="54" y="148" fill="#1e2d3d" font-size="9">••••••</text>
+  <rect x="40" y="164" width="440" height="24" rx="12" fill="#2e7abf"/>
+  <text x="260" y="180" fill="white" font-size="9" text-anchor="middle" font-weight="700">Войти</text>
+  <!-- Кнопка тестового аккаунта -->
+  <rect x="40" y="194" width="440" height="24" rx="12" fill="none" stroke="#d8e2ee" stroke-width="1.5" stroke-dasharray="5,3"/>
+  <text x="260" y="210" fill="#8fa6be" font-size="8.5" text-anchor="middle">Тестовый аккаунт</text>
+  <line x1="330" y1="222" x2="390" y2="222" stroke="#f6ad55" stroke-width="1.5"/>
+  <polygon points="386,218 394,222 386,226" fill="#f6ad55"/>
+  <text x="406" y="218" fill="#c07800" font-size="7" font-weight="600">нажмите —</text>
+  <text x="406" y="228" fill="#c07800" font-size="7">войдёт само</text>
+  <!-- Разделитель -->
+  <line x1="40" y1="240" x2="220" y2="240" stroke="#eef2f7" stroke-width="1"/>
+  <text x="260" y="244" fill="#8fa6be" font-size="7.5" text-anchor="middle">нет аккаунта?</text>
+  <line x1="300" y1="240" x2="480" y2="240" stroke="#eef2f7" stroke-width="1"/>
+  <!-- Регистрация -->
+  <rect x="40" y="252" width="440" height="22" rx="11" fill="#eef2f7" stroke="#d8e2ee" stroke-width="1"/>
+  <text x="260" y="267" fill="#3d5168" font-size="8.5" text-anchor="middle" font-weight="600">Перейти на вкладку «Регистрация»</text>
+  <!-- Подсказка регистрации -->
+  <rect x="20" y="282" width="480" height="32" rx="8" fill="#fff8e6" stroke="#f6ad55" stroke-width="1"/>
+  <text x="260" y="295" fill="#8a4f00" font-size="7.5" text-anchor="middle" font-weight="600">Регистрация: заполните ФИО, должность, организацию, логин и пароль</text>
+  <text x="260" y="308" fill="#8a4f00" font-size="7" text-anchor="middle">После одобрения администратором — войдите с теми же данными ✓</text>
+</svg>`
+  },
+  {
+    icon: '🏢',
+    title: 'Пикер помещений',
+    text: `<p>Поле <strong>«Место выполнения работ»</strong> можно заполнить вручную, а можно нажать кнопку <strong>«Выбрать помещения»</strong> справа от поля.</p>
+<p>Откроется окно с <strong>поиском и списком помещений</strong> — каждое с чекбоксом. Найдите нужные через поиск, отметьте галочками, нажмите <strong>«Применить»</strong> — они вставятся в поле автоматически.</p>
+<p>Список помещений берётся из данных вашей организации. Если кнопка недоступна — заполните поле вручную.</p>
+<div class="guide-tip">Кнопка «Выбрать помещения» доступна только после авторизации — список привязан к вашей организации.</div>`,
+    visual: `<svg viewBox="0 0 520 330" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI,system-ui,sans-serif">
+  <rect width="520" height="330" fill="#e4eaf3" rx="8"/>
+  <!-- Поле "Место выполнения работ" -->
+  <rect x="20" y="10" width="480" height="44" rx="8" fill="white"/>
+  <text x="30" y="26" fill="#8fa6be" font-size="7.5">МЕСТО ВЫПОЛНЕНИЯ РАБОТ <tspan fill="#e53e3e">*</tspan></text>
+  <rect x="30" y="30" width="374" height="18" rx="4" fill="#eef2f7"/>
+  <text x="40" y="43" fill="#8fa6be" font-size="8">не заполнено</text>
+  <rect x="410" y="30" width="82" height="18" rx="4" fill="#2e7abf"/>
+  <text x="451" y="43" fill="white" font-size="7.5" text-anchor="middle" font-weight="600">⊞ Выбрать помещения</text>
+  <!-- Стрелка -->
+  <line x1="260" y1="57" x2="260" y2="67" stroke="#2e7abf" stroke-width="2"/>
+  <polygon points="255,67 260,74 265,67" fill="#2e7abf"/>
+  <!-- Модал пикера -->
+  <rect x="10" y="76" width="500" height="244" rx="10" fill="white" stroke="#d0d9e4" stroke-width="1"/>
+  <!-- Шапка -->
+  <rect x="10" y="76" width="500" height="28" rx="10" fill="#1a3a5c"/>
+  <rect x="10" y="92" width="500" height="12" fill="#1a3a5c"/>
+  <text x="260" y="94" fill="white" font-size="10" text-anchor="middle" font-weight="700">Выбор помещений</text>
+  <text x="490" y="94" fill="white" font-size="11" text-anchor="middle">✕</text>
+  <!-- Строка фильтров -->
+  <rect x="18" y="108" width="100" height="18" rx="4" fill="#eef2f7" stroke="#d0d9e4" stroke-width="1"/>
+  <text x="68" y="121" fill="#1e2d3d" font-size="8" text-anchor="middle">20UKC</text>
+  <rect x="124" y="108" width="80" height="18" rx="4" fill="#eef2f7" stroke="#d0d9e4" stroke-width="1"/>
+  <text x="164" y="121" fill="#8fa6be" font-size="8" text-anchor="middle">0.000</text>
+  <rect x="210" y="108" width="298" height="18" rx="4" fill="#eef2f7" stroke="#d0d9e4" stroke-width="1"/>
+  <text x="222" y="121" fill="#8fa6be" font-size="8">Поиск...</text>
+  <!-- Список чекбоксов -->
+  <rect x="18" y="132" width="8" height="8" rx="2" fill="white" stroke="#d0d9e4" stroke-width="1"/>
+  <text x="32" y="141" fill="#1e2d3d" font-size="8.5">20UKC10R001</text>
+  <rect x="18" y="148" width="8" height="8" rx="2" fill="white" stroke="#d0d9e4" stroke-width="1"/>
+  <text x="32" y="157" fill="#1e2d3d" font-size="8.5">20UKC10R002</text>
+  <rect x="18" y="164" width="8" height="8" rx="2" fill="#2e7abf" stroke="#2e7abf" stroke-width="1"/>
+  <text x="23" y="172" fill="white" font-size="6" text-anchor="middle" font-weight="700">✓</text>
+  <text x="32" y="173" fill="#2e7abf" font-size="8.5" font-weight="600">20UKC10R003</text>
+  <rect x="18" y="180" width="8" height="8" rx="2" fill="#2e7abf" stroke="#2e7abf" stroke-width="1"/>
+  <text x="23" y="188" fill="white" font-size="6" text-anchor="middle" font-weight="700">✓</text>
+  <text x="32" y="189" fill="#2e7abf" font-size="8.5" font-weight="600">20UKC10R004</text>
+  <rect x="18" y="196" width="8" height="8" rx="2" fill="white" stroke="#d0d9e4" stroke-width="1"/>
+  <text x="32" y="205" fill="#1e2d3d" font-size="8.5">20UKC10R005</text>
+  <rect x="18" y="212" width="8" height="8" rx="2" fill="white" stroke="#d0d9e4" stroke-width="1"/>
+  <text x="32" y="221" fill="#1e2d3d" font-size="8.5">20UKC10R006</text>
+  <rect x="18" y="228" width="8" height="8" rx="2" fill="white" stroke="#d0d9e4" stroke-width="1"/>
+  <text x="32" y="237" fill="#1e2d3d" font-size="8.5">20UKC10R007</text>
+  <rect x="18" y="244" width="8" height="8" rx="2" fill="white" stroke="#d0d9e4" stroke-width="1"/>
+  <text x="32" y="253" fill="#1e2d3d" font-size="8.5">20UKC10R008</text>
+  <text x="260" y="253" fill="#8fa6be" font-size="7" text-anchor="middle">⋮</text>
+  <!-- Подсказка -->
+  <text x="260" y="272" fill="#8fa6be" font-size="7" text-anchor="middle" font-style="italic">Отметьте чекбоксы → нажмите «Применить»</text>
+  <!-- Футер -->
+  <line x1="10" y1="278" x2="510" y2="278" stroke="#eef2f7" stroke-width="1"/>
+  <text x="22" y="296" fill="#8fa6be" font-size="8.5">Выбрано: 2</text>
+  <rect x="380" y="282" width="56" height="20" rx="5" fill="white" stroke="#d0d9e4" stroke-width="1"/>
+  <text x="408" y="296" fill="#3d5168" font-size="8" text-anchor="middle">Отмена</text>
+  <rect x="442" y="282" width="60" height="20" rx="5" fill="#2e7abf"/>
+  <text x="472" y="296" fill="white" font-size="8" text-anchor="middle" font-weight="600">Применить</text>
 </svg>`
   },
   {
@@ -5410,7 +6903,7 @@ const GUIDE_SLIDES = [
   <text x="260" y="72" fill="white" font-size="28" text-anchor="middle">✉</text>
   <text x="260" y="97" fill="white" font-size="10" text-anchor="middle" font-weight="700">Нашли баг? Есть идея? Напишите нам</text>
   <text x="180" y="138" fill="#8fa6be" font-size="8">Разработчик</text>
-  <text x="180" y="157" fill="#1a3a5c" font-size="13" font-weight="700">Лингидан</text>
+  <text x="180" y="160" fill="#1a3a5c" font-size="11" font-weight="700">Лингидан Максим Дмитриевич</text>
   <text x="180" y="184" fill="#8fa6be" font-size="8">Электронная почта</text>
   <rect x="130" y="190" width="260" height="32" rx="8" fill="#e8f2fa"/>
   <text x="260" y="211" fill="#2e7abf" font-size="11" text-anchor="middle" font-weight="700">lingidanm@gmail.com</text>
@@ -5528,38 +7021,6 @@ function guideTo(idx) {
   _renderGuideSlide();
 }
 
-// ─── Map Picker ───────────────────────────────────────────────────────────
-function openMapPicker() {
-  document.getElementById('mapPickerOverlay').classList.add('open');
-  document.body.style.overflow = 'hidden';
-  // Hover tooltips
-  document.querySelectorAll('#sitePlanSVG .map-zone').forEach(el => {
-    el.addEventListener('mouseenter', () => {
-      document.getElementById('mapPickerStatus').textContent =
-        '▶ ' + (el.dataset.info || el.dataset.label || '');
-    });
-    el.addEventListener('mouseleave', () => {
-      document.getElementById('mapPickerStatus').textContent =
-        'Наведите на здание для просмотра информации';
-    });
-  });
-}
-function closeMapPicker() {
-  document.getElementById('mapPickerOverlay').classList.remove('open');
-  document.body.style.overflow = '';
-}
-function selectLocation(code) {
-  const el = document.getElementById('mesto');
-  if (!el) return;
-  el.value = code;
-  el.dispatchEvent(new Event('input'));
-  closeMapPicker();
-}
-// Закрытие по Escape
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') closeMapPicker();
-});
-
 // ─── Room Picker ──────────────────────────────────────────────────────────
 const RP_BUILDINGS = {
   '20UKC': {
@@ -5585,14 +7046,289 @@ let _rpBuilding = '20UKC';
 let _rpFloor = null;
 let _rpSelected = new Map(); // Map<roomId, floorKey>
 let _rpSvgCache = {};
+let _rpScale = 1;
+let _rpRoomListFloor = null;
+let _rpRoomListIds = [];
+let _rpCrop = null;
+
+function rpZoom(delta) {
+  _rpScale = Math.min(4, Math.max(0.3, _rpScale + delta));
+  rpApplyZoom();
+}
+function rpZoomReset() {
+  _rpScale = 1;
+  rpApplyZoom();
+}
+function rpApplyZoom() {
+  const wrap = document.getElementById('roomPickerSVGWrap');
+  if (wrap) wrap.style.transform = `scale(${_rpScale})`;
+  const label = document.getElementById('rpZoomLabel');
+  if (label) label.textContent = Math.round(_rpScale * 100) + '%';
+}
 
 function openRoomPicker() {
-  _rpSelected = new Map();
-  _rpFloor = null;
-  document.getElementById('roomPickerOverlay').classList.add('open');
-  document.body.style.overflow = 'hidden';
-  rpSelectBuilding('20UKC');
+  if (!currentUser) { openLoginModal(); return; }
+  openRoomListPopup();
 }
+
+/* ── Room List Popup JS ── */
+// Данные берутся из колонок Здание/Отметка/Помещение листа организации (orgRooms)
+let _rlpSelected = new Map();
+
+function _rlpLoadRooms() {
+  return orgRooms || {};
+}
+
+function openRoomListPopup() {
+  _rlpSelected = new Map();
+  document.getElementById('roomListPopup').style.display = 'block';
+  document.body.style.overflow = 'hidden';
+  document.getElementById('rlpSearch').value = '';
+
+  const rooms = _rlpLoadRooms();
+  const bldSel = document.getElementById('rlpBuilding');
+  const buildings = Object.keys(rooms);
+  bldSel.innerHTML = buildings.map(b => `<option value="${b}">${b}</option>`).join('');
+  rlpFillFloors();
+}
+
+function rlpFillFloors() {
+  const bld = document.getElementById('rlpBuilding').value;
+  const floors = Object.keys((orgRooms && orgRooms[bld]) || {});
+  document.getElementById('rlpFloor').innerHTML = floors.map(f => `<option value="${f}">${f}</option>`).join('');
+  rlpUpdate();
+}
+
+function closeRoomListPopup() {
+  document.getElementById('roomListPopup').style.display = 'none';
+  document.body.style.overflow = '';
+}
+
+function rlpUpdate() {
+  const bld = document.getElementById('rlpBuilding').value;
+  const floor = document.getElementById('rlpFloor').value;
+  const q = document.getElementById('rlpSearch').value.trim().toLowerCase();
+  let rooms = (orgRooms && orgRooms[bld] && orgRooms[bld][floor]) ? [...orgRooms[bld][floor]] : [];
+  if (q) rooms = rooms.filter(r => r.toLowerCase().includes(q));
+  const list = document.getElementById('rlpList');
+  if (!rooms.length) {
+    list.innerHTML = '<div style="padding:16px;text-align:center;color:var(--gray-400);font-size:12px">Ничего не найдено</div>';
+  } else {
+    list.innerHTML = rooms.map(r => {
+      const key = floor + '||' + r;
+      const sel = _rlpSelected.has(key);
+      return `<label style="display:flex;align-items:center;gap:8px;padding:5px 8px;border-radius:6px;cursor:pointer;font-size:12px;${sel?'background:var(--accent-light);color:var(--accent);font-weight:600':''}">
+        <input type="checkbox" value="${key}" ${sel?'checked':''} onchange="rlpToggle(this)" style="accent-color:var(--accent)">
+        ${r}
+      </label>`;
+    }).join('');
+  }
+  rlpSyncCount();
+}
+
+function rlpToggle(cb) {
+  if (cb.checked) {
+    const [floor, room] = cb.value.split('||');
+    _rlpSelected.set(cb.value, { floor, room });
+  } else {
+    _rlpSelected.delete(cb.value);
+  }
+  rlpUpdate();
+}
+
+function rlpSyncCount() {
+  const n = _rlpSelected.size;
+  document.getElementById('rlpCount').textContent = 'Выбрано: ' + n;
+  const btn = document.getElementById('rlpSaveBtn');
+  btn.disabled = n === 0;
+  btn.style.opacity = n > 0 ? '1' : '.5';
+}
+
+function saveRoomListPopup() {
+  if (!_rlpSelected.size) return;
+  // Группируем по отметке, сохраняя порядок первого появления
+  const byFloor = new Map();
+  for (const { floor, room } of _rlpSelected.values()) {
+    if (!byFloor.has(floor)) byFloor.set(floor, []);
+    byFloor.get(floor).push(room);
+  }
+  const text = [...byFloor.entries()]
+    .map(([floor, rooms]) => floor + ': ' + rooms.join(', '))
+    .join('\n');
+  const el = document.getElementById('mesto');
+  if (el) { el.value = text; el.dispatchEvent(new Event('input')); }
+  closeRoomListPopup();
+}
+
+/* ── Work Type Picker JS ── */
+let _wtpSelected    = new Set(); // виды работ
+let _wtpAppSelected = new Set(); // с применением
+let _wtpTab = 'vidRabot'; // 'vidRabot' | 'primenenie'
+
+// Разбираем текущее значение поля vidRabot обратно в два набора
+function _wtpParseField() {
+  const raw = (document.getElementById('vidRabot')?.value || '').trim();
+  const SEP = ' с применением ';
+  const sepIdx = raw.toLowerCase().indexOf(SEP.toLowerCase());
+  let vidPart = raw, appPart = '';
+  if (sepIdx !== -1) {
+    vidPart = raw.slice(0, sepIdx);
+    appPart = raw.slice(sepIdx + SEP.length);
+  }
+  _wtpSelected    = new Set(vidPart ? vidPart.split(',').map(s => s.trim()).filter(Boolean) : []);
+  _wtpAppSelected = new Set(appPart ? appPart.split(',').map(s => s.trim()).filter(Boolean) : []);
+}
+
+// Собираем одну строку из обоих наборов
+function _wtpBuildValue() {
+  const vids = [..._wtpSelected];
+  const apps = [..._wtpAppSelected];
+  let result = '';
+  if (vids.length) {
+    // Первый — с заглавной буквы, остальные — со строчной
+    result = vids.map((v, i) => i === 0
+      ? v.charAt(0).toUpperCase() + v.slice(1)
+      : v.charAt(0).toLowerCase() + v.slice(1)
+    ).join(', ');
+  }
+  if (apps.length) {
+    result += (result ? ' с применением ' : 'С применением ');
+    result += apps.join(', ');
+  }
+  return result;
+}
+
+function _wtpCurrentSet() {
+  return _wtpTab === 'primenenie' ? _wtpAppSelected : _wtpSelected;
+}
+
+function openWorkTypePicker() {
+  if (!currentUser) { openLoginModal(); return; }
+  _wtpParseField();
+  document.getElementById('workTypePopup').style.display = 'block';
+  document.body.style.overflow = 'hidden';
+  document.getElementById('wtpSearch').value = '';
+  wtpSwitchTab('vidRabot', true);
+}
+
+function wtpSwitchTab(tab, skipStyleUpdate) {
+  _wtpTab = tab;
+  const isVid = tab === 'vidRabot';
+  const tabVid = document.getElementById('wtpTabVid');
+  const tabApp = document.getElementById('wtpTabApp');
+  if (tabVid) { tabVid.style.background = isVid ? 'rgba(255,255,255,.22)' : 'transparent'; tabVid.style.color = isVid ? 'white' : 'rgba(255,255,255,.65)'; tabVid.style.fontWeight = isVid ? '700' : '600'; }
+  if (tabApp) { tabApp.style.background = !isVid ? 'rgba(255,255,255,.22)' : 'transparent'; tabApp.style.color = !isVid ? 'white' : 'rgba(255,255,255,.65)'; tabApp.style.fontWeight = !isVid ? '700' : '600'; }
+  document.getElementById('wtpSearch').value = '';
+  wtpUpdate();
+  wtpUpdateFooter();
+}
+
+function closeWorkTypePicker() {
+  document.getElementById('workTypePopup').style.display = 'none';
+  document.body.style.overflow = '';
+}
+
+// ── Избранное в пикере ────────────────────────────────────────────────────────
+function _wtpFavKey() { return 'wtp_fav_' + _wtpTab; }
+function _wtpFavLoad() {
+  try { return new Set(JSON.parse(localStorage.getItem(_wtpFavKey()) || '[]')); } catch(e) { return new Set(); }
+}
+function _wtpFavSave(set) {
+  try { localStorage.setItem(_wtpFavKey(), JSON.stringify([...set])); } catch(e) {}
+}
+function wtpToggleFav(btn, val) {
+  event.preventDefault(); event.stopPropagation();
+  const favs = _wtpFavLoad();
+  if (favs.has(val)) { favs.delete(val); btn.textContent = '☆'; btn.style.color = 'var(--gray-400)'; btn.title = 'Добавить в избранное'; }
+  else               { favs.add(val);    btn.textContent = '★'; btn.style.color = '#f5a623';           btn.title = 'Убрать из избранного'; }
+  _wtpFavSave(favs);
+  wtpUpdate();
+}
+
+function _wtpItemHtml(v, isFav, isFirst) {
+  const cur = _wtpCurrentSet();
+  const sel = cur.has(v);
+  const esc = v.replace(/&/g,'&amp;').replace(/"/g,'&quot;');
+  const border = isFirst ? '' : 'border-top:1px solid var(--border);';
+  return `<label style="display:flex;align-items:flex-start;gap:8px;padding:9px 12px;cursor:pointer;border-radius:7px;${border}${sel ? 'background:var(--accent-light);' : ''}transition:background .12s">
+    <input type="checkbox" ${sel ? 'checked' : ''} data-val="${esc}" onchange="wtpToggle(this)" style="margin-top:2px;width:15px;height:15px;cursor:pointer;accent-color:var(--accent);flex-shrink:0">
+    <span style="font-size:13px;line-height:1.45;flex:1;color:${sel ? 'var(--accent)' : 'var(--text)'};font-weight:${sel ? '600' : '400'}">${v}</span>
+    <button type="button" onclick="wtpToggleFav(this,'${esc}')" title="${isFav ? 'Убрать из избранного' : 'Добавить в избранное'}"
+      style="background:none;border:none;cursor:pointer;font-size:15px;line-height:1;padding:2px 4px;flex-shrink:0;color:${isFav ? '#f5a623' : 'var(--gray-400)'};">${isFav ? '★' : '☆'}</button>
+  </label>`;
+}
+
+function wtpUpdate() {
+  const q    = document.getElementById('wtpSearch').value.trim().toLowerCase();
+  const src  = _wtpTab === 'primenenie' ? orgApplicationTypes : orgWorkTypes;
+  const favs = _wtpFavLoad();
+  let items  = (src && src.length) ? src : [];
+  const list = document.getElementById('wtpList');
+
+  if (q) {
+    items = items.filter(v => v.toLowerCase().includes(q));
+    if (!items.length) {
+      list.innerHTML = '<div style="padding:20px;text-align:center;color:var(--gray-400);font-size:12px">' + (src && src.length ? 'Ничего не найдено' : 'Список не загружен') + '</div>';
+      return;
+    }
+    list.innerHTML = items.map((v, i) => _wtpItemHtml(v, favs.has(v), i === 0)).join('');
+    return;
+  }
+
+  if (!items.length) {
+    list.innerHTML = '<div style="padding:20px;text-align:center;color:var(--gray-400);font-size:12px">Список не загружен</div>';
+    return;
+  }
+
+  const favItems   = items.filter(v => favs.has(v));
+  const otherItems = items.filter(v => !favs.has(v));
+  let html = '';
+  if (favItems.length) {
+    html += `<div style="padding:5px 12px 3px;font-size:10px;font-weight:700;color:var(--gray-400);letter-spacing:.5px;text-transform:uppercase;">★ Избранное</div>`;
+    html += favItems.map((v, i) => _wtpItemHtml(v, true, i === 0)).join('');
+    if (otherItems.length)
+      html += `<div style="padding:5px 12px 3px;font-size:10px;font-weight:700;color:var(--gray-400);letter-spacing:.5px;text-transform:uppercase;margin-top:4px;border-top:2px solid var(--gray-200)">Все</div>`;
+  }
+  html += otherItems.map((v, i) => _wtpItemHtml(v, false, i === 0 && !favItems.length)).join('');
+  list.innerHTML = html;
+}
+
+function wtpToggle(cb) {
+  const cur = _wtpCurrentSet();
+  const value = cb.dataset.val;
+  if (cb.checked) { cur.add(value); } else { cur.delete(value); }
+  const label = cb.closest('label');
+  const span  = label.querySelector('span');
+  if (cb.checked) { label.style.background = 'var(--accent-light)'; span.style.color = 'var(--accent)'; span.style.fontWeight = '600'; }
+  else            { label.style.background = '';                     span.style.color = 'var(--text)';   span.style.fontWeight = '400'; }
+  wtpUpdateFooter();
+}
+
+function wtpUpdateFooter() {
+  const cnt = _wtpSelected.size + _wtpAppSelected.size;
+  const btn = document.getElementById('wtpApply');
+  if (btn) {
+    btn.textContent = cnt > 0 ? `Применить (${cnt})` : 'Применить';
+    btn.disabled    = cnt === 0;
+    btn.style.opacity = cnt === 0 ? '0.45' : '';
+  }
+}
+
+function wtpApply() {
+  const el = document.getElementById('vidRabot');
+  if (el) { el.value = _wtpBuildValue(); el.dispatchEvent(new Event('input')); }
+  closeWorkTypePicker();
+}
+
+function wtpClear() {
+  _wtpCurrentSet().clear();
+  wtpUpdate();
+  wtpUpdateFooter();
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && document.getElementById('workTypePopup').style.display === 'block') closeWorkTypePicker();
+});
 
 function closeRoomPicker() {
   document.getElementById('roomPickerOverlay').classList.remove('open');
@@ -5628,65 +7364,90 @@ function rpSelectFloor(floor) {
   rpLoadFloor(floor);
 }
 
-async function rpLoadFloor(floor) {
+function rpCalcCrop(bld, floor, meta) {
+  const rooms = (RP_ROOMS[bld] && RP_ROOMS[bld][floor]) || {};
+  const positions = Object.values(rooms);
+  const PAD = 90;
+  if (!positions.length) return {minX:0, minY:0, w:meta.w, h:meta.h};
+  const minX = Math.max(0, Math.min(...positions.map(p=>p.cx)) - PAD);
+  const minY = Math.max(0, Math.min(...positions.map(p=>p.cy)) - PAD);
+  const maxX = Math.min(meta.w, Math.max(...positions.map(p=>p.cx)) + PAD);
+  const maxY = Math.min(meta.h, Math.max(...positions.map(p=>p.cy)) + PAD);
+  return {minX, minY, w: maxX - minX, h: maxY - minY};
+}
+
+function rpLoadFloor(floor) {
   const bld = _rpBuilding;
   const meta = RP_BUILDINGS[bld].floors[floor];
   const wrap = document.getElementById('roomPickerSVGWrap');
   wrap.innerHTML = '<div id="roomPickerLoader">Загрузка плана…</div>';
 
-  let svgText = _rpSvgCache[bld + floor];
-  if (!svgText) {
-    try {
-      const res = await fetch(`plans_20UKC/${meta.file}`);
-      svgText = await res.text();
-      _rpSvgCache[bld + floor] = svgText;
-    } catch(e) {
-      wrap.innerHTML = '<div id="roomPickerLoader">Ошибка загрузки плана</div>';
-      return;
-    }
-  }
+  const crop = rpCalcCrop(bld, floor, meta);
+  _rpCrop = crop;
 
-  // Insert SVG (remove outer svg tag, wrap in a sized container)
-  const tmp = document.createElement('div');
-  tmp.innerHTML = svgText;
-  const svgEl = tmp.querySelector('svg');
-  if (!svgEl) { wrap.innerHTML = '<div id="roomPickerLoader">Ошибка SVG</div>'; return; }
-  svgEl.style.display = 'block';
-  svgEl.style.width = meta.w + 'px';
-  svgEl.style.height = meta.h + 'px';
+  wrap.style.width  = crop.w + 'px';
+  wrap.style.height = crop.h + 'px';
+  wrap.style.overflow = 'hidden';
+
+  const img = document.createElement('img');
+  const basePath = (()=>{
+    const s = location.href;
+    if (s.startsWith('file://')) return s.substring(0, s.lastIndexOf('/') + 1) + 'plans_20UKC/';
+    return 'plans_20UKC/';
+  })();
+  img.src = basePath + meta.file;
+  img.style.cssText = `display:block;position:absolute;top:${-crop.minY}px;left:${-crop.minX}px;width:${meta.w}px;height:${meta.h}px;`;
+  img.onerror = () => { wrap.innerHTML = '<div id="roomPickerLoader">Не удалось загрузить план. Убедитесь, что папка plans_20UKC находится рядом с index.html</div>'; };
   wrap.innerHTML = '';
-  wrap.appendChild(svgEl);
+  wrap.appendChild(img);
+  rpBuildOverlay(floor, meta, wrap);
+}
 
-  // Create overlay SVG
+function rpBuildOverlay(floor, meta, wrap) {
+  const bld = _rpBuilding;
+  const old = wrap.querySelector('svg');
+  if (old) old.remove();
+
+  const crop = _rpCrop || {minX:0, minY:0, w:meta.w, h:meta.h};
+
   const overlay = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   overlay.id = 'roomPickerOverlaySVG';
-  overlay.setAttribute('width', meta.w);
-  overlay.setAttribute('height', meta.h);
-  overlay.setAttribute('viewBox', `0 0 ${meta.w} ${meta.h}`);
-  overlay.style.cssText = `position:absolute;top:0;left:0;width:${meta.w}px;height:${meta.h}px;`;
+  overlay.setAttribute('width', crop.w);
+  overlay.setAttribute('height', crop.h);
+  overlay.setAttribute('viewBox', `${crop.minX} ${crop.minY} ${crop.w} ${crop.h}`);
+  overlay.style.cssText = `position:absolute;top:0;left:0;width:${crop.w}px;height:${crop.h}px;`;
 
   const rooms = (RP_ROOMS[bld] && RP_ROOMS[bld][floor]) || {};
-  Object.entries(rooms).forEach(([id, pos]) => {
+  // Resolve label collisions: sort by cy then cx, nudge overlapping labels down
+  const placed = []; // {x1,y1,x2,y2}
+  const resolvedPos = {};
+  Object.entries(rooms).sort((a,b) => a[1].cy - b[1].cy || a[1].cx - b[1].cx).forEach(([id, pos]) => {
+    const shortId = id.replace('20UKC', '');
+    const W = Math.max(shortId.length * 8 + 10, 80), H = 22;
+    let x = pos.cx - W/2, y = pos.cy - H/2;
+    for (let attempt = 0; attempt < 20; attempt++) {
+      const col = placed.find(p => x < p.x2 && x+W > p.x1 && y < p.y2 && y+H > p.y1);
+      if (!col) break;
+      y = col.y2 + 2;
+    }
+    placed.push({x1: x, y1: y, x2: x+W, y2: y+H});
+    resolvedPos[id] = {x, y, cx: x+W/2, cy: y+H/2, W, H, shortId};
+  });
+
+  Object.entries(resolvedPos).forEach(([id, rp]) => {
     const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
     g.setAttribute('class', 'rp-room' + (_rpSelected.has(id) ? ' selected' : ''));
     g.setAttribute('id', 'rp_' + id);
-    g.setAttribute('data-id', id);
-    g.setAttribute('data-floor', floor);
-
-    // Short label (last part of code)
-    const shortId = id.replace('20UKC', '');
-    const W = Math.max(shortId.length * 6.5 + 8, 70), H = 18;
-    const rx = pos.cx - W/2, ry = pos.cy - H/2;
 
     const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-    rect.setAttribute('x', rx); rect.setAttribute('y', ry);
-    rect.setAttribute('width', W); rect.setAttribute('height', H);
+    rect.setAttribute('x', rp.x); rect.setAttribute('y', rp.y);
+    rect.setAttribute('width', rp.W); rect.setAttribute('height', rp.H);
     rect.setAttribute('rx', 3);
 
     const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-    text.setAttribute('x', pos.cx); text.setAttribute('y', pos.cy + 3.5);
+    text.setAttribute('x', rp.cx); text.setAttribute('y', rp.cy + 3.5);
     text.setAttribute('text-anchor', 'middle');
-    text.textContent = shortId;
+    text.textContent = rp.shortId;
 
     g.appendChild(rect); g.appendChild(text);
     g.addEventListener('click', () => rpToggleRoom(id, floor));
@@ -5694,7 +7455,108 @@ async function rpLoadFloor(floor) {
   });
 
   wrap.appendChild(overlay);
+  rpUpdateRoomList(floor);
   rpUpdatePreview();
+}
+
+function rpUpdateRoomList(floor) {
+  const bld = _rpBuilding;
+  const rooms = (RP_ROOMS[bld] && RP_ROOMS[bld][floor]) || {};
+  const ids = Object.keys(rooms).sort();
+  document.getElementById('rpRoomListCount').textContent = ids.length;
+  _rpRoomListFloor = floor;
+  _rpRoomListIds = ids;
+  rpRenderRoomList('');
+  const search = document.getElementById('rpRoomListSearch');
+  if (search) search.value = '';
+}
+
+function rpRenderRoomList(filter) {
+  const container = document.getElementById('rpRoomListItems');
+  if (!container) return;
+  const ids = (_rpRoomListIds || []).filter(id => !filter || id.toLowerCase().includes(filter.toLowerCase()));
+  container.innerHTML = '';
+  ids.forEach(id => {
+    const div = document.createElement('div');
+    div.className = 'rp-list-item' + (_rpSelected.has(id) ? ' selected' : '');
+    div.textContent = id;
+    div.title = id;
+    div.addEventListener('click', () => {
+      rpToggleRoom(id, _rpRoomListFloor);
+      div.classList.toggle('selected', _rpSelected.has(id));
+      // scroll map to room label
+      const g = document.getElementById('rp_' + id);
+      if (g) g.scrollIntoView({block:'center', inline:'center'});
+    });
+    container.appendChild(div);
+  });
+}
+
+function rpFilterRoomList(val) {
+  rpRenderRoomList(val);
+}
+
+// ── Resize handles ───────────────────────────────────────────────────────────
+function rpInitResizeHandles() {
+  // sign: +1 = right drag grows target, -1 = right drag shrinks target
+  const setupHandle = (handleId, getTarget, getSibling, sign = 1) => {
+    const handle = document.getElementById(handleId);
+    if (!handle) return;
+    let startX, startW, startSibW;
+    handle.addEventListener('mousedown', e => {
+      e.preventDefault();
+      startX    = e.clientX;
+      const target  = getTarget();
+      const sibling = getSibling();
+      startW    = target  ? target.offsetWidth  : 0;
+      startSibW = sibling ? sibling.offsetWidth : 0;
+      handle.classList.add('active');
+
+      const onMove = e => {
+        const dx = (e.clientX - startX) * sign;
+        const target  = getTarget();
+        const sibling = getSibling();
+        if (target)  target.style.width  = Math.max(80, startW + dx) + 'px';
+        if (sibling) sibling.style.width = Math.max(80, startSibW - dx) + 'px';
+        rpUpdateListFontSize();
+      };
+      const onUp = () => {
+        handle.classList.remove('active');
+        document.removeEventListener('mousemove', onMove);
+        document.removeEventListener('mouseup', onUp);
+      };
+      document.addEventListener('mousemove', onMove);
+      document.addEventListener('mouseup', onUp);
+    });
+  };
+
+  // Left handle (SVGArea | handle | Sidebar): right drag → Sidebar grows, SVGArea shrinks
+  setupHandle('rpResizeHandleL',
+    () => document.getElementById('roomPickerSidebar'),
+    () => document.getElementById('roomPickerSVGArea'),
+    -1  // инвертируем: тянем вправо → Sidebar уменьшается
+  );
+
+  // Right handle (Sidebar | handle | RoomList): right drag → RoomList shrinks, Sidebar grows
+  setupHandle('rpResizeHandleR',
+    () => document.getElementById('rpRoomList'),
+    () => document.getElementById('roomPickerSidebar'),
+    -1
+  );
+}
+
+function rpUpdateListFontSize() {
+  const list = document.getElementById('rpRoomList');
+  if (!list) return;
+  const w = list.offsetWidth;
+  const fs = Math.max(10, Math.min(16, Math.round(w / 13)));
+  const search = document.getElementById('rpRoomListSearch');
+  if (search) search.style.fontSize = fs + 'px';
+  const header = document.getElementById('rpRoomListHeader');
+  if (header) header.style.fontSize = Math.max(9, fs - 2) + 'px';
+  document.querySelectorAll('.rp-list-item').forEach(el => el.style.fontSize = fs + 'px');
+  // Синхронизируем шрифт кнопок отметок
+  document.querySelectorAll('.rp-floor-btn').forEach(el => el.style.fontSize = fs + 'px');
 }
 
 function rpToggleRoom(id, floor) {
@@ -5703,8 +7565,12 @@ function rpToggleRoom(id, floor) {
   } else {
     _rpSelected.set(id, floor);
   }
+  const selected = _rpSelected.has(id);
   const g = document.getElementById('rp_' + id);
-  if (g) g.classList.toggle('selected', _rpSelected.has(id));
+  if (g) g.classList.toggle('selected', selected);
+  // sync left list item
+  const items = document.querySelectorAll('#rpRoomListItems .rp-list-item');
+  items.forEach(el => { if (el.title === id) el.classList.toggle('selected', selected); });
   rpUpdatePreview();
 }
 
@@ -5736,7 +7602,69 @@ document.addEventListener('keydown', e => {
   }
 });
 
+document.addEventListener('wheel', e => {
+  const overlay = document.getElementById('roomPickerOverlay');
+  if (!overlay || !overlay.classList.contains('open')) return;
+  if (!e.ctrlKey) return;
+  e.preventDefault();
+  rpZoom(e.deltaY < 0 ? 0.15 : -0.15);
+}, { passive: false });
+
+// ─── Drag-to-pan для схемы помещений ──────────────────────────────────────
+(function() {
+  let _panning = false, _startX = 0, _startY = 0, _scrollX = 0, _scrollY = 0;
+
+  function isRoomEl(el) {
+    return el && (el.closest('.rp-room') !== null);
+  }
+
+  document.addEventListener('mousedown', e => {
+    if (e.button !== 0) return;
+    const area = document.getElementById('roomPickerSVGArea');
+    if (!area || !area.contains(e.target)) return;
+    if (isRoomEl(e.target)) return;
+    _panning = true;
+    _startX = e.clientX;
+    _startY = e.clientY;
+    _scrollX = area.scrollLeft;
+    _scrollY = area.scrollTop;
+    area.classList.add('rp-panning');
+    e.preventDefault();
+  });
+
+  document.addEventListener('mousemove', e => {
+    if (!_panning) return;
+    const area = document.getElementById('roomPickerSVGArea');
+    if (!area) return;
+    const dx = e.clientX - _startX;
+    const dy = e.clientY - _startY;
+    // ограничение слева: scrollLeft не может быть меньше 0 (браузер ограничивает сам,
+    // но явно не даём уйти в отрицательную зону)
+    area.scrollLeft = Math.max(0, _scrollX - dx);
+    area.scrollTop = Math.max(0, _scrollY - dy);
+  });
+
+  function stopPan() {
+    if (!_panning) return;
+    _panning = false;
+    const area = document.getElementById('roomPickerSVGArea');
+    if (area) area.classList.remove('rp-panning');
+  }
+
+  document.addEventListener('mouseup', stopPan);
+  document.addEventListener('mouseleave', stopPan);
+})();
+
 // ─── Init ─────────────────────────────────────────────────────────────────
+// Сбрасываем кеш базы данных при каждой загрузке страницы
+(function() {
+  for (const key of Object.keys(sessionStorage)) {
+    if (key.startsWith('session_personnel_') || key === 'session_rooms') {
+      sessionStorage.removeItem(key);
+    }
+  }
+})();
+
 // Восстанавливаем сессию авторизации
 (function() {
   const saved = localStorage.getItem('auth_user');
@@ -5744,8 +7672,29 @@ document.addEventListener('keydown', e => {
   try {
     currentUser = JSON.parse(saved);
     updateAuthButton();
-    applyUserToForm();
-    loadOrgPersonnel();
+    if (currentUser.pending) {
+      // Сразу проверяем — вдруг уже одобрили пока не было вкладки
+      checkPendingApproval();
+      startPendingCheck();
+    } else {
+      applyUserToForm();
+      loadOrgPersonnel();
+      // Фоновое обновление данных — на случай если орг/должность изменились
+      (async () => {
+        try {
+          const data = await _apiCall({ action: 'refreshUserData', token: _authToken() });
+          if (!data.ok || !data.found) return;
+          const fresh = data.user;
+          if (data.token) localStorage.setItem('auth_token', data.token);
+          if (fresh.org !== currentUser.org || fresh.fio !== currentUser.fio || fresh.dolzh !== currentUser.dolzh) {
+            currentUser = fresh;
+            localStorage.setItem('auth_user', JSON.stringify(currentUser));
+            applyUserToForm();
+            loadOrgPersonnel();
+          }
+        } catch(e) {}
+      })();
+    }
   } catch(e) {
     localStorage.removeItem('auth_user');
   }
@@ -5764,6 +7713,16 @@ loadFormData();
 applyUserToForm(); // перезаписать input.value после loadFormData — auth-поля имеют приоритет
 document.addEventListener('input', scheduleSave);
 document.addEventListener('change', scheduleSave);
+window.addEventListener('beforeunload', saveFormData);
+document.addEventListener('focusin', _capturePreEdit);
+document.addEventListener('input', _scheduleHistoryPush);
+document.addEventListener('change', _scheduleHistoryPush);
+document.addEventListener('keydown', e => {
+  if ((e.ctrlKey || e.metaKey) && !e.altKey) {
+    if (e.key === 'z' && !e.shiftKey) { e.preventDefault(); undoAction(); }
+    if (e.key === 'y' || (e.key === 'z' && e.shiftKey)) { e.preventDefault(); redoAction(); }
+  }
+});
 
 // Автозапуск скачивания после перезагрузки из-за устаревшей версии
 (function() {
@@ -5795,229 +7754,40 @@ function copyDevEmail() {
 }
 </script>
 
-<!-- ── Map Picker Modal ── -->
-<div id="mapPickerOverlay">
-  <div id="mapPickerHeader">
-    <div>
-      <h3>Схема площадки Курской АЭС-2</h3>
-      <p>Нажмите на здание или зону — код вставится в поле «Место выполнения работ»</p>
-    </div>
-    <button id="mapPickerClose" onclick="closeMapPicker()">✕ Закрыть</button>
-  </div>
-  <div id="mapPickerBody">
-    <svg id="sitePlanSVG" viewBox="0 0 1240 880" xmlns="http://www.w3.org/2000/svg">
-      <!-- Фон площадки -->
-      <rect width="1240" height="880" fill="#e2d5b0"/>
-      <!-- Перimeter -->
-      <rect x="8" y="8" width="1224" height="864" fill="none" stroke="#9a8660" stroke-width="3" rx="4"/>
 
-      <!-- Дороги горизонтальные -->
-      <rect x="8" y="188" width="1224" height="32" fill="#d6c99a" opacity=".9"/>
-      <rect x="8" y="420" width="1224" height="32" fill="#d6c99a" opacity=".9"/>
-      <rect x="8" y="660" width="1224" height="32" fill="#d6c99a" opacity=".9"/>
-      <!-- Дороги вертикальные -->
-      <rect x="168" y="8" width="30" height="864" fill="#d6c99a" opacity=".9"/>
-      <rect x="430" y="8" width="30" height="864" fill="#d6c99a" opacity=".9"/>
-      <rect x="780" y="8" width="30" height="864" fill="#d6c99a" opacity=".9"/>
-      <rect x="1050" y="8" width="30" height="864" fill="#d6c99a" opacity=".9"/>
+<!--
+  ══════════════════════════════════════════════════════════════════════
+  ROOM PICKER MODAL (ПЛАН ЗДАНИЯ) — ВРЕМЕННО СКРЫТ (v2.75, 30.06.2026)
+  ══════════════════════════════════════════════════════════════════════
+  Причина: публикация поэтажных планов здания в открытом доступе может
+  нарушать режим конфиденциальности объекта. До выяснения правового
+  статуса — модалка скрыта, кнопка «Выбрать помещения» открывает
+  вместо неё новый popup-список (id="roomListPopup").
 
-      <!-- ════ ГРАДИРНИ ════ -->
-      <g class="map-zone" onclick="selectLocation('Градирня №1')" data-info="Градирня №1">
-        <ellipse cx="90" cy="100" rx="76" ry="82" fill="#b8a88a" stroke="#7a6a50" stroke-width="2"/>
-        <ellipse cx="90" cy="100" rx="48" ry="54" fill="#a09070" stroke="#7a6a50" stroke-width="1.5"/>
-        <ellipse cx="90" cy="118" rx="38" ry="14" fill="#8a7a60" stroke="#7a6a50" stroke-width="1"/>
-        <text x="90" y="96" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10" fill="#3a2a10">Градирня</text>
-        <text x="90" y="110" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="13" font-weight="700" fill="#3a2a10">№1</text>
-      </g>
-      <g class="map-zone" onclick="selectLocation('Градирня №2')" data-info="Градирня №2">
-        <ellipse cx="295" cy="100" rx="76" ry="82" fill="#b8a88a" stroke="#7a6a50" stroke-width="2"/>
-        <ellipse cx="295" cy="100" rx="48" ry="54" fill="#a09070" stroke="#7a6a50" stroke-width="1.5"/>
-        <ellipse cx="295" cy="118" rx="38" ry="14" fill="#8a7a60" stroke="#7a6a50" stroke-width="1"/>
-        <text x="295" y="96" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10" fill="#3a2a10">Градирня</text>
-        <text x="295" y="110" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="13" font-weight="700" fill="#3a2a10">№2</text>
-      </g>
-
-      <!-- ════ ЗДАНИЕ 21А (турбинное, левое длинное) ════ -->
-      <g class="map-zone" onclick="selectLocation('ЭБ-1, зд. 21А')" data-info="Здание 21А — Турбинное здание">
-        <rect x="14" y="224" width="150" height="190" fill="#9ab4c8" stroke="#4a7090" stroke-width="2" rx="2"/>
-        <text x="89" y="318" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="18" font-weight="700" fill="#1a3a52">21А</text>
-        <text x="89" y="334" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="9" fill="#2a5070">Турбинное</text>
-        <text x="89" y="345" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="9" fill="#2a5070">здание</text>
-      </g>
-
-      <!-- ════ ЗДАНИЕ 19А ════ -->
-      <g class="map-zone" onclick="selectLocation('ЭБ-1, зд. 19А')" data-info="Здание 19А">
-        <rect x="14" y="456" width="150" height="100" fill="#9ab4c8" stroke="#4a7090" stroke-width="2" rx="2"/>
-        <text x="89" y="512" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="18" font-weight="700" fill="#1a3a52">19А</text>
-      </g>
-
-      <!-- ════ ЗДАНИЕ 20А (левее реактора) ════ -->
-      <g class="map-zone" onclick="selectLocation('зд. 20А')" data-info="Здание 20А">
-        <rect x="200" y="224" width="220" height="190" fill="#9ab4c8" stroke="#4a7090" stroke-width="2" rx="2"/>
-        <text x="310" y="318" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="18" font-weight="700" fill="#1a3a52">20А</text>
-      </g>
-
-      <!-- ════ 20UMH (верхнее здание над реакторным комплексом) ════ -->
-      <g class="map-zone" onclick="selectLocation('зд. 20UMH')" data-info="20UMH">
-        <rect x="462" y="14" width="348" height="60" fill="#aab8cc" stroke="#5a7090" stroke-width="1.5" rx="2"/>
-        <text x="636" y="50" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="14" font-weight="700" fill="#1a3050">20UMH</text>
-      </g>
-
-      <!-- ════ 20UMA ════ -->
-      <g class="map-zone" onclick="selectLocation('зд. 20UMA')" data-info="20UMA">
-        <rect x="462" y="80" width="210" height="104" fill="#aab8cc" stroke="#5a7090" stroke-width="1.5" rx="2"/>
-        <text x="567" y="138" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="14" font-weight="700" fill="#1a3050">20UMA</text>
-      </g>
-
-      <!-- ════ 20UQR (слева от реакторного) ════ -->
-      <g class="map-zone" onclick="selectLocation('зд. 20UQR')" data-info="20UQR">
-        <rect x="462" y="224" width="130" height="190" fill="#aab8cc" stroke="#5a7090" stroke-width="1.5" rx="2"/>
-        <text x="527" y="322" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="13" font-weight="700" fill="#1a3050">20UQR</text>
-      </g>
-
-      <!-- ════ 20UKC — Вспомогательное реакторное здание (большой прямоугольник) ════ -->
-      <g class="map-zone" onclick="selectLocation('20UKC')" data-info="20UKC — Вспомогательное реакторное здание (2 энергоблок)">
-        <rect x="600" y="80" width="380" height="510" fill="#b0c2d8" stroke="#3a6090" stroke-width="3" rx="3"/>
-        <!-- Сетка помещений -->
-        <line x1="660" y1="80" x2="660" y2="590" stroke="#8090a8" stroke-width=".6" opacity=".5"/>
-        <line x1="730" y1="80" x2="730" y2="590" stroke="#8090a8" stroke-width=".6" opacity=".5"/>
-        <line x1="810" y1="80" x2="810" y2="590" stroke="#8090a8" stroke-width=".6" opacity=".5"/>
-        <line x1="890" y1="80" x2="890" y2="590" stroke="#8090a8" stroke-width=".6" opacity=".5"/>
-        <line x1="600" y1="155" x2="980" y2="155" stroke="#8090a8" stroke-width=".6" opacity=".5"/>
-        <line x1="600" y1="230" x2="980" y2="230" stroke="#8090a8" stroke-width=".6" opacity=".5"/>
-        <line x1="600" y1="310" x2="980" y2="310" stroke="#8090a8" stroke-width=".6" opacity=".5"/>
-        <line x1="600" y1="390" x2="980" y2="390" stroke="#8090a8" stroke-width=".6" opacity=".5"/>
-        <line x1="600" y1="456" x2="980" y2="456" stroke="#8090a8" stroke-width=".6" opacity=".5"/>
-        <line x1="600" y1="520" x2="980" y2="520" stroke="#8090a8" stroke-width=".6" opacity=".5"/>
-        <text x="790" y="348" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="20" font-weight="700" fill="#1a3a5c">20UKC</text>
-        <text x="790" y="370" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10" fill="#2a4a70">Вспомогательное реакторное здание</text>
-        <text x="790" y="383" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10" fill="#2a4a70">2-й энергоблок</text>
-      </g>
-
-      <!-- ════ 20UJA — Реакторное здание (круглый купол) ════ -->
-      <g class="map-zone" onclick="selectLocation('20UJA')" data-info="20UJA — Реакторное здание">
-        <!-- Outer containment ring -->
-        <circle cx="790" cy="310" r="108" fill="#8aaac4" stroke="#2a5080" stroke-width="3"/>
-        <!-- Pre-stressed containment -->
-        <circle cx="790" cy="310" r="80" fill="#7090ac" stroke="#2a5080" stroke-width="2"/>
-        <!-- Inner dome -->
-        <circle cx="790" cy="310" r="50" fill="#5878a0" stroke="#2a5080" stroke-width="1.5"/>
-        <!-- Reactor symbol -->
-        <circle cx="790" cy="310" r="20" fill="#3a5880" stroke="#1a3a60" stroke-width="1.5"/>
-        <text x="790" y="315" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10" font-weight="700" fill="white">ВВЭР</text>
-        <text x="790" y="218" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11" font-weight="700" fill="#102040">20UJA</text>
-      </g>
-
-      <!-- ════ 20UBA (внизу реакторного) ════ -->
-      <g class="map-zone" onclick="selectLocation('зд. 20UBA')" data-info="20UBA">
-        <rect x="462" y="456" width="130" height="100" fill="#aab8cc" stroke="#5a7090" stroke-width="1.5" rx="2"/>
-        <text x="527" y="512" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="13" font-weight="700" fill="#1a3050">20UBA</text>
-      </g>
-
-      <!-- ════ 20USC (правее реакторного комплекса) ════ -->
-      <g class="map-zone" onclick="selectLocation('зд. 20USC')" data-info="20USC">
-        <rect x="815" y="600" width="165" height="90" fill="#aab8cc" stroke="#5a7090" stroke-width="1.5" rx="2"/>
-        <text x="897" y="650" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="13" font-weight="700" fill="#1a3050">20USC</text>
-      </g>
-
-      <!-- ════ 21USF — Резервуары (справа) ════ -->
-      <g class="map-zone" onclick="selectLocation('зд. 21USF')" data-info="21USF — Резервуары аварийного охлаждения">
-        <rect x="1085" y="14" width="148" height="200" fill="#b0c8b0" stroke="#4a7a50" stroke-width="1.5" rx="2"/>
-        <circle cx="1130" cy="80" r="38" fill="#88a888" stroke="#4a7a50" stroke-width="1.5"/>
-        <circle cx="1195" cy="80" r="38" fill="#88a888" stroke="#4a7a50" stroke-width="1.5"/>
-        <circle cx="1130" cy="160" r="38" fill="#88a888" stroke="#4a7a50" stroke-width="1.5"/>
-        <circle cx="1195" cy="160" r="38" fill="#88a888" stroke="#4a7a50" stroke-width="1.5"/>
-        <text x="1159" y="225" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="12" font-weight="700" fill="#1a3a1a">21USF</text>
-      </g>
-
-      <!-- ════ Правый блок 1 ════ -->
-      <g class="map-zone" onclick="selectLocation('зд. 20UBC')" data-info="20UBC">
-        <rect x="1085" y="224" width="148" height="190" fill="#aab8cc" stroke="#5a7090" stroke-width="1.5" rx="2"/>
-        <text x="1159" y="322" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="13" font-weight="700" fill="#1a3050">20UBC</text>
-      </g>
-
-      <!-- ════ Правый блок 2 ════ -->
-      <g class="map-zone" onclick="selectLocation('зд. 20UBP')" data-info="20UBP">
-        <rect x="1085" y="456" width="148" height="200" fill="#aab8cc" stroke="#5a7090" stroke-width="1.5" rx="2"/>
-        <text x="1159" y="562" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="13" font-weight="700" fill="#1a3050">20UBP</text>
-      </g>
-
-      <!-- ════ Нижний ряд зданий ════ -->
-      <!-- 11UZ -->
-      <g class="map-zone" onclick="selectLocation('зд. 11UZ')" data-info="11UZ">
-        <rect x="200" y="695" width="220" height="100" fill="#c8c8a0" stroke="#8a8a50" stroke-width="1.5" rx="2"/>
-        <text x="310" y="752" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="16" font-weight="700" fill="#3a3a10">11UZ</text>
-      </g>
-      <!-- 13UZ -->
-      <g class="map-zone" onclick="selectLocation('зд. 13UZ')" data-info="13UZ">
-        <rect x="462" y="695" width="310" height="100" fill="#c8c8a0" stroke="#8a8a50" stroke-width="1.5" rx="2"/>
-        <text x="617" y="752" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="16" font-weight="700" fill="#3a3a10">13UZ</text>
-      </g>
-      <!-- 12Б -->
-      <g class="map-zone" onclick="selectLocation('зд. 12Б')" data-info="Здание 12Б">
-        <rect x="14" y="695" width="150" height="100" fill="#c8c8a0" stroke="#8a8a50" stroke-width="1.5" rx="2"/>
-        <text x="89" y="752" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="16" font-weight="700" fill="#3a3a10">12Б</text>
-      </g>
-      <!-- Правое нижнее -->
-      <g class="map-zone" onclick="selectLocation('зд. 21А (вост.)')" data-info="Здание 21А (восточная часть)">
-        <rect x="815" y="695" width="420" height="100" fill="#9ab4c8" stroke="#4a7090" stroke-width="1.5" rx="2"/>
-        <text x="1025" y="752" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="16" font-weight="700" fill="#1a3a52">21А (вост.)</text>
-      </g>
-
-      <!-- ════ КПП ════ -->
-      <g>
-        <rect x="10" y="10" width="60" height="24" fill="#1a3a5c" rx="3"/>
-        <text x="40" y="27" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10" font-weight="700" fill="white">КПП 3а</text>
-      </g>
-      <g>
-        <rect x="575" y="10" width="55" height="24" fill="#1a3a5c" rx="3"/>
-        <text x="602" y="27" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10" font-weight="700" fill="white">КПП 4</text>
-      </g>
-      <g>
-        <rect x="1170" y="10" width="60" height="24" fill="#1a3a5c" rx="3"/>
-        <text x="1200" y="27" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10" font-weight="700" fill="white">КПП 1</text>
-      </g>
-      <g>
-        <rect x="1170" y="846" width="60" height="24" fill="#1a3a5c" rx="3"/>
-        <text x="1200" y="863" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10" font-weight="700" fill="white">КПП 2</text>
-      </g>
-
-      <!-- ════ Компас ════ -->
-      <g transform="translate(1185,810)">
-        <circle r="22" fill="white" stroke="#9a8660" stroke-width="1.5" opacity=".92"/>
-        <polygon points="0,-16 -4,-4 0,0 4,-4" fill="#1a3a5c"/>
-        <polygon points="0,16 -4,4 0,0 4,4" fill="#9a8660"/>
-        <text x="0" y="-19" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="9" font-weight="700" fill="#1a3a5c">С</text>
-        <text x="0" y="27" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="9" fill="#9a8660">Ю</text>
-      </g>
-
-      <!-- Легенда -->
-      <rect x="14" y="810" width="220" height="60" fill="rgba(255,255,255,.75)" rx="6" stroke="#c8b890" stroke-width="1"/>
-      <rect x="24" y="822" width="14" height="10" fill="#9ab4c8" stroke="#4a7090" stroke-width="1"/>
-      <text x="44" y="832" font-family="Segoe UI,sans-serif" font-size="10" fill="#3a3a2a">— здания (кликабельны)</text>
-      <rect x="24" y="838" width="14" height="10" fill="#b8a88a" stroke="#7a6a50" stroke-width="1"/>
-      <text x="44" y="848" font-family="Segoe UI,sans-serif" font-size="10" fill="#3a3a2a">— градирни</text>
-      <rect x="24" y="854" width="14" height="10" fill="#88a888" stroke="#4a7a50" stroke-width="1"/>
-      <text x="44" y="864" font-family="Segoe UI,sans-serif" font-size="10" fill="#3a3a2a">— резервуары / ёмкости</text>
-
-      <!-- Заголовок схемы -->
-      <rect x="380" y="810" width="420" height="62" fill="rgba(26,58,92,.82)" rx="6"/>
-      <text x="590" y="833" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11" font-weight="700" fill="white">КУРСКАЯ АЭС-2</text>
-      <text x="590" y="848" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="10" fill="rgba(255,255,255,.8)">Схема расположения объектов (упрощённая)</text>
-      <text x="590" y="863" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="9" fill="rgba(255,255,255,.55)">Выберите здание для заполнения поля «Место выполнения работ»</text>
-    </svg>
-  </div>
-  <div id="mapPickerStatus">Наведите на здание для просмотра информации</div>
-</div>
-
+  КАК ВЕРНУТЬ:
+  1. Убери style="display:none" у div#roomPickerOverlay ниже.
+  2. В функции openRoomPicker() раскомментируй оригинальный код
+     (он помечен "ОРИГИНАЛ") и удали вызов openRoomListPopup().
+  3. Весь остальной JS (rpSelectBuilding, rpLoadFloor и т.д.) уже на
+     месте и работает — ничего восстанавливать не нужно.
+  ══════════════════════════════════════════════════════════════════════
+-->
 <!-- ── Room Picker Modal ── -->
-<div id="roomPickerOverlay">
+<div id="roomPickerOverlay" style="display:none">
   <div id="roomPickerHeader">
     <div>
       <h3>Выбор помещений — <span id="rpBuildingTitle">20UKC</span></h3>
       <p>Нажмите на помещение для выбора. Закрытие без сохранения отменяет выбор.</p>
     </div>
-    <button id="roomPickerCloseBtn" onclick="closeRoomPicker()">✕</button>
+    <div style="display:flex;align-items:center;gap:12px">
+      <div id="rpZoomControls">
+        <button onclick="rpZoom(-0.2)" title="Уменьшить">−</button>
+        <span id="rpZoomLabel">100%</span>
+        <button onclick="rpZoom(+0.2)" title="Увеличить">+</button>
+        <button onclick="rpZoomReset()" title="Сбросить масштаб" style="width:auto;padding:0 8px;font-size:11px;">⊙ Сброс</button>
+      </div>
+      <button id="roomPickerCloseBtn" onclick="closeRoomPicker()">✕</button>
+    </div>
   </div>
   <div id="roomPickerContent">
     <div id="roomPickerSVGArea">
@@ -6025,6 +7795,7 @@ function copyDevEmail() {
         <div id="roomPickerLoader">Выберите отметку</div>
       </div>
     </div>
+    <div class="rp-resize-handle" id="rpResizeHandleL" title="Тянуть для изменения ширины"></div>
     <div id="roomPickerSidebar">
       <div id="roomPickerSidebarInner">
         <p class="rp-building-label">Здание</p>
@@ -6035,6 +7806,12 @@ function copyDevEmail() {
         <div id="rpFloorList"></div>
       </div>
     </div>
+    <div class="rp-resize-handle" id="rpResizeHandleR" title="Тянуть для изменения ширины"></div>
+    <div id="rpRoomList">
+      <div id="rpRoomListHeader">Помещения (<span id="rpRoomListCount">0</span>)</div>
+      <input id="rpRoomListSearch" type="text" placeholder="Поиск…" oninput="rpFilterRoomList(this.value)">
+      <div id="rpRoomListItems"></div>
+    </div>
   </div>
   <div id="roomPickerBottom">
     <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
@@ -6042,6 +7819,88 @@ function copyDevEmail() {
       <button id="roomPickerSaveBtn" onclick="saveRoomPicker()" disabled>Сохранить</button>
     </div>
     <div id="roomPickerPreviewText">—</div>
+  </div>
+</div>
+
+<!-- ── Модалка: данные сотрудников не предоставлены ── -->
+<div id="noEmployeeDataModal" style="display:none;position:fixed;inset:0;z-index:9800;background:rgba(0,0,0,.5);display:none" onclick="if(event.target===this)closeNoEmployeeDataModal()">
+  <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--surface);border-radius:12px;box-shadow:0 8px 40px rgba(0,0,0,.3);width:400px;max-width:92vw;overflow:hidden">
+    <div style="background:var(--navy);color:white;padding:14px 16px;display:flex;align-items:center;justify-content:space-between">
+      <span style="font-weight:700;font-size:14px">База сотрудников недоступна</span>
+      <button onclick="closeNoEmployeeDataModal()" style="background:rgba(255,255,255,.15);border:none;color:white;border-radius:6px;width:28px;height:28px;cursor:pointer;font-size:16px;line-height:1">✕</button>
+    </div>
+    <div style="padding:20px 20px 8px">
+      <div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:16px">
+        <div style="flex-shrink:0;width:36px;height:36px;border-radius:50%;background:#fff3cd;display:flex;align-items:center;justify-content:center;font-size:18px">⚠️</div>
+        <div style="font-size:13px;color:var(--text);line-height:1.6">
+          Данные сотрудников для вашей организации не предоставлены.<br>
+          Для получения доступа к базе необходимо обратиться к разработчику и запросить шаблон для заполнения данных.
+        </div>
+      </div>
+      <div style="background:var(--bg-page);border-radius:8px;padding:12px 14px;margin-bottom:16px">
+        <div style="font-size:11px;color:var(--gray-400);margin-bottom:4px">Электронная почта разработчика</div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="font-size:13px;font-weight:600;color:var(--navy)">lingidanm@gmail.com</span>
+          <button onclick="navigator.clipboard.writeText('lingidanm@gmail.com');this.textContent='✓ Скопировано';setTimeout(()=>this.textContent='Копировать',2000)"
+            style="font-size:11px;padding:4px 10px;border:1px solid var(--border);border-radius:5px;background:transparent;color:var(--text);cursor:pointer">Копировать</button>
+        </div>
+      </div>
+    </div>
+    <div style="padding:0 20px 16px;display:flex;justify-content:flex-end">
+      <button onclick="closeNoEmployeeDataModal()" style="background:var(--accent);color:white;border:none;border-radius:6px;padding:7px 20px;cursor:pointer;font-size:13px;font-weight:600">Понятно</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Room List Popup (новый пикер помещений без плана) ── -->
+<div id="roomListPopup" style="display:none;position:fixed;inset:0;z-index:9700;background:rgba(0,0,0,.5)" onclick="if(event.target===this)closeRoomListPopup()">
+  <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--surface);border-radius:12px;box-shadow:0 8px 40px rgba(0,0,0,.35);width:440px;max-width:95vw;max-height:85vh;display:flex;flex-direction:column;overflow:hidden">
+    <div style="background:var(--navy);color:white;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0">
+      <span style="font-weight:700;font-size:14px">Выбор помещений</span>
+      <button onclick="closeRoomListPopup()" style="background:rgba(255,255,255,.15);border:none;color:white;border-radius:6px;width:28px;height:28px;cursor:pointer;font-size:16px;line-height:1">✕</button>
+    </div>
+    <div style="padding:10px 14px;display:flex;gap:8px;flex-shrink:0;border-bottom:1px solid var(--border);background:var(--bg-page)">
+      <select id="rlpBuilding" onchange="rlpFillFloors()" style="flex:0 0 90px;border:1px solid var(--border);border-radius:6px;padding:5px 8px;font-size:12px;background:var(--surface);color:var(--text)">
+        <option value="20UKC">20UKC</option>
+      </select>
+      <select id="rlpFloor" onchange="rlpUpdate()" style="flex:0 0 115px;border:1px solid var(--border);border-radius:6px;padding:5px 8px;font-size:12px;background:var(--surface);color:var(--text)">
+      </select>
+      <input id="rlpSearch" type="text" placeholder="Поиск…" oninput="rlpUpdate()" style="flex:1;min-width:0;border:1px solid var(--border);border-radius:6px;padding:5px 8px;font-size:12px;background:var(--surface);color:var(--text)">
+    </div>
+    <div id="rlpList" style="overflow-y:auto;flex:1;padding:8px 6px;background:var(--surface)"></div>
+    <div style="padding:10px 14px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;gap:8px;background:var(--surface)">
+      <span id="rlpCount" style="font-size:12px;color:var(--gray-400)">Выбрано: 0</span>
+      <div style="display:flex;gap:8px">
+        <button onclick="closeRoomListPopup()" style="border:1px solid var(--border);background:transparent;color:var(--text);border-radius:6px;padding:6px 14px;cursor:pointer;font-size:12px">Отмена</button>
+        <button id="rlpSaveBtn" onclick="saveRoomListPopup()" disabled style="background:var(--accent);color:white;border:none;border-radius:6px;padding:6px 14px;cursor:pointer;font-size:12px;font-weight:600;opacity:.5">Применить</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Work Type Picker Popup ── -->
+<div id="workTypePopup" style="display:none;position:fixed;inset:0;z-index:9700;background:rgba(0,0,0,.5)" onclick="if(event.target===this)closeWorkTypePicker()">
+  <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--surface);border-radius:12px;box-shadow:0 8px 40px rgba(0,0,0,.35);width:440px;max-width:95vw;max-height:85vh;display:flex;flex-direction:column;overflow:hidden">
+    <div style="background:var(--navy);color:white;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0">
+      <div style="display:flex;gap:4px">
+        <button id="wtpTabVid" onclick="wtpSwitchTab('vidRabot')"
+          style="background:rgba(255,255,255,.22);border:none;color:white;border-radius:6px;padding:5px 14px;cursor:pointer;font-size:13px;font-weight:700">Вид работ</button>
+        <button id="wtpTabApp" onclick="wtpSwitchTab('primenenie')"
+          style="background:transparent;border:none;color:rgba(255,255,255,.65);border-radius:6px;padding:5px 14px;cursor:pointer;font-size:13px;font-weight:600">С применением</button>
+      </div>
+      <button onclick="closeWorkTypePicker()" style="background:rgba(255,255,255,.15);border:none;color:white;border-radius:6px;width:28px;height:28px;cursor:pointer;font-size:16px;line-height:1">✕</button>
+    </div>
+    <div style="padding:10px 14px;flex-shrink:0;border-bottom:1px solid var(--border);background:var(--bg-page)">
+      <input id="wtpSearch" type="text" placeholder="Поиск…" oninput="wtpUpdate()" style="width:100%;box-sizing:border-box;border:1px solid var(--border);border-radius:6px;padding:6px 10px;font-size:12px;background:var(--surface);color:var(--text)">
+    </div>
+    <div id="wtpList" style="overflow-y:auto;flex:1;padding:6px 8px;background:var(--surface)"></div>
+    <div style="padding:10px 14px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;gap:8px;background:var(--surface)">
+      <button onclick="wtpClear()" style="border:none;background:transparent;color:var(--gray-400);border-radius:6px;padding:6px 10px;cursor:pointer;font-size:12px">Сбросить</button>
+      <div style="display:flex;gap:8px">
+        <button onclick="closeWorkTypePicker()" style="border:1px solid var(--border);background:transparent;color:var(--text);border-radius:6px;padding:6px 14px;cursor:pointer;font-size:12px">Отмена</button>
+        <button id="wtpApply" onclick="wtpApply()" disabled style="border:none;background:var(--accent);color:white;border-radius:6px;padding:6px 16px;cursor:pointer;font-size:12px;font-weight:600;opacity:0.45">Применить</button>
+      </div>
+    </div>
   </div>
 </div>
 

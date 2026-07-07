@@ -1694,7 +1694,7 @@
     <p>Форма заполнения разрешительной документации на опасные работы</p>
   </div>
   <div style="font-size:12px; color:var(--gray-400); text-align:right; white-space:nowrap">
-    <div style="font-size:14px; font-weight:700; color:var(--navy); margin-bottom:4px">v3.69</div>
+    <div style="font-size:14px; font-weight:700; color:var(--navy); margin-bottom:4px">v3.70</div>
     Разработал<br>Лингидан Максим Дмитриевич
   </div>
 </div>
@@ -2197,6 +2197,18 @@
         <div class="field">
           <label>Должность спасателя</label>
           <input type="text" id="ozpSpasDolzh" placeholder="">
+        </div>
+
+        <div class="field col-span-2">
+          <label>Особые условия проведения работ</label>
+          <div style="display:flex;gap:20px;flex-wrap:wrap;padding-top:6px;">
+            <label style="display:flex;align-items:center;gap:6px;font-weight:400;cursor:pointer;">
+              <input type="checkbox" id="ozpCondHeight"> Работа на высоте
+            </label>
+            <label style="display:flex;align-items:center;gap:6px;font-weight:400;cursor:pointer;">
+              <input type="checkbox" id="ozpCondFire"> Огневые работы
+            </label>
+          </div>
         </div>
       </div>
     </div>
@@ -5467,7 +5479,7 @@ async function buildPPRVDocument(data) {
 }
 
 // ─── Проверка актуальности версии ─────────────────────────────────────────
-const CURRENT_VERSION = 'v3.69';
+const CURRENT_VERSION = 'v3.70';
 const VERSION_CHECK_TTL = 5 * 60 * 1000; // 5 минут
 let _versionCheckTime = null;
 let _versionCheckPassed = false;
@@ -6307,6 +6319,7 @@ function clearFormUI(withRows) {
    'ozpMaterialy','ozpSvyaz'].forEach(id => {
     const el = document.getElementById(id); if (el) el.value = '';
   });
+  ['ozpCondHeight','ozpCondFire'].forEach(id => { const el = document.getElementById(id); if (el) el.checked = false; });
   OZP_FACTORS.forEach((_, i) => { const el = document.getElementById('ozpFactor' + i); if (el) el.checked = false; });
   OZP_SIZ_ROWS.forEach(row => { const el = document.getElementById(row.id); if (el) el.value = ''; });
   ['fieldOgnevoyOrg','fieldOgnevoyRukovFio','fieldOgnevoyRukovDolzh'].forEach(id => {
@@ -6383,6 +6396,8 @@ function _collectOzpSnapshot() {
     spasFio: g('ozpSpasFio'), spasDolzh: g('ozpSpasDolzh'),
     mesto: g('ozpMesto'), soderzhanie: g('ozpSoderzhanie'),
     materialy: g('ozpMaterialy'), svyaz: g('ozpSvyaz'),
+    condHeight: !!document.getElementById('ozpCondHeight')?.checked,
+    condFire: !!document.getElementById('ozpCondFire')?.checked,
     ozpFactors, sizValues, executors,
   };
 }
@@ -6400,6 +6415,8 @@ function _applyOzpSnapshot(ozp) {
   set('ozpSpasFio', ozp.spasFio); set('ozpSpasDolzh', ozp.spasDolzh);
   set('ozpMesto', ozp.mesto); set('ozpSoderzhanie', ozp.soderzhanie);
   set('ozpMaterialy', ozp.materialy); set('ozpSvyaz', ozp.svyaz);
+  const condH = document.getElementById('ozpCondHeight'); if (condH) condH.checked = !!ozp.condHeight;
+  const condF = document.getElementById('ozpCondFire'); if (condF) condF.checked = !!ozp.condFire;
   if (ozp.ozpFactors) Object.entries(ozp.ozpFactors).forEach(([i, checked]) => { const el = document.getElementById('ozpFactor' + i); if (el) el.checked = checked; });
   if (ozp.sizValues) Object.entries(ozp.sizValues).forEach(([id, val]) => { const el = document.getElementById(id); if (el) el.value = val; });
   (ozp.executors || []).forEach(e => addOzpRow(e.fio, e.dolzh, e.razr, e.grEB));
@@ -7088,6 +7105,43 @@ const OZP_SIZ_ROWS = [
   { id: 'ozpSiz6', label: 'Самоспасатели и системы эвакуации/спасения' },
 ];
 
+// Типовые мероприятия наряда-допуска на работы в ОЗП (фиксированный текст бланка)
+const OZP_PRE_WORK_TASKS = [
+  'Получить наряд-допуск на производство работ у должностного лица, выдающего наряд-допуск, с записью в журнале учёта работ по наряду-допуску.',
+  'Ознакомиться с документированным описанием процедуры управления профессиональными рисками, проектной и технологической документацией, планом мероприятий при аварийной ситуации и при спасении из ОЗП.',
+  'Определить состав звена, назначить ответственного исполнителя, наблюдающего и спасателя.',
+  'Обеспечить нахождение наблюдающего у наружного входа в ОЗП и его контроль за действиями работников.',
+  'Провести осмотр ОЗП, зафиксировать наличие шлама, твёрдого осадка или жидкостей в рабочей зоне с записью в наряде-допуске.',
+  'Внести результаты оценки параметров рабочей среды ОЗП в наряд-допуск.',
+  'Проверить укомплектованность членов бригады инструментом, материалами, средствами защиты, измерения, связи, а также наличие и сроки действия удостоверений о допуске к работам в ОЗП.',
+  'Дать указание ответственному исполнителю по подготовке и приведению в исправность инструментов, материалов, средств защиты, знаков, ограждений.',
+  'Организовать и проконтролировать выполнение технических мероприятий по подготовке рабочего места, наличие и комплектность средств защиты, включая аварийный комплект спасательных и эвакуационных средств.',
+  'Проверять соответствие состава бригады составу, указанному в наряде-допуске.',
+  'Довести до сведения членов бригады информацию о мерах безопасности, провести целевой инструктаж под подпись в наряде-допуске.',
+  'Разъяснить членам бригады порядок производства работ и порядок действий в аварийных и чрезвычайных ситуациях, их права и обязанности.',
+  'Проверить полноту усвоения членами бригады мероприятий по безопасности после целевого инструктажа.',
+  'Организовать и обеспечить выполнение мероприятий по безопасности работ в ОЗП, в том числе необходимость повторного включения вентиляции по результатам мониторинга.',
+  'Допустить бригаду к работе по наряду-допуску непосредственно на месте выполнения работ.',
+];
+
+const OZP_DURING_WORK_TASKS = [
+  { text: 'Обеспечивать принудительный отбор проб газоанализатором в соответствии с требованиями (расположение точки входа, высота отбора, запрет использования газосигнализаторов без индикации концентрации).', who: 'ispoln' },
+  { text: 'Обеспечивать нахождение наблюдающего и спасателя у наружного входа в ОЗП и контроль за действиями работников.', who: 'ispoln' },
+  { text: 'Проверять в присутствии ответственного руководителя работ подготовку рабочих мест, выполнение мер безопасности, наличие у бригады средств защиты, оснастки и инструмента.', who: 'ispoln' },
+  { text: 'Указать каждому члену бригады его рабочее место.', who: 'ispoln' },
+  { text: 'Запрещать членам бригады покидать место производства работ без разрешения ответственного исполнителя, выполнение работ, не предусмотренных нарядом-допуском.', who: 'ispoln' },
+  { text: 'Выводить членов бригады с места производства работ на время перерывов в ходе рабочей смены.', who: 'ispoln' },
+  { text: 'Возобновлять работу бригады после перерыва только после личного осмотра рабочего места.', who: 'ispoln' },
+  { text: 'По окончании работ обеспечить уборку материалов, инструмента, приспособлений, ограждений, мусора и других предметов.', who: 'brigada' },
+  { text: 'Вывести членов бригады с места производства работ по окончании рабочей смены.', who: 'ispoln' },
+  { text: 'Контролировать применение средств коллективной и индивидуальной защиты.', who: 'ispoln' },
+  { text: 'Выполнять только порученную ему работу.', who: 'brigada' },
+  { text: 'Осуществлять непрерывную указанную в наряде-допуске связь (аудио-визуальную) с другими членами бригады и наблюдающим (страхующим).', who: 'ispoln' },
+  { text: 'Уметь профессионально пользоваться оборудованием, инструментом и техническими средствами, обеспечивающими безопасность работников.', who: 'brigada' },
+  { text: 'Лично производить осмотр выданных средств измерений, связи, индивидуальной защиты до и после каждого их использования.', who: 'brigada' },
+  { text: 'Уметь оказывать первую помощь пострадавшим на производстве.', who: 'brigada' },
+];
+
 function _renderOzpFactorsAndSiz() {
   const fGrid = document.getElementById('ozpFactorsGrid');
   if (fGrid && !fGrid.dataset.rendered) {
@@ -7379,6 +7433,8 @@ function collectOzpFormData() {
     mesto: g('ozpMesto'), soderzhanie: g('ozpSoderzhanie'),
     brigada,
     materialy: g('ozpMaterialy'), svyaz: g('ozpSvyaz'),
+    condHeight: !!document.getElementById('ozpCondHeight')?.checked,
+    condFire: !!document.getElementById('ozpCondFire')?.checked,
     activeFactors, sizRows,
   };
 }
@@ -7420,8 +7476,13 @@ async function buildOzpDocument(data) {
     return new TableCell({ borders, width: opts.width ? { size: opts.width, type: WidthType.PERCENTAGE } : undefined,
       children: [p(text, { size: 18, after: 0, ...opts })] });
   }
+  function sectionTitle(text) {
+    return p(text, { bold: true, after: 80 });
+  }
 
   const fmtDate = d => d ? d.split('-').reverse().join('.') : '____________';
+  const ispolnFull = [data.ispolnFio, data.ispolnDolzh].filter(Boolean).join(', ') || '_______________________________';
+  const rukovShort = toInitials ? toInitials(data.rukovFio || '') : (data.rukovFio || '');
 
   const children = [
     p(`НАРЯД-ДОПУСК № ${data.nomer || '_______'}`, { bold: true, size: 28, align: AlignmentType.CENTER }),
@@ -7432,7 +7493,7 @@ async function buildOzpDocument(data) {
     p(`Выдан: «${fmtDate(data.dateStart)}» (действителен на 1 рабочую смену)`, { after: 200 }),
 
     p(`Ответственный руководитель работ: ${[data.rukovFio, data.rukovDolzh].filter(Boolean).join(', ') || '_______________________________'}`),
-    p(`Ответственный исполнитель (производитель) работ: ${[data.ispolnFio, data.ispolnDolzh].filter(Boolean).join(', ') || '_______________________________'}`),
+    p(`Ответственный исполнитель (производитель) работ: ${ispolnFull}`),
     p(`Наблюдающий: ${[data.nabludFio, data.nabludDolzh].filter(Boolean).join(', ') || '_______________________________'}`),
     p(`Спасатель: ${[data.spasFio, data.spasDolzh].filter(Boolean).join(', ') || '_______________________________'}`, { after: 200 }),
 
@@ -7440,29 +7501,30 @@ async function buildOzpDocument(data) {
     p(`Содержание работ: ${data.soderzhanie || '_______________________________'}`, { after: 200 }),
   ];
 
-  children.push(p('Состав исполнителей работ (члены бригады):', { bold: true, after: 80 }));
+  children.push(sectionTitle('Состав исполнителей работ (члены бригады):'));
   if (data.brigada.length) {
     children.push(new Table({
       width: { size: 100, type: WidthType.PERCENTAGE },
       rows: [
-        new TableRow({ children: [cell('Ф.И.О.', { bold: true, width: 30 }), cell('Должность', { bold: true, width: 30 }), cell('С условиями работ ознакомлен (подпись)', { bold: true, width: 40 })] }),
-        ...data.brigada.map(b => new TableRow({ children: [cell(b.fio, { width: 30 }), cell(b.itog || '', { width: 30 }), cell('', { width: 40 })] })),
+        new TableRow({ children: [
+          cell('Ф.И.О.', { bold: true, width: 34 }),
+          cell('С условиями работ ознакомил, инструктаж провёл (подпись)', { bold: true, width: 33 }),
+          cell('С условиями работ ознакомлен (подпись)', { bold: true, width: 33 }),
+        ] }),
+        ...data.brigada.map(b => new TableRow({ children: [
+          cell(b.fio, { width: 34 }), cell(rukovShort, { width: 33 }), cell('', { width: 33 }),
+        ] })),
       ],
     }));
   } else {
     children.push(p('_______________________________________________________'));
   }
 
-  children.push(p(' ', { after: 100 }));
-  children.push(p('Опасные и вредные производственные факторы:', { bold: true, after: 80 }));
-  if (data.activeFactors.length) {
-    data.activeFactors.forEach((f, i) => children.push(p(`${i + 1}. ${f}`, { after: 40 })));
-  } else {
-    children.push(p('Не указаны', { after: 40 }));
-  }
+  children.push(p(' ', { after: 60 }));
+  children.push(p(`Начало работ в _____ час _____ мин «${fmtDate(data.dateStart)}» г.`));
+  children.push(p(`Окончание работ в _____ час _____ мин «____________» г.`, { after: 200 }));
 
-  children.push(p(' ', { after: 100 }));
-  children.push(p('Системы обеспечения безопасности работ в ОЗП:', { bold: true, after: 80 }));
+  children.push(sectionTitle('Системы обеспечения безопасности работ в ОЗП:'));
   if (data.sizRows.length) {
     children.push(new Table({
       width: { size: 100, type: WidthType.PERCENTAGE },
@@ -7473,11 +7535,85 @@ async function buildOzpDocument(data) {
   }
 
   children.push(p(' ', { after: 100 }));
+  children.push(sectionTitle('Опасные и вредные производственные факторы:'));
+  if (data.activeFactors.length) {
+    data.activeFactors.forEach((f, i) => children.push(p(`${i + 1}. ${f}`, { after: 40 })));
+  } else {
+    children.push(p('Не указаны', { after: 40 }));
+  }
+
+  children.push(p(' ', { after: 100 }));
+  children.push(p(`1. Необходимые для производства работ.`, { bold: true, after: 40 }));
   children.push(p(`Материалы и инструменты: ${data.materialy || '_______________________________'}`));
   children.push(p(`Средства связи: ${data.svyaz || '_______________________________'}`, { after: 200 }));
 
-  children.push(p('Наряд-допуск выдал: _______________________ (Ф.И.О., подпись, дата)', { after: 60 }));
-  children.push(p('Разрешение на вход в ОЗП выдал: ____________________________ (Ф.И.О., подпись, дата)', { after: 60 }));
+  function tasksTable(title, tasks, respFn) {
+    children.push(sectionTitle(title));
+    children.push(new Table({
+      width: { size: 100, type: WidthType.PERCENTAGE },
+      rows: [
+        new TableRow({ children: [
+          cell('№', { bold: true, width: 5, align: AlignmentType.CENTER }),
+          cell('Наименование мероприятия', { bold: true, width: 63 }),
+          cell('Срок выполнения', { bold: true, width: 14 }),
+          cell('Ответственный исполнитель', { bold: true, width: 18 }),
+        ] }),
+        ...tasks.map((t, i) => new TableRow({ children: [
+          cell(String(i + 1), { width: 5, align: AlignmentType.CENTER }),
+          cell(typeof t === 'string' ? t : t.text, { width: 63 }),
+          cell('До начала работ', { width: 14 }),
+          cell(respFn(t), { width: 18 }),
+        ] })),
+      ],
+    }));
+    children.push(p(' ', { after: 100 }));
+  }
+
+  tasksTable('2. До начала производства работ необходимо выполнить следующие мероприятия:',
+    OZP_PRE_WORK_TASKS, () => data.rukovFio || '_________________');
+
+  tasksTable('3. В процессе производства работ необходимо выполнить следующие мероприятия:',
+    OZP_DURING_WORK_TASKS, t => t.who === 'brigada' ? 'Члены бригады' : (data.ispolnFio || '_________________'));
+
+  if (data.condHeight || data.condFire) {
+    children.push(sectionTitle('4. Особые условия проведения работ:'));
+    children.push(new Table({
+      width: { size: 100, type: WidthType.PERCENTAGE },
+      rows: [
+        new TableRow({ children: [
+          cell('Наименование условий', { bold: true, width: 60 }),
+          cell('Срок выполнения', { bold: true, width: 15 }),
+          cell('Ответственный исполнитель', { bold: true, width: 25 }),
+        ] }),
+        ...(data.condHeight ? [new TableRow({ children: [cell('Работа на высоте', { width: 60 }), cell('Постоянно', { width: 15 }), cell(data.ispolnFio || '_________________', { width: 25 })] })] : []),
+        ...(data.condFire ? [new TableRow({ children: [cell('Огневые работы', { width: 60 }), cell('Постоянно', { width: 15 }), cell(data.ispolnFio || '_________________', { width: 25 })] })] : []),
+      ],
+    }));
+    children.push(p(' ', { after: 100 }));
+  }
+
+  function admissionLogTable(title, headers, widths) {
+    children.push(sectionTitle(title));
+    const rows = [new TableRow({ children: headers.map((h, i) => cell(h, { bold: true, width: widths[i], align: AlignmentType.CENTER })) })];
+    for (let i = 0; i < 6; i++) {
+      rows.push(new TableRow({ children: widths.map(w => cell('', { width: w })) }));
+    }
+    children.push(new Table({ width: { size: 100, type: WidthType.PERCENTAGE }, rows }));
+    children.push(p(' ', { after: 100 }));
+  }
+
+  admissionLogTable(
+    '5. Разрешение на подготовку рабочих мест и на допуск к выполнению работ:',
+    ['Наименование рабочего места', 'Дата, время', 'Подпись ответственного руководителя работ', 'Подпись ответственного исполнителя (производителя) работ'],
+    [30, 15, 27, 28],
+  );
+
+  admissionLogTable(
+    '6. Разрешение на вход в ОЗП после подтверждения соответствующих блокировок:',
+    ['Дата, время', 'Подпись ответственного руководителя работ (выдал)', 'Подпись ответственного исполнителя работ (получил)', 'Работа окончена, бригада удалена (подпись, дата)'],
+    [15, 28, 28, 29],
+  );
+
   children.push(p('Работа выполнена в полном объёме. Материалы, инструмент убраны. Члены бригады выведены.', { after: 60 }));
   children.push(p('Наряд-допуск закрыт: _______________________ (Ф.И.О., подпись, дата)'));
 
@@ -7814,6 +7950,13 @@ async function buildOgnevoySheetDoc(data) {
 
 // ─── История обновлений ───────────────────────────────────────────────────
 const CHANGELOG = [
+  {
+    version: 'v3.70', date: '07.07.2026',
+    changes: [
+      'Документ наряда-допуска ОЗП приближен к реальному бланку: добавлены типовые таблицы мероприятий «до начала работ» и «в процессе работ», особые условия (высота/огневые работы) и журналы допуска в ОЗП',
+      'В форму ОЗП добавлен чек-бокс особых условий (высота/огневые работы); время начала/окончания работ в документе по-прежнему заполняется от руки',
+    ]
+  },
   {
     version: 'v3.69', date: '07.07.2026',
     changes: [
